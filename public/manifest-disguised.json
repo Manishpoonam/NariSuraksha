@@ -3,15 +3,15 @@
   "name": "Polity Notes - UPSC & NCERT Revision Module",
   "icons": [
     {
-      "src": "/icon-polity.svg",
+      "src": "./icon-polity.svg",
       "type": "image/svg+xml",
       "sizes": "192x192 512x512"
     }
   ],
-  "start_url": "/?mode=disguised",
+  "start_url": "./?mode=disguised",
   "background_color": "#F8FAFC",
   "theme_color": "#3B5998",
   "display": "standalone",
   "orientation": "portrait",
-  "scope": "/"
+  "scope": "./"
 }

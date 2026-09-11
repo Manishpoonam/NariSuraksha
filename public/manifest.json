@@ -3,15 +3,15 @@
   "name": "NariSuraksha - NCII & Cyber Extortion Emergency Response Portal",
   "icons": [
     {
-      "src": "/icon.svg",
+      "src": "./icon.svg",
       "type": "image/svg+xml",
       "sizes": "192x192 512x512"
     }
   ],
-  "start_url": "/",
+  "start_url": "./",
   "background_color": "#FAF9F6",
   "theme_color": "#2D2D2D",
   "display": "standalone",
   "orientation": "portrait",
-  "scope": "/"
+  "scope": "./"
 }
