@@ -1,0 +1,625 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState } from 'react';
+import { 
+  ShieldCheck, 
+  ExternalLink, 
+  Mail, 
+  Clock, 
+  Check, 
+  Copy, 
+  Search, 
+  MessageCircle, 
+  Send, 
+  Instagram, 
+  Twitter, 
+  Film,
+  ShieldAlert,
+  Globe,
+  Layers,
+  Sparkles,
+  ArrowRight,
+  HelpCircle,
+  FileText,
+  Lock,
+  ChevronDown,
+  ChevronUp
+} from 'lucide-react';
+import { Language } from '../types';
+import { hapticAction } from '../utils/haptics';
+import { PrivacyLockdownGuide } from './PrivacyLockdownGuide';
+
+interface PlatformTakedownPortalProps {
+  language: Language;
+  onNavigateToTab?: (tab: string, elementId?: string) => void;
+}
+
+type PlatformTabKey = 'whatsapp' | 'instagram' | 'telegram' | 'google' | 'adult' | 'twitter' | 'cybercrime';
+
+export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({ 
+  language,
+  onNavigateToTab 
+}) => {
+  const isHindi = language === 'hi';
+
+  const [activePlatform, setActivePlatform] = useState<PlatformTabKey>('whatsapp');
+  const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
+  const [copiedNotice, setCopiedNotice] = useState<boolean>(false);
+  const [showLockdownDrawer, setShowLockdownDrawer] = useState<boolean>(false);
+  const [showMirrorSolutions, setShowMirrorSolutions] = useState<boolean>(false);
+
+  const handleCopy = (text: string, type: 'email' | 'notice') => {
+    navigator.clipboard.writeText(text);
+    hapticAction();
+    if (type === 'email') {
+      setCopiedEmail(text);
+      setTimeout(() => setCopiedEmail(null), 2200);
+    } else {
+      setCopiedNotice(true);
+      setTimeout(() => setCopiedNotice(false), 2200);
+    }
+  };
+
+  const platformsConfig: Record<PlatformTabKey, {
+    name: string;
+    badge: string;
+    icon: React.ReactNode;
+    turnaround: string;
+    directUrl: string;
+    grievanceEmail?: string;
+    statutoryRule: string;
+    steps: { en: string[]; hi: string[] };
+    noticeSubject: string;
+    noticeBody: string;
+  }> = {
+    whatsapp: {
+      name: isHindi ? 'व्हाट्सएप (WhatsApp India)' : 'WhatsApp (In-App & Grievance)',
+      badge: isHindi ? '24 घंटे में अनिवार्य निष्कासन' : 'Mandatory 24-Hr Indian Takedown',
+      icon: <MessageCircle className="w-5 h-5 text-emerald-600" />,
+      turnaround: isHindi ? '< 24 घंटे (IT नियम 2021)' : '< 24 Hours (IT Rules 2021)',
+      directUrl: 'https://www.whatsapp.com/contact/forms/147171412035889',
+      grievanceEmail: 'grievance_officer_wa@support.whatsapp.com',
+      statutoryRule: 'Rule 3(2)(b) Information Technology Rules, 2021',
+      steps: {
+        en: [
+          'In WhatsApp chat with perpetrator, tap Profile > Scroll down > Tap "Report Contact". (WhatsApp receives last 5 messages as official server evidence).',
+          'If circulating in a group, tap Group Info > Tap "Report Group".',
+          'Send formal notice to grievance_officer_wa@support.whatsapp.com with the perpetrator’s phone number (+91...) and uncropped threat screenshots.',
+        ],
+        hi: [
+          'चैट में प्रोफाइल पर जाएं > नीचे "Report Contact" पर टैप करें। (व्हाट्सएप को पिछले 5 संदेश सर्वर सबूत के रूप में मिलते हैं)।',
+          'यदि ग्रुप में भेजा गया है, तो ग्रुप इंफो में जाकर "Report Group" करें।',
+          'grievance_officer_wa@support.whatsapp.com पर ईमेल भेजकर 24 घंटे में अकाउंट बैन और सामग्री हटाने की मांग करें।',
+        ],
+      },
+      noticeSubject: 'URGENT: Notice under Rule 3(2)(b) IT Rules 2021 for Immediate Takedown of Non-Consensual Media',
+      noticeBody: 'Dear WhatsApp India Grievance Officer,\n\nI am writing to submit an urgent grievance under Rule 3(2)(b) of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021.\n\nPerpetrator Phone Number: [Insert Offender Number with +91]\nOffender Display Name: [Insert Name]\nViolation: Circulation/threat of non-consensual intimate imagery.\n\nUnder Rule 3(2)(b), intermediaries are legally mandated to disable access to such material within 24 hours of receiving notice. Please ban the offending account and preserve server logs for law enforcement under Section 91 CrPC/BNSS.\n\nAttached: Uncropped screenshots of harassment/extortion.',
+    },
+    instagram: {
+      name: isHindi ? 'इंस्टाग्राम व फेसबुक (Meta India)' : 'Instagram & Facebook (Meta India)',
+      badge: isHindi ? '24 घंटे में प्रोफाइल व फोटो रिमूवल' : '24-Hr Removal & Profile Strike',
+      icon: <Instagram className="w-5 h-5 text-rose-600" />,
+      turnaround: isHindi ? '< 24 घंटे' : '< 24 Hours',
+      directUrl: 'https://help.instagram.com/contact/584460464982589',
+      grievanceEmail: 'grievance-officer-india@support.instagram.com',
+      statutoryRule: 'Rule 3(2)(b) IT Rules 2021 & Meta Safety Policies',
+      steps: {
+        en: [
+          'On the post, story, or profile: Tap three dots (...) > Report > Select "Nudity or sexual activity" > "Non-consensual intimate imagery".',
+          'Submit Meta’s Dedicated Intimate Image Form (direct URL below). Meta cross-matches and purges across Instagram, Facebook, and Messenger.',
+          'Email the India Grievance Officer if not removed within 12 hours.',
+        ],
+        hi: [
+          'पोस्ट या प्रोफाइल पर 3 डॉट्स (...) दबाएं > Report > "Nudity or sexual activity" > "Non-consensual intimate imagery" चुनें।',
+          'मेटा के विशेष इंटिमेट इमेज रिमूवल फॉर्म (नीचे दिए बटन) पर शिकायत दर्ज करें। मेटा इंस्टाग्राम व फेसबुक दोनों से इसे हटाता है।',
+          '12 घंटे में कार्रवाई न होने पर नोडल अधिकारी को ईमेल नोटिस भेजें।',
+        ],
+      },
+      noticeSubject: 'URGENT: Rule 3(2)(b) IT Rules 2021 Takedown Demand - Non-Consensual Intimate Image',
+      noticeBody: 'Dear Meta India Grievance Officer,\n\nThis is an urgent takedown demand under Rule 3(2)(b) of the Information Technology Rules, 2021.\n\nOffending Profile / Post URL: [Insert Instagram Profile or Post Link]\nPerpetrator Username: @[Insert Username]\n\nThe material depicts non-consensual intimate imagery/harassment. Rule 3(2)(b) mandates removal within 24 hours without exception. Kindly terminate access and preserve IP/registration telemetry.\n\nSincerely,\n[Your Name / Confidential Complainant]',
+    },
+    telegram: {
+      name: isHindi ? 'टेलीग्राम (Telegram Abuse & Bots)' : 'Telegram Abuse & Deepfake Bots',
+      badge: isHindi ? 'चैनल व बॉट बैन प्रोटोकॉल' : 'Channel, Bot & Group Takedown',
+      icon: <Send className="w-5 h-5 text-sky-600" />,
+      turnaround: isHindi ? '24 - 48 घंटे' : '24 - 48 Hours',
+      directUrl: 'https://telegram.org/support',
+      grievanceEmail: 'cops@telegram.org, abuse@telegram.org, stopca@telegram.org',
+      statutoryRule: 'Rule 3(2)(b) IT Rules 2021 & Telegram TOS',
+      steps: {
+        en: [
+          'Long-press offending message/post in Telegram > Tap "Report" > Select "Illegal Adult Content" or "Personal Data".',
+          'Copy the exact permanent link of the channel or message (e.g. t.me/channel_name/1234).',
+          'Email cops@telegram.org and stopca@telegram.org specifying Indian IT Rules violation. Also report to the @notoscam bot on Telegram.',
+        ],
+        hi: [
+          'टेलीग्राम मैसेज पर लॉन्ग-प्रेस करें > "Report" > "Illegal Adult Content" चुनें।',
+          'चैनल या मैसेज का सटीक t.me लिंक (e.g. t.me/channel/123) कॉपी करें।',
+          'cops@telegram.org और stopca@telegram.org पर ईमेल भेजें और @notoscam बॉट पर शिकायत दर्ज करें।',
+        ],
+      },
+      noticeSubject: 'CRITICAL ABUSE: Urgent Takedown of Non-Consensual Media / AI Deepfake Bot',
+      noticeBody: 'Dear Telegram Abuse & Enforcement Team,\n\nI am reporting an illegal channel / bot operating in violation of Telegram Terms and Indian Law:\n\nChannel / Bot Link: [Insert t.me link]\nBot Username: @[Insert bot handle]\nNature of Infringement: Non-consensual explicit material / deepfake morphing.\n\nPlease immediately terminate this channel/bot and preserve account identification data for cyber law enforcement.\n\nThank you.',
+    },
+    google: {
+      name: isHindi ? 'गूगल सर्च व इमेजेस (Google De-Index)' : 'Google Search & Images De-Indexing',
+      badge: isHindi ? 'वैश्विक सर्च रिजल्ट्स से खात्मा' : 'Global Search & Mirror Erasure',
+      icon: <Search className="w-5 h-5 text-amber-600" />,
+      turnaround: isHindi ? '24 - 72 घंटे' : '24 - 72 Hours',
+      directUrl: 'https://support.google.com/websearch/troubleshooter/3111061',
+      statutoryRule: 'Google Non-Consensual Explicit Media Removal Policy',
+      steps: {
+        en: [
+          'Open Google’s official "Remove explicit personal images from Google Search" form.',
+          'Provide the URLs of the webpages and the specific Google Image search results displaying the media.',
+          'List search queries that trigger the results (e.g., your name, phone number, or handle). Google purges the links globally and activates automated duplicate matching.',
+        ],
+        hi: [
+          'गूगल के आधिकारिक "Remove explicit personal images" फॉर्म पर जाएं।',
+          'उन सभी वेब पेजों और गूगल इमेजेस के लिंक (URLs) दर्ज करें।',
+          'वे सर्च कीवर्ड्स बताएं जिनसे यह परिणाम दिखता है। गूगल पूरी दुनिया के सर्च नतीजों से इसे हटा देता है।',
+        ],
+      },
+      noticeSubject: 'Google Search De-Listing Request under Non-Consensual Explicit Content Policy',
+      noticeBody: 'Please use the direct Google Troubleshooter form link below to submit with cryptographic verification.',
+    },
+    adult: {
+      name: isHindi ? 'एडल्ट वेबसाइट्स व क्लाउडफ्लेयर शटडाउन' : 'Adult / Pirate Sites & Cloudflare Abuse',
+      badge: isHindi ? 'होस्टिंग सर्वर डिलीशन' : 'Upstream Origin Server Kill-Switch',
+      icon: <Film className="w-5 h-5 text-rose-700" />,
+      turnaround: isHindi ? '24 - 48 घंटे' : '24 - 48 Hours',
+      directUrl: 'https://abuse.cloudflare.com',
+      statutoryRule: '18 U.S.C. 2257 / DMCA / IT Act Section 67A',
+      steps: {
+        en: [
+          'Do NOT communicate with rogue pirate site webmasters.',
+          'Over 80% of adult clone sites use Cloudflare reverse proxies to conceal their host. File a report on abuse.cloudflare.com under "Non-Consensual Sexual Content".',
+          'Cloudflare transmits the legal takedown strike directly to the actual origin host and domain registrar, compelling immediate server file deletion.',
+        ],
+        hi: [
+          'अनजान पायरेट वेबसाइटों के एडमिन से कभी पैसे देकर बात न करें।',
+          '80% से ज्यादा ऐसी साइट्स क्लाउडफ्लेयर के जरिए चलती हैं। abuse.cloudflare.com पर "Non-Consensual Sexual Content" में रिपोर्ट करें।',
+          'क्लाउडफ्लेयर असली वेब होस्टिंग कंपनी को नोटिस भेजकर मुख्य सर्वर से फाइलें डिलीट करवाता है।',
+        ],
+      },
+      noticeSubject: 'Cloudflare Abuse Notification: Non-Consensual Intimate Material Origin Server Deletion',
+      noticeBody: 'Submitted directly through the Cloudflare verified abuse form for root host dispatch.',
+    },
+    twitter: {
+      name: isHindi ? 'एक्स / ट्विटर (X Non-Consensual Nudity)' : 'X / Twitter Takedown Portal',
+      badge: isHindi ? 'त्वरित निष्कासन व स्थायी बैन' : 'Expedited Removal & Account Suspension',
+      icon: <Twitter className="w-5 h-5 text-[#111]" />,
+      turnaround: isHindi ? '< 24 घंटे' : '< 24 Hours',
+      directUrl: 'https://help.twitter.com/forms/safety-and-sensitive-content/private-information',
+      grievanceEmail: 'grievance-officer-india@twitter.com',
+      statutoryRule: 'X Safety Policy & Rule 3(2)(b) IT Rules 2021',
+      steps: {
+        en: [
+          'On the offending post, tap the three dots (...) > Report > Select "Sensitive media" > "Non-consensual nudity".',
+          'Open X’s dedicated Non-Consensual Intimate Media portal (link below) and submit the tweet URL.',
+          'X permanently terminates access and bans the offender’s account across devices.',
+        ],
+        hi: [
+          'पोस्ट पर 3 डॉट्स (...) टैप करें > Report > "Sensitive media" > "Non-consensual nudity" चुनें।',
+          'X के समर्पित वेब फॉर्म पर ट्वीट का लिंक दर्ज करें।',
+          'X कंटेंट को तुरंत हटाकर अपराधी का अकाउंट हमेशा के लिए सस्पेंड कर देता है।',
+        ],
+      },
+      noticeSubject: 'URGENT: Takedown of Non-Consensual Intimate Media under Rule 3(2)(b) IT Rules',
+      noticeBody: 'Dear X Grievance Officer,\n\nI request immediate removal of the offending post located at: [Insert Tweet URL]\nHandle: @[Insert Handle]\n\nThis contains non-consensual explicit material subject to mandatory 24-hour takedown under Indian IT Rules.\n\nThank you.',
+    },
+    cybercrime: {
+      name: isHindi ? 'राष्ट्रीय साइबर अपराध पोर्टल (1930)' : 'National Cyber Crime Portal (1930)',
+      badge: isHindi ? 'आधिकारिक पुलिस ई-एफआईआर' : 'Official Police E-FIR & Investigation',
+      icon: <FileText className="w-5 h-5 text-indigo-700" />,
+      turnaround: isHindi ? 'तत्काल एफआईआर दर्ज' : 'Instant E-Complaint Registered',
+      directUrl: 'https://cybercrime.gov.in',
+      statutoryRule: 'BNS Section 73 (Confidential Identity) & IT Act Sec 67A',
+      steps: {
+        en: [
+          'Visit cybercrime.gov.in and select "Report Crime Against Women/Children".',
+          'Choose "Report Anonymously" if you want rapid action against URLs without giving your personal identity, or "Report & Track" for full police prosecution.',
+          'Provide suspect handles, phone numbers, and URLs to initiate court takedown directives.',
+        ],
+        hi: [
+          'cybercrime.gov.in पर जाएं और "Report Crime Against Women/Children" चुनें।',
+          'यदि आप अपनी पहचान बताए बिना लिंक हटवाना चाहती हैं तो "Report Anonymously" चुनें, या एफआईआर के लिए "Report & Track" चुनें।',
+          'स्क्रीनशॉट व ब्लैकमेलर का नंबर दर्ज करें। पुलिस अदालत के जरिए लिंक ब्लॉक करवाती है।',
+        ],
+      },
+      noticeSubject: 'National Cyber Crime Reporting Portal Grievance',
+      noticeBody: 'File officially through cybercrime.gov.in or dial 1930 for financial freeze within the golden hour.',
+    },
+  };
+
+  const selectedPlatform = platformsConfig[activePlatform];
+
+  const platformTabs: { id: PlatformTabKey; label: string; icon: React.ReactNode }[] = [
+    { id: 'whatsapp', label: 'WhatsApp', icon: <MessageCircle className="w-4 h-4 text-emerald-600" /> },
+    { id: 'instagram', label: 'Instagram / FB', icon: <Instagram className="w-4 h-4 text-rose-600" /> },
+    { id: 'telegram', label: 'Telegram', icon: <Send className="w-4 h-4 text-sky-600" /> },
+    { id: 'google', label: 'Google Search', icon: <Search className="w-4 h-4 text-amber-600" /> },
+    { id: 'adult', label: 'Adult Sites', icon: <Film className="w-4 h-4 text-rose-700" /> },
+    { id: 'twitter', label: 'X (Twitter)', icon: <Twitter className="w-4 h-4 text-neutral-800" /> },
+    { id: 'cybercrime', label: 'Police 1930', icon: <FileText className="w-4 h-4 text-indigo-700" /> },
+  ];
+
+  return (
+    <div className="space-y-6 scroll-mt-48" id="platform-takedown-portal">
+      {/* 1. SINGLE, CLEAR HERO BAR */}
+      <div className="p-6 sm:p-7 rounded-3xl bg-white border border-[#E8E2DC] shadow-xs space-y-3">
+        <div className="flex items-center gap-2">
+          <span className="px-3 py-1 rounded-full bg-[#26215C]/10 text-[#26215C] text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#26215C]" />
+            <span>{isHindi ? '24 घंटे में अनिवार्य कानूनी रिमूवल' : 'Mandatory 24-Hour Legal Takedowns'}</span>
+          </span>
+          <span className="text-xs text-[#777] hidden sm:inline-block">
+            {isHindi ? 'IT Rules 2021 नियम 3(2)(b)' : 'Rule 3(2)(b) IT Rules, 2021'}
+          </span>
+        </div>
+        <h2 className="text-xl sm:text-2xl font-bold text-[#1A1A1A] tracking-tight">
+          {isHindi ? 'तस्वीरें व वीडियो सोशल मीडिया से हटाएं — बिना किसी को पैसे दिए' : 'Remove Intimate Photos & Stop Leaks — Without Paying Anyone'}
+        </h2>
+        <p className="text-xs sm:text-sm text-[#666] max-w-3xl leading-relaxed">
+          {isHindi
+            ? 'भारतीय कानून के तहत सोशल मीडिया प्लेटफॉर्म 24 घंटे के भीतर गैर-सहमति वाली निजी तस्वीरें हटाने के लिए बाध्य हैं। नीचे दिए गए आधिकारिक रिमूवल लिंक्स और स्टॉपएनसीआईआई (StopNCII) का उपयोग करें।'
+            : 'Under Indian IT Rules 2021, tech intermediaries must remove non-consensual intimate media within 24 hours of receiving notice. Use the verified portals below to force immediate deletion.'}
+        </p>
+      </div>
+
+      {/* 2. THE STOPNCII GLOBAL HASH SHIELD (FIRST DEFENSE) */}
+      <div className="p-5 sm:p-7 rounded-3xl bg-gradient-to-br from-[#26215C] to-[#18143F] text-white shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-300 text-xs font-bold uppercase tracking-wider border border-emerald-400/30">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{isHindi ? 'अपलोड होने से पहले ही ताला लगाएं' : 'Pre-Emptive Global Hash Shield'}</span>
+            </div>
+            <h3 className="text-lg sm:text-xl font-bold text-white">
+              {isHindi ? 'तस्वीरों को सोशल मीडिया पर पोस्ट होने से रोकें (StopNCII)' : 'Block Photos From Being Shared Across Social Networks'}
+            </h3>
+            <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
+              {isHindi
+                ? 'यह तकनीक आपके फोन पर ही एक निजी डिजिटल कोड (हैश) बनाती है। आपकी असली फोटो कभी किसी सर्वर पर अपलोड नहीं होती। इंस्टाग्राम, फेसबुक, टिकटॉक, थ्रेड्स और ओनलीफैंस पर कोई भी इसे कभी पोस्ट नहीं कर सकेगा।'
+                : 'Generates an irreversible mathematical fingerprint directly on your device — your raw photo NEVER leaves your phone. Participating networks (Meta, Instagram, Facebook, Threads, TikTok, Reddit, OnlyFans) automatically block matching files permanently.'}
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-2.5 shrink-0 self-start sm:self-center w-full sm:w-auto">
+            <a
+              href="https://stopncii.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-[#111] font-bold text-xs sm:text-sm transition-all shadow-sm active:scale-97"
+            >
+              <span>👩 {isHindi ? '18+: StopNCII.org खोलें' : '18+: Open StopNCII.org'}</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+            <a
+              href="https://takeitdown.ncmec.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white/15 hover:bg-white/25 text-white border border-white/20 font-bold text-xs sm:text-sm transition-all active:scale-97"
+            >
+              <span>👧 {isHindi ? '18 से कम: Take It Down' : 'Under 18: Take It Down'}</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-white/10 text-xs text-white/70">
+          <div className="flex items-center gap-2">
+            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>{isHindi ? 'फोटो डिवाइस से बाहर नहीं जाती' : 'Zero photo upload to servers'}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>{isHindi ? 'मेटा, टिकटॉक, रेडिट पर री-अपलोड ब्लॉक' : 'Blocks re-uploads across partner apps'}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>{isHindi ? '100% मुफ्त व गोपनीय' : '100% Free, Anonymous & Legal'}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. PLATFORM-BY-PLATFORM TAKEDOWN (FOCUSED 1-CARD SELECTOR) */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-base sm:text-lg font-bold text-[#1A1A1A]">
+            {isHindi ? 'प्लेटफॉर्म चुनें और 24 घंटे में हटाएं:' : 'Select Platform for 24-Hour Removal:'}
+          </h3>
+          <span className="text-xs text-[#777] hidden sm:inline-block">
+            {isHindi ? 'आधिकारिक फॉर्म व नोडल ईमेल' : 'Official Portal & Nodal Email'}
+          </span>
+        </div>
+
+        {/* Clean Platform Selector Pills */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {platformTabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => {
+                hapticAction();
+                setActivePlatform(tab.id);
+              }}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
+                activePlatform === tab.id
+                  ? 'bg-[#1A1A1A] text-white shadow-xs scale-102'
+                  : 'bg-white text-[#555] hover:text-[#111] border border-[#E8E2DC] hover:bg-[#FAF8F3]'
+              }`}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Selected Platform Action Card */}
+        <div className="bg-white border border-[#E8E2DC] rounded-3xl p-5 sm:p-7 shadow-xs space-y-5">
+          {/* Header & Badges */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#F0EBE6]">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] flex items-center justify-center shrink-0">
+                {selectedPlatform.icon}
+              </div>
+              <div>
+                <h4 className="text-base sm:text-lg font-bold text-[#1A1A1A]">
+                  {selectedPlatform.name}
+                </h4>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="inline-flex items-center gap-1.5 text-xs text-[#8B6D5C] bg-[#F3EFEC] px-2.5 py-0.5 rounded-full font-bold">
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>{selectedPlatform.turnaround}</span>
+                  </span>
+                  <span className="text-xs text-[#777] hidden md:inline">
+                    {selectedPlatform.statutoryRule}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Primary Action Button */}
+            <a
+              href={selectedPlatform.directUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#1A1A1A] hover:bg-black text-white font-bold text-xs sm:text-sm transition-all shadow-xs shrink-0 active:scale-97"
+            >
+              <span>{isHindi ? 'आधिकारिक रिमूवल फॉर्म खोलें' : 'Open Official Takedown Portal'}</span>
+              <ExternalLink className="w-4 h-4 text-amber-300" />
+            </a>
+          </div>
+
+          {/* Grievance Email Bar with 1-Click Copy */}
+          {selectedPlatform.grievanceEmail && (
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center shrink-0">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#777]">
+                    {isHindi ? 'भारत सरकार मान्यता प्राप्त नोडल ईमेल' : 'Official Grievance Officer Email'}
+                  </div>
+                  <div className="font-mono text-xs sm:text-sm font-bold text-[#1A1A1A] truncate">
+                    {selectedPlatform.grievanceEmail}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => handleCopy(selectedPlatform.grievanceEmail!, 'email')}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#F3EFEC] text-[#2D2D2D] border border-[#DED9D4] text-xs font-bold transition-colors cursor-pointer active:scale-95"
+                >
+                  {copiedEmail === selectedPlatform.grievanceEmail ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="text-emerald-700">{isHindi ? 'ईमेल कॉपी हो गया!' : 'Email Copied!'}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>{isHindi ? 'ईमेल कॉपी करें' : 'Copy Email'}</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Action Steps */}
+          <div className="space-y-3">
+            <h5 className="text-xs font-bold uppercase tracking-wider text-[#8B6D5C]">
+              {isHindi ? 'कार्रवाई के 3 त्वरित कदम:' : '3 Quick Steps to Complete Takedown:'}
+            </h5>
+            <ol className="space-y-2 pl-4 list-decimal text-xs sm:text-sm text-[#333]">
+              {selectedPlatform.steps[language].map((step, idx) => (
+                <li key={idx} className="leading-relaxed pl-1 font-medium">
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          {/* Statutory Notice Quick Copy */}
+          {selectedPlatform.noticeBody && (
+            <div className="pt-2 border-t border-[#F0EBE6] space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[#555]">
+                  {isHindi ? 'ईमेल में भेजने के लिए 24-घंटे कानूनी नोटिस टेम्पलेट:' : 'Pre-Drafted 24-Hour Statutory Notice for Email:'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleCopy(`${selectedPlatform.noticeSubject}\n\n${selectedPlatform.noticeBody}`, 'notice')}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#26215C] hover:underline cursor-pointer"
+                >
+                  {copiedNotice ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="text-emerald-600">{isHindi ? 'नोटिस कॉपी हुआ!' : 'Notice Copied!'}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>{isHindi ? 'पूरा नोटिस कॉपी करें' : 'Copy Legal Notice'}</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <pre className="p-3.5 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] text-[11px] sm:text-xs text-[#444] font-mono whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto">
+                {selectedPlatform.noticeBody}
+              </pre>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 4. COMPACT UMBRELLA FIX FOR CLONE & MIRROR WEBSITES */}
+      <div className="rounded-3xl bg-white border border-[#E8E2DC] shadow-xs overflow-hidden">
+        <button
+          type="button"
+          onClick={() => {
+            hapticAction();
+            setShowMirrorSolutions((prev) => !prev);
+          }}
+          className="w-full p-5 sm:p-6 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF8F3]/60 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+              <Globe className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="text-sm sm:text-base font-bold text-[#1A1A1A]">
+                  {isHindi ? 'क्या वीडियो कई अनजान मिरर या पायरेट साइट्स पर फैल गया है?' : 'What if Media Has Spread to Multiple Clone or Pirate Mirror Sites?'}
+                </h4>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 hidden sm:inline-block">
+                  {isHindi ? 'मास्टर समाधान' : 'Master Solution'}
+                </span>
+              </div>
+              <p className="text-xs text-[#666]">
+                {isHindi
+                  ? 'आपको 100 अलग-अलग वेबसाइटों को खोजने की आवश्यकता नहीं है। 2 मास्टर टूल्स जो सभी क्लोन्स को एक साथ बंद करते हैं।'
+                  : 'You do not need to contact 100 pirate websites individually. Use these 2 umbrella tools to shut down copies worldwide.'}
+              </p>
+            </div>
+          </div>
+          <div className="shrink-0 p-1.5 rounded-full bg-black/5 text-[#555]">
+            {showMirrorSolutions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </div>
+        </button>
+
+        {showMirrorSolutions && (
+          <div className="p-5 sm:p-6 pt-0 grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-[#F0EBE6]">
+            {/* Tool 1: Google De-Index */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] space-y-3 flex flex-col justify-between">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-sky-700 uppercase tracking-wide">
+                    {isHindi ? '1. गूगल ऑटोमैटिक मिरर पर्ज' : '1. Google Search De-Index'}
+                  </span>
+                  <Globe className="w-4 h-4 text-sky-600" />
+                </div>
+                <h5 className="text-sm font-bold text-[#1A1A1A]">
+                  {isHindi ? 'सभी डुप्लीकेट साइट्स से 1 बार में खात्मा' : 'Purges All Mirror Copies from Search Worldwide'}
+                </h5>
+                <p className="text-xs text-[#666] leading-relaxed">
+                  {isHindi
+                    ? 'गूगल के एआई एल्गोरिदम के तहत, 1 बार रिपोर्ट करने पर गूगल सभी क्लोन व डुप्लीकेट साइटों से उस वीडियो/फोटो को सर्च और इमेज रिजल्ट्स से खुद मिटा देता है।'
+                    : 'Once Google approves removal for one URL, its duplicate matching algorithm automatically de-lists matching copies across all other mirror websites globally.'}
+                </p>
+              </div>
+              <a
+                href="https://support.google.com/websearch/troubleshooter/3111061"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-colors w-full"
+              >
+                <span>{isHindi ? 'गूगल रिमूवल फॉर्म खोलें' : 'Open Google De-Indexer'}</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            {/* Tool 2: Cloudflare Host Strike */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] space-y-3 flex flex-col justify-between">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-amber-700 uppercase tracking-wide">
+                    {isHindi ? '2. क्लाउडफ्लेयर होस्ट स्ट्राइक' : '2. Cloudflare Origin Host Kill-Switch'}
+                  </span>
+                  <ShieldAlert className="w-4 h-4 text-amber-600" />
+                </div>
+                <h5 className="text-sm font-bold text-[#1A1A1A]">
+                  {isHindi ? '80% एडल्ट साइट्स का असली सर्वर बंद' : 'Direct Hosting Server File Deletion'}
+                </h5>
+                <p className="text-xs text-[#666] leading-relaxed">
+                  {isHindi
+                    ? '80% से ज्यादा क्लोन एडल्ट साइट्स क्लाउडफ्लेयर पर निर्भर हैं। abuse.cloudflare.com पर रिपोर्ट करने से उनके मुख्य सर्वर से फाइलें तुरंत डिलीट करवा दी जाती हैं।'
+                    : 'Over 80% of fringe clone adult sites use Cloudflare to hide their hosting. Submitting an abuse report compels the actual hosting provider to delete root files.'}
+                </p>
+              </div>
+              <a
+                href="https://abuse.cloudflare.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition-colors w-full"
+              >
+                <span>{isHindi ? 'क्लाउडफ्लेयर एब्यूज फॉर्म खोलें' : 'Open Cloudflare Abuse'}</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 5. COLLAPSIBLE ACCOUNT PRIVACY LOCKDOWN DRAWER */}
+      <div className="rounded-3xl bg-white border border-[#E8E2DC] shadow-xs overflow-hidden">
+        <button
+          type="button"
+          onClick={() => {
+            hapticAction();
+            setShowLockdownDrawer((prev) => !prev);
+          }}
+          className="w-full p-5 sm:p-6 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF8F3]/60 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
+              <Lock className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="text-sm sm:text-base font-bold text-[#1A1A1A]">
+                  {isHindi ? 'सोशल मीडिया अकाउंट प्राइवेसी लॉकडाउन' : 'Account Privacy & Harassment Lockdown'}
+                </h4>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 hidden sm:inline-block">
+                  {isHindi ? 'सेटिंग्स चेकलिस्ट' : 'Settings Checklist'}
+                </span>
+              </div>
+              <p className="text-xs text-[#666]">
+                {isHindi
+                  ? 'इंस्टाग्राम, व्हाट्सएप व टेलीग्राम की सेटिंग्स लॉक करें ताकि अनजान लोग आपको मैसेज या टैग न कर सकें।'
+                  : 'Lock down Instagram, WhatsApp, and Telegram settings to prevent unwanted contact, tagging, or friendlist scraping.'}
+              </p>
+            </div>
+          </div>
+          <div className="shrink-0 p-1.5 rounded-full bg-black/5 text-[#555]">
+            {showLockdownDrawer ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </div>
+        </button>
+
+        {showLockdownDrawer && (
+          <div className="p-5 sm:p-6 pt-2 border-t border-[#F0EBE6]">
+            <PrivacyLockdownGuide language={language} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

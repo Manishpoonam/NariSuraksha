@@ -1,0 +1,6 @@
+{
+  "name": "NariSuraksha - NCII & Cyber Extortion Emergency Response Portal",
+  "description": "Emergency, India-specific, victim-friendly crisis response guide, direct takedown portals (StopNCII, Meta, Telegram, WhatsApp), cyber police complaint draft generator, legal rights (IT Act & BNS), and 24/7 helplines for women facing intimate photo leaks, AI deepfakes, and blackmail.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

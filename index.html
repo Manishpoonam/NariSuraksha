@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>NariSuraksha - NCII & Cyber Extortion Emergency Response Portal</title>
+    <meta name="description" content="Emergency, India-specific, victim-friendly crisis response guide, direct takedown portals (StopNCII, Meta, Telegram, WhatsApp), cyber police complaint draft generator, legal rights (IT Act & BNS), and 24/7 helplines for women facing intimate photo leaks, AI deepfakes, and blackmail." />
+    <meta property="og:title" content="NariSuraksha - NCII & Cyber Extortion Emergency Response Portal" />
+    <meta property="og:description" content="Emergency, India-specific, victim-friendly crisis response guide, direct takedown portals (StopNCII, Meta, Telegram, WhatsApp), cyber police complaint draft generator, legal rights (IT Act & BNS), and 24/7 helplines for women facing intimate photo leaks, AI deepfakes, and blackmail." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#26215C" />
+  </head>
+  <body class="bg-[#FAF8F3] text-[#26215C] antialiased selection:bg-[#993556] selection:text-white font-sans">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>
+
