@@ -106,7 +106,8 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="sticky top-0 z-40 bg-[#FAF8F3]/95 backdrop-blur-md border-b border-[#26215C]/10 shadow-soft">
       {/* 1. TOP UTILITY STRIP: QUIET REASSURANCE & ESSENTIAL CONTROLS */}
       <div className="bg-[#26215C] text-[#FAF8F3] px-3 sm:px-6 py-1.5 sm:py-2">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 text-xs">
+        {/* DESKTOP / TABLET VIEW (sm: and up) - Identical original layout */}
+        <div className="hidden sm:flex max-w-7xl mx-auto items-center justify-between gap-2 text-xs">
           {/* Left: Quick Access Helplines */}
           <div className="flex items-center gap-1.5 sm:gap-2">
             <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 text-[#FAF8F3] text-[11px] font-medium">
@@ -118,7 +119,7 @@ export const Header: React.FC<HeaderProps> = ({
             <a
               href="tel:1930"
               onClick={() => hapticAction()}
-              className="inline-flex items-center gap-1 font-semibold text-white bg-[#0F6E56] hover:bg-[#0A4E3D] px-2.5 py-1 rounded-full text-[11px] sm:text-xs transition-all active:scale-97 shadow-xs min-h-[34px] sm:min-h-0"
+              className="inline-flex items-center gap-1 font-semibold text-white bg-[#0F6E56] hover:bg-[#0A4E3D] px-2.5 py-1 rounded-full text-xs transition-all active:scale-97 shadow-xs"
               title="National Cyber Crime Helpline 1930"
             >
               <PhoneCall className="w-3 h-3 shrink-0" />
@@ -129,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({
             <a
               href="tel:112"
               onClick={() => hapticPanic()}
-              className="inline-flex items-center gap-1 font-semibold text-white bg-[#DC2626] hover:bg-[#B91C1C] px-2 sm:px-2.5 py-1 rounded-full text-[11px] sm:text-xs transition-all active:scale-97 shadow-xs min-h-[34px] sm:min-h-0"
+              className="inline-flex items-center gap-1 font-semibold text-white bg-[#DC2626] hover:bg-[#B91C1C] px-2.5 py-1 rounded-full text-xs transition-all active:scale-97 shadow-xs"
               title="Police Emergency 112"
             >
               <PhoneCall className="w-3 h-3 shrink-0" />
@@ -150,7 +151,7 @@ export const Header: React.FC<HeaderProps> = ({
                   hapticAction();
                   onToggleStealthTitle();
                 }}
-                className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full transition-colors cursor-pointer min-h-[34px] sm:min-h-0 ${
+                className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full transition-colors cursor-pointer ${
                   isStealthTitle 
                     ? 'bg-[#E1F5EE] text-[#0F6E56] border border-[#B7E4D7]' 
                     : 'bg-white/10 hover:bg-white/20 text-[#FAF8F3]'
@@ -176,7 +177,7 @@ export const Header: React.FC<HeaderProps> = ({
                   hapticAction();
                   onToggleNightDimmer();
                 }}
-                className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full transition-colors cursor-pointer min-h-[34px] sm:min-h-0 ${
+                className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full transition-colors cursor-pointer ${
                   isNightDimmer 
                     ? 'bg-amber-500/30 text-amber-200 border border-amber-400' 
                     : 'bg-white/10 hover:bg-white/20 text-[#FAF8F3]'
@@ -211,7 +212,7 @@ export const Header: React.FC<HeaderProps> = ({
                 hapticCamouflage(true);
                 onTriggerCamouflage();
               }}
-              className="inline-flex items-center gap-1 px-3 py-1 bg-[#993556] hover:bg-[#7A2843] text-white rounded-full text-xs font-semibold transition-all active:scale-97 cursor-pointer shadow-xs min-h-[34px] sm:min-h-0"
+              className="inline-flex items-center gap-1 px-3 py-1 bg-[#993556] hover:bg-[#7A2843] text-white rounded-full text-xs font-semibold transition-all active:scale-97 cursor-pointer shadow-xs"
               title={isHindi ? 'तुरंत स्क्रीन छिपाएं (ESC)' : 'Leave this page instantly (ESC)'}
             >
               <EyeOff className="w-3.5 h-3.5 text-[#F3C5D6] shrink-0" />
@@ -222,12 +223,116 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Language Switch */}
             <button
               onClick={onToggleLanguage}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-[#FAF8F3] text-xs font-medium transition-colors cursor-pointer min-h-[34px] sm:min-h-0"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-[#FAF8F3] text-xs font-medium transition-colors cursor-pointer"
               title="Switch Language"
             >
               <Globe className="w-3 h-3 shrink-0 text-[#F3C5D6]" />
               <span>{isHindi ? 'EN' : 'हिन्दी'}</span>
             </button>
+          </div>
+        </div>
+
+        {/* MOBILE VIEW (< sm): Smooth Native App Dual-Strip with Zero Overflow */}
+        <div className="sm:hidden flex flex-col gap-1.5 text-xs">
+          {/* Row 1: Primary Action & Emergency Bar (Helplines Left, Quick Exit + Language Right) */}
+          <div className="flex items-center justify-between gap-1">
+            {/* Quick Access Helplines */}
+            <div className="flex items-center gap-1 shrink-0">
+              {/* National Cyber Crime 1930 */}
+              <a
+                href="tel:1930"
+                onClick={() => hapticAction()}
+                className="inline-flex items-center gap-1 font-semibold text-white bg-[#0F6E56] active:bg-[#0A4E3D] px-2.5 py-1 rounded-full text-[11px] shadow-xs active:scale-95 transition-transform"
+                title="1930 National Cyber Crime Helpline"
+              >
+                <PhoneCall className="w-3 h-3 shrink-0" />
+                <span>1930</span>
+              </a>
+
+              {/* Police 112 */}
+              <a
+                href="tel:112"
+                onClick={() => hapticPanic()}
+                className="inline-flex items-center gap-1 font-semibold text-white bg-[#DC2626] active:bg-[#B91C1C] px-2.5 py-1 rounded-full text-[11px] shadow-xs active:scale-95 transition-transform"
+                title="112 Police Emergency"
+              >
+                <PhoneCall className="w-3 h-3 shrink-0" />
+                <span>112</span>
+              </a>
+            </div>
+
+            {/* Quick Exit & Language Switch - Always 100% visible and unclipped */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                onClick={() => {
+                  hapticCamouflage(true);
+                  onTriggerCamouflage();
+                }}
+                className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#993556] active:bg-[#7A2843] text-white rounded-full text-[11px] font-semibold shadow-xs active:scale-95 transition-transform"
+                title={isHindi ? 'तुरंत स्क्रीन छिपाएं (ESC)' : 'Leave this page instantly (ESC)'}
+              >
+                <EyeOff className="w-3 h-3 text-[#F3C5D6] shrink-0" />
+                <span>{isHindi ? 'स्क्रीन छिपाएं' : 'Quick Exit'}</span>
+              </button>
+
+              <button
+                onClick={onToggleLanguage}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/15 active:bg-white/25 text-[#FAF8F3] text-[11px] font-semibold transition-colors active:scale-95"
+                title="Switch Language / भाषा बदलें"
+              >
+                <Globe className="w-3 h-3 shrink-0 text-[#F3C5D6]" />
+                <span>{isHindi ? 'EN' : 'हिन्दी'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Row 2: Secondary Utilities (Cloud Status Left, Stealth & Dimmer Right) */}
+          <div className="flex items-center justify-between gap-1 pt-1 border-t border-white/10 text-[11px]">
+            {/* Cloud-Sync Backup Indicator */}
+            <div className="flex items-center min-w-0">
+              <CloudSyncIndicator language={language} />
+            </div>
+
+            {/* Stealth & Dimmer Toggles */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              {onToggleStealthTitle && (
+                <button
+                  id="mobile-header-toggle-stealth-tab"
+                  onClick={() => {
+                    hapticAction();
+                    onToggleStealthTitle();
+                  }}
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full transition-colors cursor-pointer text-[10.5px] ${
+                    isStealthTitle 
+                      ? 'bg-[#E1F5EE] text-[#0F6E56] border border-[#B7E4D7] font-medium' 
+                      : 'bg-white/10 text-[#FAF8F3]'
+                  }`}
+                  title={isHindi ? 'ब्राउज़र टैब को UPSC/NCERT नोट्स के रूप में छिपाएं' : 'Disguise Tab'}
+                >
+                  <BookOpen className="w-3 h-3 text-[#F3C5D6] shrink-0" />
+                  <span>{isStealthTitle ? (isHindi ? 'टैब गुप्त' : 'Tab: Stealth') : (isHindi ? 'टैब' : 'Tab')}</span>
+                </button>
+              )}
+
+              {onToggleNightDimmer && (
+                <button
+                  id="mobile-header-toggle-night-dimmer"
+                  onClick={() => {
+                    hapticAction();
+                    onToggleNightDimmer();
+                  }}
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full transition-colors cursor-pointer text-[10.5px] ${
+                    isNightDimmer 
+                      ? 'bg-amber-500/30 text-amber-200 border border-amber-400 font-medium' 
+                      : 'bg-white/10 text-[#FAF8F3]'
+                  }`}
+                  title={isHindi ? 'कम रोशनी मोड' : 'Night Dimmer'}
+                >
+                  <Moon className="w-3 h-3 text-amber-200 shrink-0" />
+                  <span>{isNightDimmer ? (isHindi ? 'डिम' : 'Dim: ON') : (isHindi ? 'डिम' : 'Dim')}</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
