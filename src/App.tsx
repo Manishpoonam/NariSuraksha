@@ -40,7 +40,8 @@ import {
   Sparkles,
   AlertTriangle,
   ArrowLeft,
-  CheckCircle2
+  CheckCircle2,
+  Info
 } from 'lucide-react';
 
 const ACTIVE_TAB_STORAGE_KEY = 'suraksha_active_tab_v1';
@@ -375,14 +376,8 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Browser back & hardware gesture interception (popstate)
+  // Browser back & hardware gesture interception (popstate) - safe & standard
   useEffect(() => {
-    // Arm history state on mount so back action never closes or leaves the application
-    if (!window.history.state || typeof window.history.state.tab !== 'string') {
-      window.history.replaceState({ tab: 'rescue', depth: 0 }, '');
-      window.history.pushState({ tab: activeTab, depth: 1 }, '');
-    }
-
     const handlePopState = (event: PopStateEvent) => {
       // Priority 1: Close active modals without leaving view
       if (isSOSOpen) {
@@ -407,16 +402,12 @@ export default function App() {
           if (state.tab === 'report') setReportSubTab(state.subTab as any);
           if (state.tab === 'support') setSupportSubTab(state.subTab as any);
         }
-      } else {
-        // Popstate reached the root of history: KEEP USER SAFELY IN THE APP AT RESCUE
-        setActiveTab('rescue');
-        window.history.pushState({ tab: 'rescue', depth: 1 }, '');
       }
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [isSOSOpen, isCamouflage, showDeepScenarios, activeTab]);
+  }, [isSOSOpen, isCamouflage, showDeepScenarios]);
 
   // Global ESC shortcut for instant panic camouflage with physical haptic confirmation
   useEffect(() => {
@@ -509,6 +500,19 @@ export default function App() {
               : 'bg-[#FAF8F3] text-[#26215C]'
           }`}
         >
+      {/* Educational & Independent Portal Disclaimer */}
+      <aside aria-label="Disclaimer" className="bg-[#1E1A48] text-amber-200 text-xs px-4 py-2 border-b border-amber-300/20 text-center flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2.5 z-30">
+        <span className="font-semibold flex items-center gap-1.5 text-amber-300 text-[11px] sm:text-xs">
+          <Info className="w-3.5 h-3.5 shrink-0" />
+          {isHindi ? 'नागरिक सहायता व जागरूकता संसाधन' : 'Citizen Safety Awareness & Legal Aid Guide'}
+        </span>
+        <span className="text-amber-100/80 text-[11px]">
+          {isHindi 
+            ? 'यह स्वतंत्र ओपन-सोर्स सहायता मार्गदर्शिका है, सरकारी पोर्टल नहीं। कोई डेटा इंटरनेट पर नहीं भेजा जाता।'
+            : 'Independent crisis guide by Manish Poonam Kashyap. Not an official gov portal. 100% private & client-side.'}
+        </span>
+      </aside>
+
       {/* 1. Top Header & Emergency Bar */}
       <Header
         language={language}

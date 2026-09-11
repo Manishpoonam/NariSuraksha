@@ -52,6 +52,15 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
 
   return (
     <div className="min-h-screen bg-[#FAF8F3] text-[#1A1829] flex flex-col justify-between selection:bg-[#993556] selection:text-white relative overflow-hidden">
+      {/* Educational & Independent Resource Banner */}
+      <aside aria-label="Disclaimer" className="w-full bg-[#1E1A48] text-amber-200 text-xs px-4 py-1.5 border-b border-amber-300/20 text-center flex items-center justify-center gap-2 z-20">
+        <span className="text-amber-100/80 text-[11px]">
+          {isHindi 
+            ? 'नागरिक सुरक्षा जागरूकता व संकट सहायता गाइड • स्वतंत्र ओपन-सोर्स पोर्टल • 100% ऑफलाइन गोपनीयता'
+            : 'Independent Crisis Awareness Guide • Open-Source Citizen Resource by Manish Poonam Kashyap • 100% In-Browser Privacy'}
+        </span>
+      </aside>
+
       {/* 1. DISCREET TOP UTILITY STRIP */}
       <header className="w-full px-4 sm:px-8 py-3.5 sm:py-5 flex items-center justify-between z-20 border-b border-[#26215C]/5">
         {/* Brand identity: Quiet, dignified, non-institutional */}
