@@ -1,7 +1,14 @@
 {
-  "name": "react-example",
-  "private": true,
-  "version": "0.0.0",
+  "name": "narisuraksha",
+  "version": "1.0.0",
+  "description": "NCII & Cyber Extortion Emergency Response Portal for India",
+  "author": "Manish Poonam Kashyap <manishkumarkashyap14@gmail.com> (https://github.com/Manishpoonam)",
+  "license": "MIT",
+  "homepage": "https://manishpoonam.github.io/narisuraksha",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Manishpoonam/narisuraksha.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",

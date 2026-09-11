@@ -1,3 +1,9 @@
+/**
+ * @license MIT
+ * Copyright (c) 2026 Manish Poonam Kashyap <manishkumarkashyap14@gmail.com>
+ * NariSuraksha Emergency Response Portal
+ */
+
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";

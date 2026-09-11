@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you reference, replicate, or utilize this software, please cite it as below."
+authors:
+  - family-names: "Kashyap"
+    given-names: "Manish Poonam"
+    email: "manishkumarkashyap14@gmail.com"
+title: "NariSuraksha - NCII & Cyber Extortion Emergency Response Portal"
+version: 1.0.0
+date-released: 2026-09-11
+url: "https://github.com/Manishpoonam/narisuraksha"
+repository-code: "https://github.com/Manishpoonam/narisuraksha"
+keywords:
+  - cyber-safety
+  - emergency-response
+  - women-safety
+  - privacy
+  - react
+  - typescript
+license: MIT

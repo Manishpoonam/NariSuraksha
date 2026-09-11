@@ -1,6 +1,7 @@
 /**
- * @license
- * SPDX-License-Identifier: Apache-2.0
+ * @license MIT
+ * Copyright (c) 2026 Manish Poonam Kashyap <manishkumarkashyap14@gmail.com>
+ * NariSuraksha - NCII & Cyber Extortion Emergency Response Portal
  */
 
 import React, { useState, useEffect } from 'react';
@@ -692,6 +693,9 @@ export default function App() {
             </div>
             <p className="text-[11px] text-[#777]">
               Designed for women's digital safety under the Information Technology Act, 2000 & Bharatiya Nyaya Sanhita, 2023.
+            </p>
+            <p className="text-[11px] text-[#555]">
+              Architected & Maintained by <a href="https://github.com/Manishpoonam" target="_blank" rel="noopener noreferrer" className="font-semibold text-[#993556] hover:underline">Manish Poonam Kashyap</a>
             </p>
           </div>
 
