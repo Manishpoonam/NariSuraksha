@@ -388,16 +388,6 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="hidden sm:inline">{isHindi ? 'होम / सांस लें' : 'Sanctuary'}</span>
             </button>
           )}
-
-          {onTriggerSOS && (
-            <button
-              onClick={onTriggerSOS}
-              className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 bg-[#DC2626] hover:bg-[#B91C1C] text-white rounded-full text-xs sm:text-sm font-semibold shadow-soft border border-[#DC2626] transition-transform active:scale-97 cursor-pointer min-h-[40px]"
-            >
-              <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0 animate-pulse" />
-              <span>{isHindi ? 'SOS आपातकाल' : 'SOS Emergency'}</span>
-            </button>
-          )}
         </div>
       </div>
 

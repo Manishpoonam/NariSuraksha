@@ -32,7 +32,6 @@ import { Language, IncidentCategory } from './types';
 import { 
   ShieldCheck, 
   PhoneCall, 
-  Share2, 
   Lock, 
   Scale, 
   HeartHandshake, 
@@ -100,7 +99,6 @@ export default function App() {
   const [isSOSOpen, setIsSOSOpen] = useState<boolean>(false);
   const [draftCategory, setDraftCategory] = useState<IncidentCategory>('extortion_blackmail');
   const [rescueSituation, setRescueSituation] = useState<CrisisScenarioKey | string>('countdown');
-  const [shareCopied, setShareCopied] = useState<boolean>(false);
   const [isPrintCardOpen, setIsPrintCardOpen] = useState<boolean>(false);
   const [isPurgeModalOpen, setIsPurgeModalOpen] = useState<boolean>(false);
 
@@ -444,20 +442,6 @@ export default function App() {
     setLanguage((prev) => (prev === 'en' ? 'hi' : 'en'));
   };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'NariSuraksha - NCII & Cyber Extortion Emergency Response Portal',
-        text: 'Emergency crisis guide, StopNCII links, cyber police drafts & 24/7 helplines for women facing intimate leaks or blackmail.',
-        url: window.location.href,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      setShareCopied(true);
-      setTimeout(() => setShareCopied(false), 2500);
-    }
-  };
-
   return (
     <AnimatePresence mode="wait">
       {isCamouflage ? (
@@ -539,8 +523,8 @@ export default function App() {
               <ArrowLeft className="w-4 h-4 text-amber-300" />
               <span>
                 {showDeepScenarios
-                  ? (isHindi ? '← विस्तृत परिदृश्य बंद करें' : '← Close Scenarios')
-                  : (isHindi ? '← पिछले पैनल पर वापस जाएं' : '← Back to Quick Rescue')}
+                  ? (isHindi ? 'विस्तृत परिदृश्य बंद करें' : 'Close Scenarios')
+                  : (isHindi ? 'पिछले पैनल पर वापस जाएं' : 'Back to Quick Rescue')}
               </span>
             </button>
 
@@ -649,36 +633,6 @@ export default function App() {
 
         {/* LEVEL 6: ABOUT THIS SERVICE & ZERO-DATA TRUST SECTION */}
         <AboutTrustSection language={language} />
-
-        {/* Quick Awareness & Safety Callout for Police / Advocates / Colleges */}
-        <section className="bg-[#2D2D2D] text-[#FAF9F6] rounded-3xl p-6 sm:p-8 shadow-sm border border-[#333] space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-2xl">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[#FAF9F6] text-xs font-semibold tracking-wider uppercase">
-                <HeartHandshake className="w-3.5 h-3.5 text-[#E25822]" />
-                <span>{isHindi ? 'सार्वजनिक सुरक्षा जागरूकता' : 'Digital Safety Awareness Mission'}</span>
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold tracking-tight">
-                {isHindi
-                  ? 'इस पोर्टल को सोशल मीडिया, दोस्तों व कॉलेज समूहों में साझा करें'
-                  : 'Empower Women: Share this Emergency Portal with Cyber Cells & Colleges'}
-              </h3>
-              <p className="text-xs sm:text-sm text-[#CCC] leading-relaxed">
-                {isHindi
-                  ? 'हजारों लड़कियां डर और सामाजिक शर्म के कारण आत्महत्या या चुपचाप ब्लैकमेलर को पैसे देने को मजबूर हो जाती हैं। उन्हें बताएं कि 24 घंटे में तकनीकी टूल्स (StopNCII) और कानून उनकी पूरी रक्षा करते हैं।'
-                  : 'Silence and fear fuel extortion. Sharing these verified 24-hr takedown links, StopNCII hashing guides, and legal complaint templates saves lives and prevents extortion.'}
-              </p>
-            </div>
-
-            <button
-              onClick={handleShare}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#8B6D5C] hover:bg-[#775c4c] text-white rounded-full text-xs sm:text-sm font-bold transition-all shadow-xs cursor-pointer shrink-0 self-start md:self-auto min-h-[44px]"
-            >
-              {shareCopied ? <Check className="w-4 h-4 text-emerald-300" /> : <Share2 className="w-4 h-4" />}
-              <span>{shareCopied ? (isHindi ? 'लिंक कॉपी हो गया!' : 'Link Copied!') : (isHindi ? 'सुरक्षा गाइड शेयर करें' : 'Share Emergency Portal')}</span>
-            </button>
-          </div>
-        </section>
       </main>
 
       {/* Footer */}
@@ -694,6 +648,11 @@ export default function App() {
             </p>
             <p className="text-[11px] text-[#555]">
               An independent, non-commercial safety resource.
+            </p>
+            <p className="text-[11px] text-[#777] leading-relaxed">
+              {isHindi
+                ? 'भारत सरकार, राष्ट्रीय महिला आयोग (NCW) या किसी पुलिस प्राधिकरण से संबद्ध नहीं। यह सामान्य कानूनी जानकारी है, कानूनी सलाह नहीं।'
+                : 'Not affiliated with the Government of India, NCW, or any police authority. This is general legal information, not legal advice.'}
             </p>
           </div>
 

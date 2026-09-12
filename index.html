@@ -36,9 +36,15 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
+          if ('caches' in window) {
+            caches.keys().then(keys => {
+              keys.forEach(k => {
+                if (k !== 'narisuraksha-v5') caches.delete(k);
+              });
+            });
+          }
           navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
             .then(reg => {
-              // Ensure immediate update check
               reg.update().catch(() => {});
             })
             .catch(() => {});

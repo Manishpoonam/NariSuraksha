@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { 
   ShieldCheck, 
   ArrowRight, 
@@ -67,6 +67,7 @@ interface EmergencyCockpitProps {
 
 const RESCUE_STEP_STORAGE_KEY = 'suraksha_rescue_step_v1';
 const RESCUE_SCENARIO_STORAGE_KEY = 'suraksha_rescue_scenario_v1';
+const RESCUE_COMPLETED_STEPS_KEY = 'suraksha_rescue_completed_steps_v1';
 
 /**
  * Unified Linear Rescue Path Stepper
@@ -87,6 +88,7 @@ export const EmergencyCockpit: React.FC<EmergencyCockpitProps> = ({
   initialScenario = 'countdown',
 }) => {
   const isHindi = language === 'hi';
+  const prefersReducedMotion = useReducedMotion();
 
   // Step state (1: Stabilize, 2: Assess & Contain, 3: Evidence, 4: Action)
   const [currentStep, setCurrentStep] = useState<RescueStep>(() => {
@@ -99,6 +101,21 @@ export const EmergencyCockpit: React.FC<EmergencyCockpitProps> = ({
       // ignore
     }
     return 1;
+  });
+
+  // Completed steps tracking: only marked upon explicit confirmation (e.g. clicking "Proceed")
+  // Never marked based on scroll position, time spent, or passive heuristics.
+  const [completedSteps, setCompletedSteps] = useState<number[]>(() => {
+    try {
+      const saved = sessionStorage.getItem(RESCUE_COMPLETED_STEPS_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {
+      // ignore
+    }
+    return [];
   });
 
   // Selected threat scenario
@@ -144,17 +161,33 @@ export const EmergencyCockpit: React.FC<EmergencyCockpitProps> = ({
 
   useEffect(() => {
     try {
+      sessionStorage.setItem(RESCUE_COMPLETED_STEPS_KEY, JSON.stringify(completedSteps));
+    } catch {
+      // ignore
+    }
+  }, [completedSteps]);
+
+  useEffect(() => {
+    try {
       sessionStorage.setItem(RESCUE_SCENARIO_STORAGE_KEY, selectedScenario);
     } catch {
       // ignore
     }
   }, [selectedScenario]);
 
-  // Handle step change
+  // Handle direct step change (Always allowed, never gated)
   const goToStep = (step: RescueStep) => {
     hapticAction();
     setCurrentStep(step);
     smoothScrollTo('emergency-cockpit', 40);
+  };
+
+  // Explicit confirmation advancement handler:
+  // Step completion is ONLY recorded when user explicitly confirms advancement via action buttons.
+  const markStepCompleteAndAdvance = (stepToComplete: number, nextStep: RescueStep) => {
+    hapticAction();
+    setCompletedSteps(prev => (prev.includes(stepToComplete) ? prev : [...prev, stepToComplete]));
+    goToStep(nextStep);
   };
 
   const handleSelectScenario = (key: CrisisScenarioKey) => {
@@ -218,29 +251,62 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
     setTimeout(() => setter(false), 3000);
   };
 
-  // Step details for Stepper UI
+  // TRAUMA-INFORMED RESCUE STEPPER CONFIGURATION & RATIONALE:
+  // 1. NO GATING: In acute crisis or digital extortion, survivors face erratic panic spikes and
+  //    different immediate needs (e.g. someone facing active leaks needs immediate containment scripts,
+  //    while someone physically followed needs the police dossier). Forcing sequential completion
+  //    amplifies helplessness and abandonment. Every step must remain freely clickable at all times.
+  // 2. EXPLICIT COMPLETION ONLY: Completion is only marked when the survivor clicks an explicit
+  //    "Proceed" button, never based on scroll position, time spent, or passive heuristics.
+  // 3. COLOR DISCIPLINE: Red is strictly forbidden here — red is reserved exclusively for immediate
+  //    physical emergency/SOS exits. Completed steps use calm teal (#0F6E56), the current step uses
+  //    plum (#993556) with a soothing diaphragmatic breathing rhythm, and upcoming steps remain quiet neutral gray.
+  // 4. NO TIME-PRESSURE FRAMING: No countdowns, percentages, or completion deadlines. Sequence over urgency.
   const stepsConfig = [
     {
       step: 1 as RescueStep,
       title: isHindi ? '1. स्थिरता व नियम' : '1. Stabilize',
+      shortTitle: isHindi ? 'स्थिरता' : 'Stabilize',
       subtitle: isHindi ? 'श्वास व सत्य' : 'Grounding & Reality',
     },
     {
       step: 2 as RescueStep,
       title: isHindi ? '2. खतरा व रोकथाम' : '2. Assess Threat',
+      shortTitle: isHindi ? 'खतरा' : 'Assess Threat',
       subtitle: isHindi ? 'स्क्रिप्ट व सुरक्षा' : 'Containment Script',
     },
     {
       step: 3 as RescueStep,
       title: isHindi ? '3. साक्ष्य सुरक्षा' : '3. Preserve Proof',
+      shortTitle: isHindi ? 'साक्ष्य' : 'Preserve Proof',
       subtitle: isHindi ? '3 स्क्रीनशॉट' : 'Court Evidence',
     },
     {
       step: 4 as RescueStep,
       title: isHindi ? '4. सीधी कार्रवाई' : '4. Take Action',
+      shortTitle: isHindi ? 'कार्रवाई' : 'Take Action',
       subtitle: isHindi ? 'Takedown व FIR' : 'Remedies & Portals',
     },
   ];
+
+  // Trauma-informed breathing animation for current step:
+  // Slow, gentle diaphragmatic pace (2.8s) provides somatic grounding without visual distress.
+  // Completely disabled when user has prefers-reduced-motion enabled.
+  const currentStepBreathing = prefersReducedMotion
+    ? {}
+    : {
+        scale: [1, 1.04, 1],
+        boxShadow: [
+          '0 0 0 0px rgba(243, 197, 214, 0.4)',
+          '0 0 0 6px rgba(243, 197, 214, 0)',
+          '0 0 0 0px rgba(243, 197, 214, 0.4)',
+        ],
+        transition: {
+          duration: 2.8,
+          repeat: Infinity,
+          ease: 'easeInOut' as const,
+        },
+      };
 
   // Scenarios list for Step 2
   const scenariosList: {
@@ -345,86 +411,123 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-[#D2CCE7]">
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-[#D2CCE7]">
             <VolumeX className="w-3.5 h-3.5 text-[#E1F5EE]" />
-            <span>{isHindi ? 'ध्वनिरहित' : 'Silent Mode'}</span>
+            <span>{isHindi ? 'ध्वनिरहित मोड' : 'Silent Mode Active'}</span>
           </span>
-          <button
-            onClick={() => {
-              hapticCamouflage(true);
-              onTriggerCamouflage();
-            }}
-            className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full text-xs font-medium cursor-pointer transition-colors min-h-[34px]"
-            title={isHindi ? 'स्क्रीन तुरंत छिपाएं (ESC)' : 'Hide page instantly (ESC)'}
-          >
-            <EyeOff className="w-3.5 h-3.5 text-[#F3C5D6]" />
-            <span>{isHindi ? 'त्वरित निकास' : 'Quick Exit'}</span>
-            <kbd className="hidden md:inline-block px-1 py-0.2 bg-white/15 text-[10px] rounded font-mono">ESC</kbd>
-          </button>
         </div>
       </div>
 
       {/* 2. UNIFIED 'RESCUE PATH' STEPPER HEADER */}
-      <div className="bg-[#201B52] border-b border-white/10 px-4 sm:px-8 py-4">
-        {/* Mobile View: Step Title & Progress Bar */}
-        <div className="sm:hidden space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-[#F3C5D6] font-bold">
-              {isHindi ? `चरण ${currentStep} का 4` : `Step ${currentStep} of 4`}:
+      <div className="bg-[#201B52] border-b border-white/10 px-3 sm:px-6 md:px-8 py-3.5 sm:py-4">
+        {/* Minimal sequence position label: purely informational, zero time-pressure */}
+        <div className="flex items-center justify-between text-xs mb-3 text-[#D2CCE7]">
+          <div className="flex items-center gap-2">
+            <span className="text-[#F3C5D6] font-bold text-xs">
+              {isHindi ? `चरण ${currentStep} का 4` : `Step ${currentStep} of 4`}
             </span>
-            <span className="text-white font-semibold">
-              {stepsConfig[currentStep - 1].title}
+            <span className="text-white/30">•</span>
+            <span className="text-white font-medium truncate max-w-[220px] sm:max-w-none">
+              {stepsConfig[currentStep - 1].title.replace(/^\d+\.\s*/, '')}
             </span>
           </div>
-          <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-            <div 
-              className="bg-gradient-to-r from-[#993556] to-[#0F6E56] h-full transition-all duration-300 rounded-full"
-              style={{ width: `${(currentStep / 4) * 100}%` }}
-            />
-          </div>
+          <span className="text-[11px] text-[#9E93C4] hidden sm:inline-block">
+            {isHindi ? 'सभी चरण कभी भी सुलभ हैं' : 'All steps freely accessible'}
+          </span>
         </div>
 
-        {/* Desktop View: Interactive 4-Node Connected Stepper */}
-        <div className="hidden sm:grid grid-cols-4 gap-2 relative">
-          {stepsConfig.map((s) => {
-            const isCompleted = s.step < currentStep;
-            const isCurrent = s.step === currentStep;
+        {/* 4-Step Interactive Navigation with Integrated Slim Connecting Progress Treatment */}
+        <div className="relative">
+          {/* Mobile connecting line: passes behind the centered circular markers */}
+          <div 
+            className="sm:hidden absolute top-[16px] left-[12.5%] right-[12.5%] h-[1.5px] bg-white/15 -translate-y-1/2 pointer-events-none z-0" 
+            aria-hidden="true"
+          >
+            <div 
+              className="h-full bg-[#0F6E56] transition-all duration-300 rounded-full"
+              style={{
+                width: `${
+                  completedSteps.includes(3) ? 100 :
+                  completedSteps.includes(2) ? 66.6 :
+                  completedSteps.includes(1) ? 33.3 : 0
+                }%`
+              }}
+            />
+          </div>
 
-            return (
-              <button
-                key={s.step}
-                type="button"
-                onClick={() => goToStep(s.step)}
-                className={`p-2.5 rounded-2xl flex items-center gap-3 text-left transition-all cursor-pointer border ${
-                  isCurrent
-                    ? 'bg-white/15 border-[#F3C5D6] text-white shadow-xs'
-                    : isCompleted
-                    ? 'bg-white/6 border-emerald-500/30 text-[#D2CCE7] hover:bg-white/10'
-                    : 'bg-transparent border-transparent text-[#9E93C4] hover:text-white'
-                }`}
-              >
-                <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 transition-colors ${
-                    isCurrent
-                      ? 'bg-[#993556] text-white ring-2 ring-[#F3C5D6]'
-                      : isCompleted
-                      ? 'bg-[#0F6E56] text-white'
-                      : 'bg-white/10 text-[#D2CCE7]'
-                  }`}
-                >
-                  {isCompleted ? <Check className="w-4 h-4" /> : s.step}
+          {/* Stepper Grid: responsive across mobile (<=428px), tablet (429-1024px), and desktop (>=1025px) */}
+          <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 md:gap-3 relative z-10">
+            {stepsConfig.map((s) => {
+              const isCompleted = completedSteps.includes(s.step);
+              const isCurrent = s.step === currentStep;
+
+              return (
+                <div key={s.step} className="relative">
+                  {/* Slim connector line segment between cards on tablet & desktop */}
+                  {s.step < 4 && (
+                    <div
+                      className={`hidden sm:block absolute -right-2 sm:-right-2.5 md:-right-3 top-1/2 -translate-y-1/2 w-2 sm:w-2.5 md:w-3 h-[2px] transition-colors duration-300 pointer-events-none z-20 ${
+                        isCompleted ? 'bg-[#0F6E56]' : 'bg-white/15'
+                      }`}
+                      aria-hidden="true"
+                    />
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => goToStep(s.step)}
+                    aria-label={`${isHindi ? 'चरण' : 'Step'} ${s.step}: ${s.title}${isCompleted ? (isHindi ? ' (पूर्ण)' : ' (Completed)') : ''}${isCurrent ? (isHindi ? ' (वर्तमान)' : ' (Current)') : ''}`}
+                    aria-current={isCurrent ? 'step' : undefined}
+                    className={`w-full text-left transition-all cursor-pointer rounded-xl sm:rounded-2xl border min-h-[50px] sm:min-h-[56px] flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-2.5 md:gap-3 p-1.5 sm:p-2.5 md:p-3 active:scale-98 ${
+                      isCurrent
+                        ? 'bg-white/15 border-[#F3C5D6] text-white shadow-xs ring-1 ring-[#F3C5D6]/30'
+                        : isCompleted
+                        ? 'bg-[#0F6E56]/15 border-[#0F6E56]/40 text-[#FAF8F3] hover:bg-[#0F6E56]/25 hover:border-[#0F6E56]/60'
+                        : 'bg-white/[0.03] border-white/10 text-[#9E93C4] hover:text-white hover:border-white/20 hover:bg-white/5'
+                    }`}
+                  >
+                    {/* Step marker node: Teal when completed, Plum with gentle pulse when current, Neutral gray when upcoming */}
+                    <motion.div
+                      animate={isCurrent ? currentStepBreathing : {}}
+                      className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 transition-colors relative z-10 ${
+                        isCurrent
+                          ? 'bg-[#993556] text-white ring-2 ring-[#F3C5D6]'
+                          : isCompleted
+                          ? 'bg-[#0F6E56] text-white border border-[#0F6E56]'
+                          : 'bg-[#201B52] sm:bg-white/10 text-[#D2CCE7]/80 border border-white/20'
+                      }`}
+                    >
+                      {isCompleted ? (
+                        <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+                      ) : (
+                        <span>{s.step}</span>
+                      )}
+                    </motion.div>
+
+                    {/* Step label: responsive typography for mobile, tablet, and desktop */}
+                    <div className="w-full sm:w-auto truncate text-center sm:text-left min-w-0">
+                      {/* Mobile compact title */}
+                      <div className={`sm:hidden text-[10px] font-semibold truncate ${
+                        isCurrent ? 'text-white' : isCompleted ? 'text-teal-200' : 'text-[#9E93C4]'
+                      }`}>
+                        {s.shortTitle}
+                      </div>
+
+                      {/* Tablet/Desktop full title */}
+                      <div className={`hidden sm:block text-xs font-bold leading-tight truncate ${
+                        isCurrent ? 'text-white' : isCompleted ? 'text-[#FAF8F3]' : 'text-[#FAF8F3]/80'
+                      }`}>
+                        {s.title}
+                      </div>
+                      <div className="hidden md:block text-[10px] text-[#D2CCE7] truncate">
+                        {s.subtitle}
+                      </div>
+                    </div>
+                  </button>
                 </div>
-                <div className="truncate">
-                  <div className={`text-xs font-bold leading-tight ${isCurrent ? 'text-white' : 'text-[#FAF8F3]/90'}`}>
-                    {s.title}
-                  </div>
-                  <div className="text-[10px] text-[#D2CCE7] truncate">
-                    {s.subtitle}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -493,7 +596,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
               {/* The 3 Cardinal Stabilization Pillars */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
                 <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-2">
-                  <div className="flex items-center gap-2 text-rose-300 font-bold text-xs uppercase tracking-wide">
+                  <div className="flex items-center gap-2 text-[#A8E5D7] font-bold text-xs uppercase tracking-wide">
                     <Ban className="w-4 h-4" />
                     <span>{isHindi ? 'नियम 1: पैसा न दें' : 'Rule 1: Never Pay'}</span>
                   </div>
@@ -505,7 +608,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                 </div>
 
                 <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-2">
-                  <div className="flex items-center gap-2 text-amber-300 font-bold text-xs uppercase tracking-wide">
+                  <div className="flex items-center gap-2 text-[#A8E5D7] font-bold text-xs uppercase tracking-wide">
                     <Camera className="w-4 h-4" />
                     <span>{isHindi ? 'नियम 2: चैट डिलीट न करें' : 'Rule 2: Do Not Delete'}</span>
                   </div>
@@ -517,7 +620,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                 </div>
 
                 <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-2">
-                  <div className="flex items-center gap-2 text-emerald-300 font-bold text-xs uppercase tracking-wide">
+                  <div className="flex items-center gap-2 text-[#A8E5D7] font-bold text-xs uppercase tracking-wide">
                     <UserCheck className="w-4 h-4" />
                     <span>{isHindi ? 'नियम 3: आपकी कोई गलती नहीं' : 'Rule 3: Zero Shame'}</span>
                   </div>
@@ -539,17 +642,8 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                   <button
                     type="button"
-                    onClick={onTriggerSOS}
-                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium text-xs sm:text-sm transition-colors border border-white/20 min-h-[44px]"
-                  >
-                    <PhoneCall className="w-4 h-4 text-rose-300" />
-                    <span>{isHindi ? 'SOS आपातकालीन' : 'Emergency SOS'}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => goToStep(2)}
-                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
+                    onClick={() => markStepCompleteAndAdvance(1, 2)}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
                   >
                     <span>{isHindi ? 'आगे बढ़ें: खतरा व रोकथाम (चरण 2) →' : 'Proceed to Step 2: Assess Threat →'}</span>
                   </button>
@@ -921,12 +1015,12 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                   className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium text-xs sm:text-sm transition-colors border border-white/20 min-h-[44px]"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>{isHindi ? '← चरण 1 पर वापस' : '← Back to Step 1'}</span>
+                  <span>{isHindi ? 'चरण 1 पर वापस' : 'Back to Step 1'}</span>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => goToStep(3)}
+                  onClick={() => markStepCompleteAndAdvance(2, 3)}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
                 >
                   <span>{isHindi ? 'आगे बढ़ें: साक्ष्य सुरक्षा (चरण 3) →' : 'Proceed to Step 3: Secure Evidence →'}</span>
@@ -1063,12 +1157,12 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                   className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium text-xs sm:text-sm transition-colors border border-white/20 min-h-[44px]"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>{isHindi ? '← चरण 2 पर वापस' : '← Back to Step 2'}</span>
+                  <span>{isHindi ? 'चरण 2 पर वापस' : 'Back to Step 2'}</span>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => goToStep(4)}
+                  onClick={() => markStepCompleteAndAdvance(3, 4)}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
                 >
                   <span>{isHindi ? 'आगे बढ़ें: सीधी कार्रवाई (चरण 4) →' : 'Proceed to Step 4: Take Action →'}</span>
@@ -1218,7 +1312,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                   className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium text-xs sm:text-sm transition-colors border border-white/20 min-h-[44px]"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>{isHindi ? '← चरण 3 पर वापस' : '← Back to Step 3'}</span>
+                  <span>{isHindi ? 'चरण 3 पर वापस' : 'Back to Step 3'}</span>
                 </button>
 
                 <button
@@ -1233,6 +1327,15 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
+
+      {/* Discreet Legal Non-Affiliation Safeguard */}
+      <div className="mt-4 text-center px-4">
+        <p className="text-[11px] text-[#85819C] leading-relaxed max-w-3xl mx-auto">
+          {isHindi
+            ? 'भारत सरकार, राष्ट्रीय महिला आयोग (NCW) या किसी पुलिस प्राधिकरण से संबद्ध नहीं। यह सामान्य कानूनी जानकारी है, कानूनी सलाह नहीं।'
+            : 'Not affiliated with the Government of India, NCW, or any police authority. This is general legal information, not legal advice.'}
+        </p>
       </div>
 
       {/* Minor / POCSO Guidance Modal */}

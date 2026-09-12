@@ -84,119 +84,51 @@ export const subscribeToSync = (callback: Listener): (() => void) => {
   };
 };
 
-let activeProgressTimer: NodeJS.Timeout | null = null;
-let debounceSaveTimer: NodeJS.Timeout | null = null;
-
 /**
- * Triggered automatically when user types in forms, checks evidence, or navigates.
- * Runs a smooth progress bar from 15% -> 50% -> 85% -> 100% over ~1.2 seconds.
+ * Defensive local cache helper.
+ * Confirms draft changes are cached in browser session memory without any server transmission.
  */
 export const notifyDraftSaving = (title: string = 'e-FIR Complaint Draft') => {
-  if (debounceSaveTimer) {
-    clearTimeout(debounceSaveTimer);
-  }
-
-  // Debounce rapid keypresses so we don't start 100 animations
-  debounceSaveTimer = setTimeout(() => {
-    if (activeProgressTimer) {
-      clearInterval(activeProgressTimer);
-    }
-
-    const isCurrentlyOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
-
-    currentState = {
-      ...currentState,
-      status: isCurrentlyOnline ? 'saving' : 'offline',
-      progress: 18,
-      isOnline: isCurrentlyOnline,
-      lastSavedTitle: title,
-    };
-    emitState();
-
-    let step = 18;
-    activeProgressTimer = setInterval(() => {
-      step += Math.floor(Math.random() * 22) + 15;
-      if (step >= 100) {
-        step = 100;
-        if (activeProgressTimer) clearInterval(activeProgressTimer);
-        activeProgressTimer = null;
-
-        const now = Date.now();
-        currentState = {
-          ...currentState,
-          status: isCurrentlyOnline ? 'synced' : 'offline',
-          progress: 100,
-          lastSavedAt: now,
-          isOnline: isCurrentlyOnline,
-        };
-
-        try {
-          sessionDraft.set(SYNC_METADATA_KEY, {
-            lastSavedAt: now,
-            lastSavedTitle: title,
-          });
-        } catch {}
-
-        emitState();
-      } else {
-        currentState = {
-          ...currentState,
-          progress: step,
-        };
-        emitState();
-      }
-    }, 180);
-  }, 350);
-};
-
-/**
- * Explicit manual sync triggered from UI "Backup Now" button.
- */
-export const triggerManualSync = async (): Promise<void> => {
-  hapticAction();
-
-  if (activeProgressTimer) {
-    clearInterval(activeProgressTimer);
-  }
-
-  const isCurrentlyOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
-
-  currentState = {
-    ...currentState,
-    status: isCurrentlyOnline ? 'saving' : 'offline',
-    progress: 10,
-    isOnline: isCurrentlyOnline,
-    lastSavedTitle: 'Complete Emergency Vault Backup',
-  };
-  emitState();
-
-  const stages = [28, 55, 78, 92, 100];
-  for (const target of stages) {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    currentState = {
-      ...currentState,
-      progress: target,
-    };
-    emitState();
-  }
-
   const now = Date.now();
   currentState = {
     ...currentState,
-    status: isCurrentlyOnline ? 'synced' : 'offline',
+    status: 'synced',
     progress: 100,
     lastSavedAt: now,
-    isOnline: isCurrentlyOnline,
+    lastSavedTitle: title,
+    itemsSavedCount: calculateItemsSavedCount(),
   };
 
   try {
-    localStorage.setItem(
-      SYNC_METADATA_KEY,
-      JSON.stringify({
-        lastSavedAt: now,
-        lastSavedTitle: 'Complete Emergency Vault Backup',
-      })
-    );
+    sessionDraft.set(SYNC_METADATA_KEY, {
+      lastSavedAt: now,
+      lastSavedTitle: title,
+    });
+  } catch {}
+
+  emitState();
+};
+
+/**
+ * Defensive local verification check.
+ */
+export const triggerManualSync = async (): Promise<void> => {
+  hapticAction();
+  const now = Date.now();
+  currentState = {
+    ...currentState,
+    status: 'synced',
+    progress: 100,
+    lastSavedAt: now,
+    lastSavedTitle: 'Complete Local Session Vault',
+    itemsSavedCount: calculateItemsSavedCount(),
+  };
+
+  try {
+    sessionDraft.set(SYNC_METADATA_KEY, {
+      lastSavedAt: now,
+      lastSavedTitle: 'Complete Local Session Vault',
+    });
   } catch {}
 
   emitState();
