@@ -54,10 +54,10 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
     <div className="min-h-screen bg-[#FAF8F3] text-[#1A1829] flex flex-col justify-between selection:bg-[#993556] selection:text-white relative overflow-hidden">
       {/* Educational & Independent Resource Banner */}
       <aside aria-label="Disclaimer" className="w-full bg-[#1E1A48] text-amber-200 text-xs px-3 sm:px-4 py-1.5 border-b border-amber-300/20 text-center flex items-center justify-center z-20">
-        <span className="text-amber-100/90 text-[11px] leading-tight max-w-2xl mx-auto">
+        <span className="text-amber-100/90 text-[11px] leading-tight max-w-2xl mx-auto font-medium">
           {isHindi 
-            ? 'नागरिक सुरक्षा जागरूकता व संकट सहायता गाइड • स्वतंत्र ओपन-सोर्स पोर्टल • 100% ऑफलाइन गोपनीयता'
-            : 'Independent Crisis Awareness Guide • Open-Source Citizen Resource by Manish Poonam Kashyap • 100% In-Browser Privacy'}
+            ? 'स्वतंत्र डिजिटल सुरक्षा पोर्टल • कोई लॉगिन नहीं। कोई डेटा सेव नहीं। कभी नहीं।'
+            : 'Independent Digital Safety Portal • No Login. No Data Stored. Ever.'}
         </span>
       </aside>
 
@@ -78,7 +78,7 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
           </div>
         </div>
 
-        {/* Right utility controls: Calm Quick Exit + Language Toggle */}
+        {/* Right utility controls: Calm Quick Exit + Segmented Two-State Language Toggle */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Quick Exit: Discrete, clear, non-alarming red accent */}
           <button
@@ -94,15 +94,41 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
             <kbd className="hidden md:inline-block px-1.5 py-0.2 bg-white/15 text-[10px] rounded font-mono">ESC</kbd>
           </button>
 
-          {/* Bilingual Switcher */}
-          <button
-            onClick={onToggleLanguage}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-[#26215C] bg-[#FAF8F3] hover:bg-white border border-[#26215C]/12 transition-colors cursor-pointer min-h-[38px]"
-            title="Switch Language / भाषा बदलें"
+          {/* Explicit Two-State Segmented Language Toggle */}
+          <div 
+            className="inline-flex items-center p-0.5 rounded-full bg-black/5 sm:bg-[#26215C]/5 border border-[#26215C]/12 text-xs font-medium"
+            role="group"
+            aria-label={isHindi ? 'भाषा का चयन' : 'Language selection'}
           >
-            <Globe className="w-3.5 h-3.5 text-[#993556]" />
-            <span>{isHindi ? 'English' : 'हिन्दी'}</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (isHindi) onToggleLanguage();
+              }}
+              className={`px-2.5 py-1 rounded-full transition-all cursor-pointer ${
+                !isHindi
+                  ? 'bg-[#26215C] text-white font-semibold shadow-xs'
+                  : 'text-[#5A5672] hover:text-[#26215C]'
+              }`}
+              aria-pressed={!isHindi}
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (!isHindi) onToggleLanguage();
+              }}
+              className={`px-2.5 py-1 rounded-full transition-all cursor-pointer ${
+                isHindi
+                  ? 'bg-[#26215C] text-white font-semibold shadow-xs'
+                  : 'text-[#5A5672] hover:text-[#26215C]'
+              }`}
+              aria-pressed={isHindi}
+            >
+              हिन्दी
+            </button>
+          </div>
         </div>
       </header>
 
@@ -195,7 +221,7 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
 
               <div className="mt-4">
                 <h2 className="text-lg sm:text-xl font-semibold text-[#26215C] tracking-tight flex items-center gap-1.5">
-                  <span>{isHindi ? 'पहले अपने अधिकार समझना चाहती हूँ' : 'I want to understand my options'}</span>
+                  <span>{isHindi ? 'अपने विकल्प समझें' : 'Understand my options'}</span>
                   <ArrowRight className="w-4 h-4 text-[#993556] group-hover:translate-x-1 transition-transform" />
                 </h2>
                 <p className="text-xs sm:text-sm text-[#5A5672] mt-1.5 font-normal leading-normal">
@@ -224,25 +250,47 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
         </motion.div>
       </main>
 
-      {/* 3. REASSURING MINIMAL FOOTER */}
-      <footer className="w-full px-4 sm:px-8 py-4 sm:py-5 border-t border-[#26215C]/5 text-center text-xs text-[#85819C] z-10 flex flex-col sm:flex-row items-center justify-between gap-2 max-w-4xl mx-auto">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#0F6E56]" />
-          <span>
-            {isHindi ? 'राष्ट्रीय साइबर हेल्पलाइन: 1930' : 'National Cyber Helpline: 1930'}
-          </span>
-          <span className="text-[#26215C]/20">•</span>
-          <span>
-            {isHindi ? 'पुलिस आपातकाल: 112' : 'Police Emergency: 112'}
-          </span>
+      {/* 3. REASSURING MINIMAL FOOTER WITH AFFILIATION DISCLAIMER */}
+      <footer className="w-full px-4 sm:px-8 py-4 sm:py-6 border-t border-[#26215C]/5 text-center text-xs text-[#85819C] z-10 max-w-4xl mx-auto space-y-3 pb-20 sm:pb-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#0F6E56]" />
+            <span>
+              {isHindi ? 'राष्ट्रीय साइबर हेल्पलाइन: 1930' : 'National Cyber Helpline: 1930'}
+            </span>
+            <span className="text-[#26215C]/20">•</span>
+            <span>
+              {isHindi ? 'पुलिस आपातकाल: 112' : 'Police Emergency: 112'}
+            </span>
+          </div>
+
+          <div className="text-[11px] text-[#5A5672] font-medium">
+            {isHindi
+              ? 'भारतीय कानून के तहत सुरक्षित।'
+              : 'Protected under Indian law.'}
+          </div>
         </div>
 
-        <div className="text-[11px] text-[#5A5672]">
+        {/* Small Legal & Non-Affiliation Disclaimer Line */}
+        <p className="text-[10.5px] sm:text-[11px] text-[#85819C] leading-relaxed max-w-3xl mx-auto border-t border-[#26215C]/5 pt-2.5">
           {isHindi
-            ? 'भारतीय कानून (IT Act 66E, 67A व BNS 73) के तहत पीड़ित संरक्षण'
-            : 'Protected under Indian Law (IT Act 66E, 67A & BNS Sec 73)'}
-        </div>
+            ? 'नारीसुरक्षा एक स्वतंत्र, गैर-व्यावसायिक साधन है और भारत सरकार, राष्ट्रीय महिला आयोग (NCW) या किसी पुलिस प्राधिकरण से संबद्ध नहीं है। दी गई जानकारी सामान्य जागरूकता के लिए है, कानूनी सलाह का विकल्प नहीं।'
+            : 'NariSuraksha is an independent, non-commercial tool and is not affiliated with the Government of India, the National Commission for Women, or any police authority. Information provided is general in nature and not a substitute for professional legal advice.'}
+        </p>
       </footer>
+
+      {/* 4. PERSISTENT CRISIS HELPLINE FLOATING ACTION */}
+      <aside aria-label="Emergency Helpline Quick Action" className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-6 sm:bottom-6 z-30">
+        <a
+          href="tel:1930"
+          onClick={() => hapticSOS()}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#DC2626] hover:bg-[#B91C1C] text-white font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl active:scale-95 transition-all cursor-pointer border border-white/20 whitespace-nowrap"
+          title={isHindi ? 'राष्ट्रीय साइबर अपराध हेल्पलाइन 1930 पर तुरंत कॉल करें' : 'Call National Cyber Helpline 1930'}
+        >
+          <PhoneCall className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
+          <span>{isHindi ? '1930 पर कॉल करें' : 'Call 1930'}</span>
+        </a>
+      </aside>
     </div>
   );
 };

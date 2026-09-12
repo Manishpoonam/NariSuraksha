@@ -27,6 +27,7 @@ import { EmergencyCockpit, CrisisScenarioKey } from './components/EmergencyCockp
 import { CountdownBusterBanner } from './components/CountdownBusterBanner';
 import { smoothScrollTo } from './utils/scroll';
 import { hapticCamouflage, hapticSOS, hapticAction } from './utils/haptics';
+import { useThreeFingerEmergencyGesture } from './hooks/useThreeFingerEmergencyGesture';
 import { Language, IncidentCategory } from './types';
 import { 
   ShieldCheck, 
@@ -424,17 +425,10 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // 3-Finger Tap Detection anywhere on touch screen to instantly camouflage
-  useEffect(() => {
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches && e.touches.length >= 3) {
-        setIsCamouflage(true);
-        hapticCamouflage(true);
-      }
-    };
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    return () => window.removeEventListener('touchstart', handleTouchStart);
-  }, []);
+  // 3-Finger Touch Emergency Gesture Hook (blocks Chrome reload gesture, triggers haptic + camouflage)
+  useThreeFingerEmergencyGesture(() => {
+    setIsCamouflage(true);
+  });
 
   const handleTriggerCamouflage = (entering: boolean = true) => {
     hapticCamouflage(entering);
@@ -506,10 +500,10 @@ export default function App() {
           <Info className="w-3.5 h-3.5 shrink-0" />
           {isHindi ? 'नागरिक सहायता व जागरूकता संसाधन' : 'Citizen Safety Awareness & Legal Aid Guide'}
         </span>
-        <span className="text-amber-100/80 text-[11px]">
+        <span className="text-amber-100/90 text-[11px] font-medium">
           {isHindi 
-            ? 'यह स्वतंत्र ओपन-सोर्स सहायता मार्गदर्शिका है, सरकारी पोर्टल नहीं। कोई डेटा इंटरनेट पर नहीं भेजा जाता।'
-            : 'Independent crisis guide by Manish Poonam Kashyap. Not an official gov portal. 100% private & client-side.'}
+            ? 'स्वतंत्र डिजिटल सुरक्षा पोर्टल • कोई लॉगिन नहीं। कोई डेटा सेव नहीं। कभी नहीं।'
+            : 'Independent Digital Safety Portal • No Login. No Data Stored. Ever.'}
         </span>
       </aside>
 
@@ -699,7 +693,7 @@ export default function App() {
               Designed for women's digital safety under the Information Technology Act, 2000 & Bharatiya Nyaya Sanhita, 2023.
             </p>
             <p className="text-[11px] text-[#555]">
-              Architected & Maintained by <a href="https://github.com/Manishpoonam" target="_blank" rel="noopener noreferrer" className="font-semibold text-[#993556] hover:underline">Manish Poonam Kashyap</a>
+              An independent, non-commercial safety resource.
             </p>
           </div>
 

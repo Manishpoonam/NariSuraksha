@@ -22,11 +22,26 @@
   </head>
   <body class="bg-[#FAF8F3] text-[#26215C] antialiased selection:bg-[#993556] selection:text-white font-sans">
     <div id="root"></div>
+    <script>
+      // Single Page Apps for GitHub Pages redirect restoration
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch(() => {});
+          navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+            .then(reg => {
+              // Ensure immediate update check
+              reg.update().catch(() => {});
+            })
+            .catch(() => {});
         });
       }
     </script>

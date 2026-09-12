@@ -44,12 +44,14 @@ interface EvidencePreservationWizardProps {
   language: Language;
   onBack?: () => void;
   onTransferToComplaint?: () => void;
+  onNavigateToTab?: (tab: string, elementId?: string) => void;
 }
 
 export const EvidencePreservationWizard: React.FC<EvidencePreservationWizardProps> = ({
   language,
   onBack,
-  onTransferToComplaint
+  onTransferToComplaint,
+  onNavigateToTab
 }) => {
   const isHindi = language === 'hi';
 
@@ -122,6 +124,10 @@ export const EvidencePreservationWizard: React.FC<EvidencePreservationWizardProp
     if (onTransferToComplaint) {
       setTimeout(() => {
         onTransferToComplaint();
+      }, 700);
+    } else if (onNavigateToTab) {
+      setTimeout(() => {
+        onNavigateToTab('report', 'complaint-draft-generator');
       }, 700);
     }
   };

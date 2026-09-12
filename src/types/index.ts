@@ -5,7 +5,9 @@ export type IncidentCategory =
   | 'viral_leaked'
   | 'ai_deepfake_morph'
   | 'videocall_sextortion'
-  | 'device_hacked_icloud';
+  | 'device_hacked_icloud'
+  | 'ncii_distribution'
+  | 'account_takeover';
 
 export interface DecisionNode {
   id: string;
