@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { STATE_CYBER_CELLS, StateCyberCell } from '../data/stateCyberCellsData';
 import { Language } from '../types';
+import { StateLocationDetector } from './StateLocationDetector';
 import { 
   Building2, 
   PhoneCall, 
@@ -14,7 +15,9 @@ import {
   Lock,
   Phone,
   X,
-  Radio
+  Radio,
+  CheckCircle2,
+  HelpCircle
 } from 'lucide-react';
 
 interface StateCyberDirectoryProps {
@@ -25,8 +28,20 @@ export const StateCyberDirectory: React.FC<StateCyberDirectoryProps> = ({ langua
   const isHindi = language === 'hi';
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
+  const [detectedConfirmedState, setDetectedConfirmedState] = useState<string | null>(null);
   const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
   const [copiedPhone, setCopiedPhone] = useState<string | null>(null);
+
+  const handleConfirmDetectedState = (stateName: string) => {
+    setDetectedConfirmedState(stateName);
+    setSearchQuery(stateName);
+    setSelectedRegion('all');
+  };
+
+  const handleClearConfirmedState = () => {
+    setDetectedConfirmedState(null);
+    setSearchQuery('');
+  };
 
   const handleCopyEmail = (email: string) => {
     navigator.clipboard.writeText(email);
@@ -125,20 +140,36 @@ export const StateCyberDirectory: React.FC<StateCyberDirectoryProps> = ({ langua
           </div>
         </div>
 
+        {/* 100% On-device State Detection Prompt & Pinned Suggestion Banner */}
+        <StateLocationDetector
+          isHindi={isHindi}
+          onConfirmState={handleConfirmDetectedState}
+          activeConfirmedState={detectedConfirmedState}
+          onClearConfirmedState={handleClearConfirmedState}
+        />
+
         {/* Search & Region Filters */}
-        <div className="pt-2 flex flex-col gap-3">
+        <div className="pt-1 flex flex-col gap-3">
           <div className="relative w-full">
             <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#888]" />
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (detectedConfirmedState && e.target.value !== detectedConfirmedState) {
+                  setDetectedConfirmedState(null);
+                }
+              }}
               placeholder={isHindi ? 'राज्य, UT, शहर, फोन नंबर या नोडल ऑफिसर खोजें (उदा. Delhi, Ladakh, Mumbai, 1930)...' : 'Search by State, UT, City, Nodal Officer, or Phone (e.g., Delhi, Ladakh, Bengaluru, Lucknow)...'}
               className="w-full pl-11 pr-10 py-3 bg-[#FAF9F6] focus:bg-white border border-[#DED9D4] rounded-full text-xs sm:text-sm focus:outline-none focus:border-[#8B6D5C] text-[#1A1A1A] transition-colors"
             />
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => {
+                  setSearchQuery('');
+                  setDetectedConfirmedState(null);
+                }}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-[#888] hover:text-[#333] cursor-pointer"
                 title="Clear Search"
               >
@@ -199,6 +230,12 @@ export const StateCyberDirectory: React.FC<StateCyberDirectoryProps> = ({ langua
                         isUT ? 'bg-[#EBF3ED] text-[#2D5A3C]' : 'bg-[#F3EFEC] text-[#8B6D5C]'
                       }`}>
                         {isUT ? (isHindi ? 'केंद्रशासित प्रदेश (UT)' : 'Union Territory (UT)') : cell.region}
+                      </span>
+
+                      {/* Verification status label on every card */}
+                      <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#8B6D5C] bg-[#FAF8F5] px-2 py-0.5 rounded-full border border-[#E8E2DC]">
+                        <HelpCircle className="w-3 h-3 text-[#8B6D5C] shrink-0" />
+                        <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before relying'}</span>
                       </span>
                     </div>
                     <h3 className="text-base sm:text-lg font-bold text-[#1A1A1A] mt-1">

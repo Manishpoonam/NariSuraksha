@@ -17,11 +17,13 @@ import {
   X,
   ArrowUpRight,
   ChevronDown,
-  CheckCircle2
+  CheckCircle2,
+  HelpCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { STATE_CYBER_CELLS } from '../data/stateCyberCells';
 import { Language } from '../types';
+import { StateLocationDetector } from './StateLocationDetector';
 
 interface StateCyberDirectoryInlineProps {
   language: Language;
@@ -37,6 +39,18 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
   const [filterType, setFilterType] = useState<'all' | 'states' | 'uts'>('all');
   const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
   const [isDisclaimerExpanded, setIsDisclaimerExpanded] = useState<boolean>(false);
+  const [detectedConfirmedState, setDetectedConfirmedState] = useState<string | null>(null);
+
+  const handleConfirmDetectedState = (stateName: string) => {
+    setDetectedConfirmedState(stateName);
+    setSearchQuery(stateName);
+    setFilterType('all');
+  };
+
+  const handleClearConfirmedState = () => {
+    setDetectedConfirmedState(null);
+    setSearchQuery('');
+  };
 
   const handleCopy = (num: string) => {
     navigator.clipboard.writeText(num);
@@ -141,14 +155,27 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
         </div>
       </div>
 
-      {/* Search Bar & Filter Chips (Item 3: Clean, untruncated placeholder) */}
+      {/* On-device Location Auto-Detect Prompt & Confirmation Suggestion */}
+      <StateLocationDetector
+        isHindi={isHindi}
+        onConfirmState={handleConfirmDetectedState}
+        activeConfirmedState={detectedConfirmedState}
+        onClearConfirmedState={handleClearConfirmedState}
+      />
+
+      {/* Search Bar & Filter Chips (Clean, untruncated placeholder) */}
       <div className="space-y-2.5">
         <div className="relative w-full">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#888]" />
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              if (detectedConfirmedState && e.target.value !== detectedConfirmedState) {
+                setDetectedConfirmedState(null);
+              }
+            }}
             placeholder={
               isHindi
                 ? 'राज्य या UT खोजें (उदा. Delhi, Maharashtra)...'
@@ -160,7 +187,10 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
           {searchQuery && (
             <button
               type="button"
-              onClick={() => setSearchQuery('')}
+              onClick={() => {
+                setSearchQuery('');
+                setDetectedConfirmedState(null);
+              }}
               className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[#888] hover:text-[#222] cursor-pointer"
               aria-label={isHindi ? 'खोज साफ़ करें' : 'Clear search'}
             >
@@ -171,12 +201,15 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
 
         {/* Filters and Count */}
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 flex-wrap">
             <button
               type="button"
-              onClick={() => setFilterType('all')}
+              onClick={() => {
+                setFilterType('all');
+                if (searchQuery) setSearchQuery('');
+              }}
               className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                filterType === 'all'
+                filterType === 'all' && !searchQuery.trim()
                   ? 'bg-[#1A1A1A] text-white shadow-xs'
                   : 'bg-white text-[#555] border border-[#E8E2DC] hover:bg-[#F3EFEA]'
               }`}
@@ -207,6 +240,21 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
             >
               {isHindi ? `8 केंद्रशासित प्रदेश (UTs)` : `8 UTs`}
             </button>
+
+            {/* When a search or location query filter is active, render a distinct "Filtered" pill */}
+            {searchQuery.trim() && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#1A1A1A] text-white shadow-xs">
+                <span>{isHindi ? `फ़िल्टर: "${searchQuery.trim()}"` : `Filtered: "${searchQuery.trim()}"`}</span>
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  aria-label={isHindi ? 'फ़िल्टर हटाएं' : 'Remove filter'}
+                  className="hover:text-[#F3EFEA] ml-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
           </div>
 
           <span className="text-[11px] text-[#777] font-medium ml-auto">
@@ -253,13 +301,20 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
                   </span>
                 </div>
 
-                {/* Verified date indicator only when set */}
-                {cell.verifiedDate && (
-                  <div className="pt-0.5 flex items-center gap-1 text-[10px] font-semibold text-[#0F6E56]">
-                    <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
-                    <span>{isHindi ? `सत्यापित: ${cell.verifiedDate}` : `Verified: ${cell.verifiedDate}`}</span>
-                  </div>
-                )}
+                {/* Verification status label on every card: "Verified: [date]" or "Unverified — confirm before relying" */}
+                <div className="pt-0.5 flex items-center gap-1 text-[10px]">
+                  {cell.verifiedDate ? (
+                    <div className="flex items-center gap-1 font-semibold text-[#0F6E56]">
+                      <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                      <span>{isHindi ? `सत्यापित: ${cell.verifiedDate}` : `Verified: ${cell.verifiedDate}`}</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1 font-medium text-[#8B6D5C]">
+                      <HelpCircle className="w-3 h-3 text-[#8B6D5C] shrink-0" />
+                      <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before relying'}</span>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Middle Section: Helpline or Fallback Box (Flex-1 vertically centers content in consistent height card) */}
@@ -347,19 +402,36 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
       )}
 
       {/* Footer helpline note */}
-      <div className="flex items-center justify-between text-[11px] text-[#777] pt-1">
-        <span>
-          {isHindi 
-            ? 'किसी भी आपात स्थिति में सीधे 1930 या 112 डायल करें' 
-            : 'For immediate crisis intervention, dial 1930 (Cyber) or 112 (Police)'}
-        </span>
+      <div className="pt-2 border-t border-[#F0EBE6] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-[#666]">
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="font-semibold text-[#1A1A1A]">
+            {isHindi ? 'आपातकालीन हस्तक्षेप:' : 'Immediate Crisis Intervention:'}
+          </span>
+          <a
+            href="tel:1930"
+            className="inline-flex items-center gap-1 font-mono font-bold text-[#0F6E56] hover:underline"
+          >
+            <Phone className="w-3 h-3 shrink-0" />
+            <span>1930 {isHindi ? '(साइबर अपराध)' : '(Cyber Crime)'}</span>
+          </a>
+          <span className="text-[#CCC]">|</span>
+          <a
+            href="tel:112"
+            className="inline-flex items-center gap-1 font-mono font-bold text-[#8B6D5C] hover:underline"
+          >
+            <Phone className="w-3 h-3 shrink-0" />
+            <span>112 {isHindi ? '(पुलिस / आपातकालीन)' : '(Police Emergency)'}</span>
+          </a>
+        </div>
+
         {onNavigateToFullDirectory && (
           <button
             type="button"
             onClick={onNavigateToFullDirectory}
-            className="sm:hidden text-xs font-semibold text-[#0F6E56] hover:underline cursor-pointer"
+            className="sm:hidden self-start text-xs font-semibold text-[#0F6E56] hover:underline cursor-pointer flex items-center gap-0.5"
           >
-            {isHindi ? 'पूरी गाइड →' : 'Full Guide →'}
+            <span>{isHindi ? 'पूरी गाइड व विस्तृत डायरेक्टरी' : 'Full Guide & Detailed Directory'}</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
           </button>
         )}
       </div>
