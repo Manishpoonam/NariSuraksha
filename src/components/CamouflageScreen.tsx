@@ -1,19 +1,40 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'motion/react';
-import { BookOpen, Search, ArrowLeft, Sun, CloudRain, CheckSquare, ShieldCheck, Clock } from 'lucide-react';
+import { BookOpen, Search, Sun, CloudRain, CheckSquare, Clock, FileText } from 'lucide-react';
 
 interface CamouflageScreenProps {
   onRestore: () => void;
 }
 
 export const CamouflageScreen: React.FC<CamouflageScreenProps> = ({ onRestore }) => {
+  const tapCountRef = useRef(0);
+  const tapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Covert triple-tap on the top-left academic book icon for mobile restoration
+  const handleSecretTap = () => {
+    tapCountRef.current += 1;
+    if (tapTimeoutRef.current) {
+      clearTimeout(tapTimeoutRef.current);
+    }
+
+    if (tapCountRef.current >= 3) {
+      tapCountRef.current = 0;
+      onRestore();
+      return;
+    }
+
+    tapTimeoutRef.current = setTimeout(() => {
+      tapCountRef.current = 0;
+    }, 1500);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.16, ease: 'easeOut' }}
-      className="min-h-screen bg-[#FAF9F6] text-[#1A1A1A] p-4 sm:p-8 font-sans flex flex-col justify-center"
+      className="min-h-screen bg-[#FAF9F6] text-[#1A1A1A] p-4 sm:p-8 font-sans flex flex-col justify-center select-none"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.98, y: 10 }}
@@ -25,7 +46,11 @@ export const CamouflageScreen: React.FC<CamouflageScreenProps> = ({ onRestore })
         {/* Header with authentic study camouflage */}
         <div className="flex items-center justify-between border-b border-[#E8E2DC] pb-4 mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#F3EFEC] text-[#8B6D5C] rounded-2xl flex items-center justify-center shrink-0">
+            {/* Secret triple-tap target on the static book icon (no cursor or visual tell) */}
+            <div 
+              onClick={handleSecretTap}
+              className="w-10 h-10 bg-[#F3EFEC] text-[#8B6D5C] rounded-2xl flex items-center justify-center shrink-0 select-none"
+            >
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
@@ -34,20 +59,14 @@ export const CamouflageScreen: React.FC<CamouflageScreenProps> = ({ onRestore })
             </div>
           </div>
           
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={onRestore}
-            className="text-xs sm:text-sm text-[#333] hover:text-[#000] flex items-center gap-1.5 border border-[#DED9D4] hover:border-[#8B6D5C] bg-[#FAF9F6] hover:bg-white rounded-full px-4 py-2 transition-all cursor-pointer font-bold shadow-2xs"
-            title="Return to emergency portal"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Resume</span>
-          </motion.button>
+          {/* Authentic academic semester status badge replacing the previous Resume button */}
+          <span className="hidden sm:inline-block text-xs text-[#888] font-medium bg-[#FAF9F6] border border-[#E8E2DC] px-3.5 py-1.5 rounded-full">
+            Semester 2 • Syllabus Tracker
+          </span>
         </div>
 
         {/* 3 Academic Widgets with smooth staggered animation */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -104,24 +123,23 @@ export const CamouflageScreen: React.FC<CamouflageScreenProps> = ({ onRestore })
           </motion.div>
         </div>
 
-        {/* Notes content */}
+        {/* Weekly Assignment Summary: Styled consistently with cards above */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, delay: 0.2 }}
-          className="space-y-4"
+          className="p-5 bg-[#FAF9F6] rounded-2xl border border-[#E8E2DC] space-y-2.5"
         >
-          <h2 className="text-base font-semibold text-[#2D2D2D]">Weekly Assignment Summary</h2>
-          <p className="text-xs sm:text-sm text-[#555] leading-relaxed">
+          <div className="flex items-center gap-2 text-[#8B6D5C] font-bold text-xs uppercase tracking-wider">
+            <FileText className="w-4 h-4" />
+            <span>Weekly Assignment Summary</span>
+          </div>
+          <p className="text-xs sm:text-sm text-[#444] leading-relaxed">
             Module 3: Overview of Indian administrative systems and public service frameworks. Focus on decentralized governance, community welfare programs, and statutory dispute resolution mechanisms.
           </p>
-
-          <div className="flex items-center justify-between p-3.5 bg-[#FAF9F6] border border-[#F0EBE6] rounded-2xl text-xs text-[#777]">
-            <div className="flex items-center gap-2 text-[#666]">
-              <ShieldCheck className="w-4 h-4 text-[#8B6D5C]" />
-              <span>Discreet Safe Screen Active</span>
-            </div>
-            <span className="font-mono text-[11px] text-[#888]">Press ESC or click Resume to return</span>
+          <div className="pt-2 border-t border-[#E8E2DC]/80 flex flex-wrap items-center justify-between text-xs text-[#777] gap-2">
+            <span>Deadline: Friday, 5:00 PM</span>
+            <span className="text-[#8B6D5C] font-semibold">Status: In Progress (3/5 Units)</span>
           </div>
         </motion.div>
       </motion.div>
