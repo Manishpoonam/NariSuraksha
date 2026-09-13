@@ -291,15 +291,15 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
 
   // Trauma-informed breathing animation for current step:
   // Slow, gentle diaphragmatic pace (2.8s) provides somatic grounding without visual distress.
-  // Completely disabled when user has prefers-reduced-motion enabled.
+  // Uses purely non-layout-impacting boxShadow ring pulse (zero scale transform) to ensure
+  // the circle's layout box and vertical midpoint never shift or displace the connecting line.
   const currentStepBreathing = prefersReducedMotion
     ? {}
     : {
-        scale: [1, 1.04, 1],
         boxShadow: [
-          '0 0 0 0px rgba(243, 197, 214, 0.4)',
-          '0 0 0 6px rgba(243, 197, 214, 0)',
-          '0 0 0 0px rgba(243, 197, 214, 0.4)',
+          '0 0 0 0px rgba(243, 197, 214, 0.45)',
+          '0 0 0 5px rgba(243, 197, 214, 0)',
+          '0 0 0 0px rgba(243, 197, 214, 0.45)',
         ],
         transition: {
           duration: 2.8,
@@ -438,9 +438,10 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
 
         {/* 4-Step Interactive Navigation with Integrated Slim Connecting Progress Treatment */}
         <div className="relative">
-          {/* Mobile connecting line: passes behind the centered circular markers */}
+          {/* Mobile connecting line: calculated explicitly relative to the fixed 32px circle's vertical midpoint */}
           <div 
-            className="sm:hidden absolute top-[16px] left-[12.5%] right-[12.5%] h-[1.5px] bg-white/15 -translate-y-1/2 pointer-events-none z-0" 
+            className="sm:hidden absolute left-[12.5%] right-[12.5%] h-[2px] bg-white/15 -translate-y-1/2 pointer-events-none z-0" 
+            style={{ top: 'calc(1px + 0.5rem + 16px)' }}
             aria-hidden="true"
           >
             <div 
@@ -478,7 +479,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                     onClick={() => goToStep(s.step)}
                     aria-label={`${isHindi ? 'चरण' : 'Step'} ${s.step}: ${s.title}${isCompleted ? (isHindi ? ' (पूर्ण)' : ' (Completed)') : ''}${isCurrent ? (isHindi ? ' (वर्तमान)' : ' (Current)') : ''}`}
                     aria-current={isCurrent ? 'step' : undefined}
-                    className={`w-full text-left transition-all cursor-pointer rounded-xl sm:rounded-2xl border min-h-[50px] sm:min-h-[56px] flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-2.5 md:gap-3 p-1.5 sm:p-2.5 md:p-3 active:scale-98 ${
+                    className={`w-full text-left transition-all cursor-pointer rounded-xl sm:rounded-2xl border min-h-[50px] sm:min-h-[56px] flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-2.5 md:gap-3 p-2 sm:p-2.5 md:p-3 active:scale-98 ${
                       isCurrent
                         ? 'bg-white/15 border-[#F3C5D6] text-white shadow-xs ring-1 ring-[#F3C5D6]/30'
                         : isCompleted
@@ -487,22 +488,25 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                     }`}
                   >
                     {/* Step marker node: Teal when completed, Plum with gentle pulse when current, Neutral gray when upcoming */}
-                    <motion.div
-                      animate={isCurrent ? currentStepBreathing : {}}
-                      className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 transition-colors relative z-10 ${
-                        isCurrent
-                          ? 'bg-[#993556] text-white ring-2 ring-[#F3C5D6]'
-                          : isCompleted
-                          ? 'bg-[#0F6E56] text-white border border-[#0F6E56]'
-                          : 'bg-[#201B52] sm:bg-white/10 text-[#D2CCE7]/80 border border-white/20'
-                      }`}
-                    >
-                      {isCompleted ? (
-                        <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
-                      ) : (
-                        <span>{s.step}</span>
-                      )}
-                    </motion.div>
+                    {/* Fixed 32x32px layout box across all states ensures the connecting line always intersects the vertical center */}
+                    <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
+                      <motion.div
+                        animate={isCurrent ? currentStepBreathing : {}}
+                        className={`w-8 h-8 rounded-full box-border border flex items-center justify-center font-bold text-xs shrink-0 transition-colors relative z-10 ${
+                          isCurrent
+                            ? 'bg-[#993556] text-white border-[#F3C5D6] ring-2 ring-[#F3C5D6]/50 ring-offset-1 ring-offset-[#201B52]'
+                            : isCompleted
+                            ? 'bg-[#0F6E56] text-white border-[#0F6E56]'
+                            : 'bg-[#201B52] sm:bg-white/10 text-[#D2CCE7]/80 border-white/20'
+                        }`}
+                      >
+                        {isCompleted ? (
+                          <Check className="w-4 h-4 text-white" />
+                        ) : (
+                          <span>{s.step}</span>
+                        )}
+                      </motion.div>
+                    </div>
 
                     {/* Step label: responsive typography for mobile, tablet, and desktop */}
                     <div className="w-full sm:w-auto truncate text-center sm:text-left min-w-0">
