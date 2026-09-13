@@ -1,6 +1,7 @@
 import React from 'react';
 import { Scale, Info, ExternalLink } from 'lucide-react';
 import { Language } from '../types';
+import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
 
 interface LegalDisclaimerNoticeProps {
   language: Language;
@@ -13,6 +14,12 @@ export const LegalDisclaimerNotice: React.FC<LegalDisclaimerNoticeProps> = ({
 }) => {
   const isHindi = language === 'hi';
 
+  const handleScrollToCanonical = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.getElementById(LEGAL_DISCLAIMER.anchorId);
+    el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   if (compact) {
     return (
       <aside 
@@ -24,8 +31,17 @@ export const LegalDisclaimerNotice: React.FC<LegalDisclaimerNoticeProps> = ({
           <span className="font-semibold text-[#26215C]">
             {isHindi ? 'कानूनी सूचना व परामर्श:' : 'Legal & Procedural Notice:'}
           </span>{' '}
+          <span>{LEGAL_DISCLAIMER.short[language]} — </span>
+          <a
+            href={`#${LEGAL_DISCLAIMER.anchorId}`}
+            onClick={handleScrollToCanonical}
+            className="text-[#26215C] font-semibold hover:underline underline-offset-2"
+          >
+            {LEGAL_DISCLAIMER.linkText[language]}
+          </a>
+          <span>. </span>
           {isHindi
-            ? 'यह प्लेटफॉर्म केवल तथ्यात्मक साक्ष्य संकलन व शिकायत का प्रारूप (Draft) तैयार करने में सहायता करता है। यह औपचारिक कानूनी सलाह (Legal Advice) या अधिवक्ता प्रतिनिधित्व नहीं है। न्यायालयीन प्रक्रिया हेतु राज्य विधिक सेवा प्राधिकरण (NALSA 15100) या पंजीकृत अधिवक्ता की सलाह लें।'
+            ? 'यह प्लेटफॉर्म तथ्यात्मक साक्ष्य संकलन व शिकायत का प्रारूप तैयार करने में सहायता करता है। यह औपचारिक कानूनी सलाह या अधिवक्ता प्रतिनिधित्व नहीं है। न्यायालयीन प्रक्रिया हेतु राज्य विधिक सेवा प्राधिकरण (NALSA 15100) या पंजीकृत अधिवक्ता की सलाह लें।'
             : 'This platform provides factual evidence structuring and complaint drafting assistance to facilitate reporting to official authorities (1930 / cybercrime.gov.in). It does not provide attorney-client representation or formal legal advice. For formal proceedings, consult a licensed advocate or access free legal aid via NALSA (Dial 15100).'}
         </div>
       </aside>
@@ -47,9 +63,18 @@ export const LegalDisclaimerNotice: React.FC<LegalDisclaimerNoticeProps> = ({
       </div>
 
       <p className="leading-relaxed">
+        <span>{LEGAL_DISCLAIMER.short[language]} — </span>
+        <a
+          href={`#${LEGAL_DISCLAIMER.anchorId}`}
+          onClick={handleScrollToCanonical}
+          className="text-[#26215C] font-semibold hover:underline underline-offset-2"
+        >
+          {LEGAL_DISCLAIMER.linkText[language]}
+        </a>
+        <span>. </span>
         {isHindi
-          ? 'NariSuraksha एक स्वतंत्र नागरिक-सुरक्षा व आपातकालीन डिजिटल सहायता टूल है। यहाँ उत्पन्न शिकायत पत्रक (Draft Complaint) उपयोगकर्ता द्वारा दी गई जानकारी पर आधारित एक प्रारूप है, जिसे आधिकारिक राष्ट्रीय साइबर अपराध पोर्टल (cybercrime.gov.in / 1930) या स्थानीय थाने में जमा करने में सहायता हेतु तैयार किया गया है। यह कोई न्यायिक प्रमाण-पत्र या वकील का औपचारिक कानूनी परामर्श नहीं है।'
-          : 'NariSuraksha is an open crisis response and digital evidence assistance utility. Generated complaint drafts are user-guided templates structured to facilitate formal reporting to the National Cyber Crime Reporting Portal (cybercrime.gov.in / 1930) and local Cyber Crime Police Stations. This service does not constitute legal representation, attorney-client relationship, or certified legal advice.'}
+          ? 'यहाँ उत्पन्न शिकायत पत्रक (Draft Complaint) उपयोगकर्ता द्वारा दी गई जानकारी पर आधारित एक प्रारूप है, जिसे आधिकारिक राष्ट्रीय साइबर अपराध पोर्टल (cybercrime.gov.in / 1930) या स्थानीय थाने में जमा करने में सहायता हेतु तैयार किया गया है। यह कोई न्यायिक प्रमाण-पत्र या वकील का औपचारिक कानूनी परामर्श नहीं है।'
+          : 'Generated complaint drafts are user-guided templates structured to facilitate formal reporting to the National Cyber Crime Reporting Portal (cybercrime.gov.in / 1930) and local Cyber Crime Police Stations. This service does not constitute legal representation, attorney-client relationship, or certified legal advice.'}
       </p>
 
       <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-[#26215C]/10 text-[11px]">

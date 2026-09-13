@@ -336,7 +336,7 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
         {/* 5 Summary Highlight Badges */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-3 border-t border-white/10 text-xs">
           <div className="bg-white/5 p-3 rounded-2xl flex items-center gap-2">
-            <Globe className="w-4 h-4 text-purple-300 shrink-0" />
+            <Globe className="w-4 h-4 text-teal-300 shrink-0" />
             <span className="font-semibold">{isHindi ? 'UN सर्वाइवर सिद्धांत' : 'UN Survivor-First'}</span>
           </div>
           <div className="bg-white/5 p-3 rounded-2xl flex items-center gap-2">

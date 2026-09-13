@@ -29,6 +29,7 @@ import { smoothScrollTo } from './utils/scroll';
 import { hapticCamouflage, hapticSOS, hapticAction } from './utils/haptics';
 import { useThreeFingerEmergencyGesture } from './hooks/useThreeFingerEmergencyGesture';
 import { Language, IncidentCategory } from './types';
+import { LEGAL_DISCLAIMER } from './data/legalDisclaimer';
 import { 
   ShieldCheck, 
   PhoneCall, 
@@ -464,6 +465,13 @@ export default function App() {
             setViewMode('app');
             handleNavigateToTab('support', 'somatic-grounding-tool');
           }}
+          onOpenFullDisclaimer={() => {
+            setViewMode('app');
+            setTimeout(() => {
+              const el = document.getElementById(LEGAL_DISCLAIMER.anchorId);
+              el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+          }}
         />
       ) : (
         <motion.div
@@ -650,9 +658,18 @@ export default function App() {
               An independent, non-commercial safety resource.
             </p>
             <p className="text-[11px] text-[#777] leading-relaxed">
-              {isHindi
-                ? 'भारत सरकार, राष्ट्रीय महिला आयोग (NCW) या किसी पुलिस प्राधिकरण से संबद्ध नहीं। यह सामान्य कानूनी जानकारी है, कानूनी सलाह नहीं।'
-                : 'Not affiliated with the Government of India, NCW, or any police authority. This is general legal information, not legal advice.'}
+              <span>{LEGAL_DISCLAIMER.short[language]} — </span>
+              <a
+                href={`#${LEGAL_DISCLAIMER.anchorId}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const el = document.getElementById(LEGAL_DISCLAIMER.anchorId);
+                  el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+                className="text-[#2D2D2D] hover:underline font-semibold underline-offset-2"
+              >
+                {LEGAL_DISCLAIMER.linkText[language]}
+              </a>
             </p>
           </div>
 

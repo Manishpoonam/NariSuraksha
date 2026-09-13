@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Language } from '../types';
 import { hapticAction, hapticCamouflage, hapticSOS } from '../utils/haptics';
+import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
 
 interface LandingGroundingScreenProps {
   language: Language;
@@ -26,6 +27,7 @@ interface LandingGroundingScreenProps {
   onChooseUnderstandOptions: () => void;
   onTriggerCamouflage: () => void;
   onOpenBreathing: () => void;
+  onOpenFullDisclaimer?: () => void;
 }
 
 /**
@@ -47,8 +49,21 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
   onChooseUnderstandOptions,
   onTriggerCamouflage,
   onOpenBreathing,
+  onOpenFullDisclaimer,
 }) => {
   const isHindi = language === 'hi';
+
+  const handleDisclaimerClick = () => {
+    if (onOpenFullDisclaimer) {
+      onOpenFullDisclaimer();
+    } else {
+      onChooseUnderstandOptions();
+      setTimeout(() => {
+        const el = document.getElementById('about-trust-section');
+        el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#FAF8F3] text-[#1A1829] flex flex-col justify-between selection:bg-[#993556] selection:text-white relative overflow-hidden">
@@ -271,11 +286,16 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
           </div>
         </div>
 
-        {/* Small Legal & Non-Affiliation Disclaimer Line */}
+        {/* Canonical Short Legal & Non-Affiliation Disclaimer Line */}
         <p className="text-[10.5px] sm:text-[11px] text-[#85819C] leading-relaxed max-w-3xl mx-auto border-t border-[#26215C]/5 pt-2.5">
-          {isHindi
-            ? 'नारीसुरक्षा एक स्वतंत्र, गैर-व्यावसायिक साधन है और भारत सरकार, राष्ट्रीय महिला आयोग (NCW) या किसी पुलिस प्राधिकरण से संबद्ध नहीं है। दी गई जानकारी सामान्य जागरूकता के लिए है, कानूनी सलाह का विकल्प नहीं।'
-            : 'NariSuraksha is an independent, non-commercial tool and is not affiliated with the Government of India, the National Commission for Women, or any police authority. Information provided is general in nature and not a substitute for professional legal advice.'}
+          <span>{LEGAL_DISCLAIMER.short[language]} — </span>
+          <button
+            type="button"
+            onClick={handleDisclaimerClick}
+            className="text-[#26215C] hover:underline font-medium cursor-pointer underline-offset-2 inline-flex items-center gap-0.5"
+          >
+            <span>{LEGAL_DISCLAIMER.linkText[language]}</span>
+          </button>
         </p>
       </footer>
 

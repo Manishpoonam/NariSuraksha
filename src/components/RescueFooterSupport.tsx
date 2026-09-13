@@ -182,7 +182,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className="font-mono font-bold text-xs text-[#26215C] tracking-tight">7827170170</span>
-                    <span className="text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded bg-purple-100 text-purple-800">NCW</span>
+                    <span className="text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded bg-[#E1F5EE] text-[#0F6E56]">NCW</span>
                   </div>
                   <p className="text-[10px] text-[#666] truncate">
                     {isHindi ? 'महिला आयोग साइबर सेल' : 'NCW Women Cyber Cell'}
@@ -308,7 +308,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                   </p>
                 </div>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-800 border border-purple-200 shrink-0">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E1F5EE] text-[#0F6E56] border border-[#A2E2CD] shrink-0">
                 {isHindi ? 'लोकल केवल' : '100% On-Device'}
               </span>
             </div>
@@ -394,7 +394,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
             aria-expanded={showLegalRights}
           >
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-[#E1F5EE] text-[#0F6E56] flex items-center justify-center shrink-0">
                 <Scale className="w-4 h-4" />
               </div>
               <div className="min-w-0">
@@ -402,7 +402,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                   <h3 className="text-sm font-bold text-[#1A1A1A]">
                     {isHindi ? 'आपके कानूनी अधिकार व सुरक्षा (IT Act एवं BNS)' : 'Your Legal Rights & Statutory Immunity (IT Act & BNS)'}
                   </h3>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E1F5EE] text-[#0F6E56]">
                     {isHindi ? '100% गोपनीयता' : 'Statutory Privacy'}
                   </span>
                 </div>

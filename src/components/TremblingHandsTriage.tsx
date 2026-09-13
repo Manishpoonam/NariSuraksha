@@ -177,7 +177,7 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
               onClick={() => handleSelectVector('instagram_meta')}
               className="p-5 rounded-2xl border-2 border-gray-300 hover:border-[#8B6D5C] bg-gray-50 hover:bg-[#FAF9F6] text-left transition-all cursor-pointer flex flex-col justify-between space-y-3 active:scale-98 shadow-sm group min-h-[100px]"
             >
-              <span className="text-xs font-black uppercase tracking-wider text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full self-start">
+              <span className="text-xs font-black uppercase tracking-wider text-[#0F6E56] bg-[#E1F5EE] px-2 py-0.5 rounded-full self-start">
                 Instagram / Meta
               </span>
               <div>

@@ -44,6 +44,7 @@ import { Language, IncidentCategory } from '../types';
 import { hapticCamouflage, hapticSOS, hapticAction, hapticPanic, hapticSuccess } from '../utils/haptics';
 import { PocsoMinorShieldModal } from './PocsoMinorShieldModal';
 import { smoothScrollTo } from '../utils/scroll';
+import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
 
 export type CrisisScenarioKey = 
   | 'countdown' 
@@ -392,7 +393,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
         hi: 'परिवार या समाज को बताए बिना साइबर सेल में गुप्त FIR दर्ज कराने की प्रक्रिया (BNS धारा 73)।',
       },
       badge: { en: 'Legal Shield', hi: 'पहचान सील' },
-      icon: <Scale className="w-5 h-5 text-purple-300" />,
+      icon: <Scale className="w-5 h-5 text-teal-300" />,
     },
   ];
 
@@ -792,7 +793,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                     ) : (
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-teal-300 flex items-center gap-1.5">
                             <Clock className="w-3.5 h-3.5" />
                             <span>{isHindi ? 'समय बढ़ाने वाला संदेश (ग्रे-रॉक डिले)' : 'Gray-Rock Delay Script (Buys 12 Hours)'}</span>
                           </span>
@@ -946,7 +947,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                 {selectedScenario === 'police' && (
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-purple-400" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-teal-400" />
                       <h3 className="text-sm sm:text-base font-bold text-white">
                         {isHindi ? 'पहचान सुरक्षा: BNS धारा 73 के तहत पूर्ण गोपनीयता' : 'Identity Protection: Strictly Sealed under Sec 73 BNS'}
                       </h3>
@@ -1250,7 +1251,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                 {/* 3. Police FIR Generator */}
                 <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
                   <div className="space-y-1.5">
-                    <div className="flex items-center gap-2 text-purple-300 font-bold text-sm">
+                    <div className="flex items-center gap-2 text-teal-300 font-bold text-sm">
                       <Scale className="w-4 h-4" />
                       <span>{isHindi ? 'गोपनीय साइबर FIR ड्राफ्ट' : 'Confidential Police FIR Dossier'}</span>
                     </div>
@@ -1336,9 +1337,18 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
       {/* Discreet Legal Non-Affiliation Safeguard */}
       <div className="mt-4 text-center px-4">
         <p className="text-[11px] text-[#85819C] leading-relaxed max-w-3xl mx-auto">
-          {isHindi
-            ? 'भारत सरकार, राष्ट्रीय महिला आयोग (NCW) या किसी पुलिस प्राधिकरण से संबद्ध नहीं। यह सामान्य कानूनी जानकारी है, कानूनी सलाह नहीं।'
-            : 'Not affiliated with the Government of India, NCW, or any police authority. This is general legal information, not legal advice.'}
+          <span>{LEGAL_DISCLAIMER.short[language]} — </span>
+          <a
+            href={`#${LEGAL_DISCLAIMER.anchorId}`}
+            onClick={(e) => {
+              e.preventDefault();
+              const el = document.getElementById(LEGAL_DISCLAIMER.anchorId);
+              el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+            className="text-[#FAF8F3] hover:underline font-semibold underline-offset-2"
+          >
+            {LEGAL_DISCLAIMER.linkText[language]}
+          </a>
         </p>
       </div>
 

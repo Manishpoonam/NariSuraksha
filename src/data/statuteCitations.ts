@@ -224,6 +224,52 @@ export const STATUTE_REGISTRY: Record<string, StatuteCitation> = {
     },
     bailable: true,
     verificationStatus: 'VERIFIED_GAZETTE',
+  },
+
+  // BSA Section 63: Admissibility of Electronic Records (Replaces Section 65B Indian Evidence Act, 1872)
+  BSA_63: {
+    id: 'BSA_63',
+    act: 'Bharatiya Sakshya Adhiniyam, 2023 (BSA)',
+    section: 'Section 63',
+    legacyEquivalent: 'Section 65B, Indian Evidence Act, 1872 (Repealed)',
+    shortLabel: { 
+      en: 'BSA Sec 63 (Electronic Evidence Certificate)', 
+      hi: 'BSA धारा 63 (इलेक्ट्रॉनिक साक्ष्य प्रमाण-पत्र)' 
+    },
+    heading: {
+      en: 'Admissibility of Electronic Records & Mandatory Forensic Certification',
+      hi: 'इलेक्ट्रॉनिक साक्ष्य की ग्राह्यता एवं अनिवार्य फोरेंसिक प्रमाण-पत्र'
+    },
+    penalSummary: {
+      en: 'Under Section 63(4) of the Bharatiya Sakshya Adhiniyam, 2023 (which supersedes Section 65B(4) of the former Indian Evidence Act from July 1, 2024), digital screenshots, chat archives, and call logs submitted to police or court are admissible as primary electronic evidence when accompanied by a signed forensic certificate confirming device custody, un-tampered hash, and device reliability.',
+      hi: 'भारतीय साक्ष्य अधिनियम 2023 की धारा 63(4) (पूर्ववर्ती धारा 65B भारतीय साक्ष्य अधिनियम) के तहत, चैट, स्क्रीनशॉट और कॉल रिकॉर्ड तभी कानूनी साक्ष्य माने जाते हैं जब उनके साथ डिवाइस की विश्वसनीयता और अखंडता का हस्ताक्षरित प्रमाण-पत्र संलग्न हो।'
+    },
+    bailable: true,
+    verificationStatus: 'FLAGGED_FOR_LEGAL_REVIEW',
+    uncertaintyFlag: 'FLAGGED FOR LEGAL VERIFICATION: "Section 63 BSA certified complaints" vs. "Section 65B Indian Evidence Act" cited across e-FIR and evidence modules. BSA 2023 Section 63 directly supersedes Section 65B IEA for all offenses committed after July 1, 2024. Requires legal verification on whether cyber FIR drafts and e-evidence declarations should uniformly cite "Section 63 BSA 2023", or dual-cite "Section 63 BSA (formerly Section 65B Indian Evidence Act)" to accommodate legacy state police software portals and transitional proceedings.',
+  },
+
+  // Legacy Citation: IEA Section 65B (Cross-referenced for transition audit)
+  IEA_65B: {
+    id: 'IEA_65B',
+    act: 'Indian Evidence Act, 1872 (Repealed as of July 1, 2024)',
+    section: 'Section 65B',
+    legacyEquivalent: 'Superseded by Section 63, Bharatiya Sakshya Adhiniyam, 2023 (BSA)',
+    shortLabel: { 
+      en: 'IEA Sec 65B (Legacy Electronic Certificate)', 
+      hi: 'IEA धारा 65B (पूर्ववर्ती इलेक्ट्रॉनिक प्रमाण-पत्र)' 
+    },
+    heading: {
+      en: 'Admissibility of Electronic Records (Pre-July 2024 Legacy Provision)',
+      hi: 'इलेक्ट्रॉनिक साक्ष्य की ग्राह्यता (1 जुलाई 2024 से पूर्व का प्रावधान)'
+    },
+    penalSummary: {
+      en: 'Mandated Section 65B(4) certificates for computer printouts and digital evidence. Formally repealed and superseded by Section 63 BSA, 2023 from July 1, 2024.',
+      hi: 'कंप्यूटर व मोबाइल स्क्रीनशॉट के लिए धारा 65B प्रमाण-पत्र अनिवार्य था। 1 जुलाई 2024 से इसे BSA 2023 की धारा 63 द्वारा प्रतिस्थापित कर दिया गया है।'
+    },
+    bailable: true,
+    verificationStatus: 'FLAGGED_FOR_LEGAL_REVIEW',
+    uncertaintyFlag: 'FLAGGED FOR CONSOLIDATION: Retained solely as a historical/legacy cross-reference for pending investigations or evidence gathered under pre-July 2024 law. All active generation should point to Section 63 BSA upon legal confirmation.',
   }
 };
 

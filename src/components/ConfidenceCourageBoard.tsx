@@ -133,8 +133,8 @@ const CONFIDENCE_PINS: ConfidencePin[] = [
       en: 'Criminals rely on emotional subservience. Delivering a calm, formal legal statement signals that you know the law and cannot be manipulated.', 
       hi: 'ब्लैकमेलर केवल घबराहट पर पलते हैं। शांत कानूनी जवाब देखते ही वे समझ जाते हैं कि आपको डराया नहीं जा सकता।' 
     },
-    colorClass: 'border-violet-100 hover:border-violet-300',
-    badgeBg: 'bg-violet-50 text-violet-800 border-violet-200'
+    colorClass: 'border-[#A2E2CD] hover:border-[#0F6E56]',
+    badgeBg: 'bg-[#E1F5EE] text-[#0F6E56] border-[#A2E2CD]'
   },
   {
     id: 'pin_parent_talk',

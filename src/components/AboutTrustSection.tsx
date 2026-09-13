@@ -1,6 +1,7 @@
 import React from 'react';
-import { ShieldCheck, Lock, CheckCircle2, HeartHandshake, FileText, Database, EyeOff, Scale } from 'lucide-react';
+import { ShieldCheck, Lock, HeartHandshake, Scale } from 'lucide-react';
 import { Language } from '../types';
+import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
 
 interface AboutTrustSectionProps {
   language: Language;
@@ -48,7 +49,7 @@ export const AboutTrustSection: React.FC<AboutTrustSectionProps> = ({ language }
 
         {/* Pillar 2: Nature of service */}
         <div className="p-5 rounded-2xl bg-[#FAF9F6] border border-[#E8E2DC] space-y-3">
-          <div className="w-8 h-8 rounded-xl bg-[#F3EFEC] text-[#8B6D5C] flex items-center justify-center font-bold">
+          <div className="w-8 h-8 rounded-xl bg-[#E1F5EE] text-[#0F6E56] flex items-center justify-center font-bold">
             <Scale className="w-4 h-4" />
           </div>
           <h4 className="font-bold text-[#2D2D2D] text-sm sm:text-base">
@@ -73,6 +74,24 @@ export const AboutTrustSection: React.FC<AboutTrustSectionProps> = ({ language }
             {isHindi
               ? 'कोई लॉगिन आवश्यक नहीं। आपके द्वारा भरा गया कोई भी ड्राफ्ट, इमेज हैश या विवरण किसी सर्वर पर कभी नहीं भेजा जाता।'
               : 'Zero server uploads. All drafts, hashes, and SOS drafts are processed entirely in your browser memory and vanish on tab close.'}
+          </p>
+        </div>
+      </div>
+
+      {/* Canonical Legal & Non-Affiliation Disclaimer */}
+      <div 
+        id="canonical-legal-disclaimer" 
+        className="p-4 sm:p-5 rounded-2xl bg-[#FAF9F6] border border-[#E8E2DC] text-xs text-[#555] leading-relaxed flex items-start gap-3.5 scroll-mt-36"
+      >
+        <div className="w-7 h-7 rounded-lg bg-[#E1F5EE] text-[#0F6E56] flex items-center justify-center shrink-0 mt-0.5">
+          <Scale className="w-4 h-4" />
+        </div>
+        <div className="space-y-1">
+          <span className="font-bold text-[#1A1A1A] block text-xs sm:text-sm">
+            {isHindi ? 'वैधानिक गैर-संबद्धता एवं कानूनी अस्वीकरण (Legal Disclaimer):' : 'Legal Disclaimer & Non-Affiliation Notice:'}
+          </span>
+          <p className="text-[#555] leading-relaxed">
+            {LEGAL_DISCLAIMER.full[language]}
           </p>
         </div>
       </div>
