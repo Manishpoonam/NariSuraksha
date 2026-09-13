@@ -220,7 +220,7 @@ export default function App() {
       targetTab = 'report';
       targetSubTab = 'rights';
       setReportSubTab('rights');
-    } else if (tab === 'state_cells') {
+    } else if (tab === 'state_cells' || tab === 'state_cyber' || tab === 'state-cyber-directory') {
       targetTab = 'report';
       targetSubTab = 'state_cells';
       setReportSubTab('state_cells');
