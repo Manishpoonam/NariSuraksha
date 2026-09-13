@@ -233,9 +233,22 @@ export const StateCyberDirectory: React.FC<StateCyberDirectoryProps> = ({ langua
                       </span>
 
                       {/* Verification status label on every card */}
-                      <span className="inline-flex items-center gap-1 text-[10px] font-medium text-[#8B6D5C] bg-[#FAF8F5] px-2 py-0.5 rounded-full border border-[#E8E2DC]">
-                        <HelpCircle className="w-3 h-3 text-[#8B6D5C] shrink-0" />
-                        <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before relying'}</span>
+                      <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border ${
+                        cell.verifiedDate 
+                          ? 'text-[#0F6E56] bg-emerald-50 border-emerald-200 font-semibold' 
+                          : 'text-[#8B6D5C] bg-[#FAF8F5] border-[#E8E2DC]'
+                      }`}>
+                        {cell.verifiedDate ? (
+                          <>
+                            <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                            <span>{isHindi ? `सत्यापित: ${cell.verifiedDate}` : `Verified: ${cell.verifiedDate}`}</span>
+                          </>
+                        ) : (
+                          <>
+                            <HelpCircle className="w-3 h-3 text-[#8B6D5C] shrink-0" />
+                            <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before relying'}</span>
+                          </>
+                        )}
                       </span>
                     </div>
                     <h3 className="text-base sm:text-lg font-bold text-[#1A1A1A] mt-1">

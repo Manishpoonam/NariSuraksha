@@ -230,7 +230,10 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
 
       {activeMode === 'helplines' && (
         <div className="space-y-6">
-          <HelplineDirectory language={language} />
+          <HelplineDirectory 
+            language={language} 
+            onNavigateToTab={onNavigateToTab}
+          />
         </div>
       )}
 

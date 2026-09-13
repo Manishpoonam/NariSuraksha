@@ -14,7 +14,9 @@ import {
   ChevronDown,
   ChevronUp,
   ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  Building2,
+  ArrowRight
 } from 'lucide-react';
 import { HELPLINE_ITEMS } from '../data/helplinesData';
 import { Language } from '../types';
@@ -22,6 +24,7 @@ import { hapticPanic, hapticAction } from '../utils/haptics';
 
 interface HelplineDirectoryProps {
   language: Language;
+  onNavigateToTab?: (tab: string, elementId?: string) => void;
 }
 
 /**
@@ -34,7 +37,10 @@ interface HelplineDirectoryProps {
  * 2. Large Touch Targets (≥48px): Sized for hands that may be trembling or impaired by acute panic.
  * 3. Warm, Non-Bureaucratic Aesthetic: Soft cards with deep plum (#26215C) and soft teal (#0F6E56) accents.
  */
-export const HelplineDirectory: React.FC<HelplineDirectoryProps> = ({ language }) => {
+export const HelplineDirectory: React.FC<HelplineDirectoryProps> = ({ 
+  language,
+  onNavigateToTab 
+}) => {
   const isHindi = language === 'hi';
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -271,6 +277,36 @@ export const HelplineDirectory: React.FC<HelplineDirectoryProps> = ({ language }
           );
         })}
       </div>
+
+      {/* State & UT Cyber Cells Cross-Link */}
+      {onNavigateToTab && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#26215C]/12 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-soft mt-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#FAF8F3] border border-[#26215C]/10 flex items-center justify-center text-[#0F6E56] shrink-0">
+              <Building2 className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-[#26215C]">
+                {isHindi ? 'राज्य और केंद्र शासित प्रदेश साइबर सेल (36)' : 'State & UT Cyber Cells (36 Divisions)'}
+              </h4>
+              <p className="text-xs text-[#5A5672]">
+                {isHindi
+                  ? 'अपने स्थानीय राज्य के नोडल अधिकारी, ईमेल और विशेष महिला साइबर सेल संपर्क देखें।'
+                  : 'Find local nodal officers, headquarters addresses, and special women cyber desks for your state.'}
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => onNavigateToTab('state_cells')}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#FAF8F3] hover:bg-[#26215C] text-[#26215C] hover:text-white border border-[#26215C]/15 font-semibold text-xs transition-colors shrink-0 cursor-pointer"
+          >
+            <span>{isHindi ? 'राज्य डायरेक्टरी खोलें' : 'Open State Directory'}</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
     </section>
   );
 };

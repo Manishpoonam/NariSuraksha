@@ -59,6 +59,29 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
   const [showLegalRights, setShowLegalRights] = useState<boolean>(false);
   const [internalShowPlatformGuides, setInternalShowPlatformGuides] = useState<boolean>(false);
   const [showStateCyberDirectory, setShowStateCyberDirectory] = useState<boolean>(false);
+  const [confirmingPurge, setConfirmingPurge] = useState<boolean>(false);
+  const purgeTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  React.useEffect(() => {
+    return () => {
+      if (purgeTimerRef.current) clearTimeout(purgeTimerRef.current);
+    };
+  }, []);
+
+  const handlePurgeClick = () => {
+    hapticAction();
+    if (confirmingPurge) {
+      if (purgeTimerRef.current) clearTimeout(purgeTimerRef.current);
+      setConfirmingPurge(false);
+      onOpenPurgeModal();
+    } else {
+      setConfirmingPurge(true);
+      if (purgeTimerRef.current) clearTimeout(purgeTimerRef.current);
+      purgeTimerRef.current = setTimeout(() => {
+        setConfirmingPurge(false);
+      }, 3000);
+    }
+  };
 
   const isPlatformGuidesOpen = externalShowPlatformGuides !== undefined 
     ? externalShowPlatformGuides 
@@ -332,11 +355,19 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
               </div>
               <button
                 type="button"
-                onClick={onOpenPurgeModal}
-                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs transition-colors cursor-pointer active:scale-97 shadow-2xs min-h-[38px]"
+                onClick={handlePurgeClick}
+                className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-semibold text-xs transition-all cursor-pointer active:scale-97 shadow-2xs min-h-[38px] ${
+                  confirmingPurge 
+                    ? 'bg-amber-600 hover:bg-amber-700 text-white ring-2 ring-amber-400' 
+                    : 'bg-rose-600 hover:bg-rose-700 text-white'
+                }`}
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                <span className="whitespace-nowrap">{isHindi ? 'डेटा मिटाएं' : 'Purge'}</span>
+                <span className="whitespace-nowrap">
+                  {confirmingPurge 
+                    ? (isHindi ? 'पुष्टि हेतु पुनः दबाएं' : 'Tap again to confirm')
+                    : (isHindi ? 'डेटा मिटाएं' : 'Purge')}
+                </span>
               </button>
             </div>
           </div>
@@ -377,8 +408,8 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                 </div>
                 <p className="text-xs text-[#666] line-clamp-1 sm:line-clamp-none">
                   {isHindi
-                    ? 'क्या पुलिस घर फोन करेगी? क्या फोटो भेजने की सजा होगी? अपने 3 कानूनी अधिकार जानें।'
-                    : 'Will police notify family? Am I liable? Statements recorded only by female officers under BNSS 173.'}
+                    ? 'क्या पुलिस घर फोन करेगी? क्या फोटो भेजने की सजा होगी? जानिए अपने वैधानिक अधिकार एवं BNSS 173 के तहत सुरक्षा।'
+                    : 'Will police notify family? Am I liable? Statutory right to privacy and statement recording by female officers under BNSS 173.'}
                 </p>
               </div>
             </div>
@@ -397,7 +428,10 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                 transition={{ duration: 0.25 }}
                 className="border-t border-[#F0EBE6] p-4 sm:p-6 bg-[#FAF8F3]/40"
               >
-                <ZeroShameLegalShield language={language} />
+                <ZeroShameLegalShield 
+                  language={language} 
+                  onNavigateToTab={onNavigateToTab}
+                />
               </motion.div>
             )}
           </AnimatePresence>

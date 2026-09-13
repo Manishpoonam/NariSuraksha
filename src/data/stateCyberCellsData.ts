@@ -9,6 +9,8 @@ export interface StateCyberCell {
   websiteUrl: string;
   address: string;
   specialWomenCell: { en: string; hi: string };
+  verifiedDate?: string | null;
+  isVerified?: boolean;
 }
 
 export const STATE_CYBER_CELLS: StateCyberCell[] = [
