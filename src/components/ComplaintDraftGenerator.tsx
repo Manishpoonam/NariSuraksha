@@ -36,6 +36,7 @@ import { PocsoMinorShieldModal } from './PocsoMinorShieldModal';
 import { HumanReferralCard } from './HumanReferralCard';
 import { AnonymousFeedbackPrompt } from './AnonymousFeedbackPrompt';
 import { LegalDisclaimerNotice } from './LegalDisclaimerNotice';
+import { generateIntermediaryStatutoryNotice } from '../data/statutoryNotices';
 
 interface ComplaintDraftGeneratorProps {
   language: Language;
@@ -219,33 +220,16 @@ RESPECTFULLY SUBMITTED,
 ${formData.victimAlias}`;
   };
 
-  // Generate 24-Hour Intermediary Notice text
+  // Generate 24-Hour Intermediary Notice text from shared statutoryNotice module
   const generateIntermediaryNotice = () => {
-    return `FORMAL STATUTORY NOTICE UNDER RULE 3(2)(b) OF THE IT (INTERMEDIARY GUIDELINES AND DIGITAL MEDIA ETHICS CODE) RULES, 2021
-
-TO:
-GRIEVANCE OFFICER / LEGAL ENFORCEMENT TEAM
-${formData.platformsInvolved.join(' / ') || 'Intermediary Platform'}
-
-SUBJECT: Emergency Request for Immediate Removal of Non-Consensual Intimate Imagery / Deepfake Media within 24 Hours.
-
-Dear Grievance Officer,
-
-I am writing to formally report non-consensual sexually explicit / morphed intimate imagery hosted on or transmitted via your platform in clear violation of Rule 3(2)(b) of the Information Technology Rules, 2021.
-
-1. URL / IDENTIFIER OF ABUSE:
-${formData.linksOrUsernames || 'Attached in the evidentiary exhibit'}
-
-2. NATURE OF VIOLATION:
-The content depicts intimate private media circulated without consent (${formData.incidentType}).
-
-3. STATUTORY TIMELINE:
-Under Rule 3(2)(b), intermediaries are legally bound to take all reasonable and practicable measures to remove or disable access to such content within twenty-four (24) hours of receipt of this notice.
-
-Failure to act within the mandated 24-hour window will result in the forfeiture of Safe Harbour immunity under Section 79(1) of the Information Technology Act, 2000, exposing the platform and its officers to joint criminal liability under Section 67A.
-
-Complainant Identifier: ${formData.victimAlias}
-Date: ${new Date().toLocaleDateString('en-IN')}`;
+    const { body } = generateIntermediaryStatutoryNotice({
+      platformName: formData.platformsInvolved.join(' / ') || 'Intermediary Platform',
+      targetIdentifier: formData.linksOrUsernames || 'Attached in the evidentiary exhibit',
+      incidentType: formData.incidentType,
+      victimAlias: formData.victimAlias,
+      dateStr: new Date().toLocaleDateString('en-IN'),
+    });
+    return body;
   };
 
   // Generate NCW Petition text

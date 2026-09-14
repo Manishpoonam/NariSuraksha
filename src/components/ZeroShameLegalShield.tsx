@@ -151,7 +151,7 @@ export const ZeroShameLegalShield: React.FC<ZeroShameLegalShieldProps> = ({
 
               {/* Item 3: Inline Minor/POCSO Cross-link directly visible on Fact #1 */}
               {item.hasMinorCrossLink && (
-                <div className="px-4 sm:px-5 pb-3 -mt-1 flex items-center gap-1.5 text-xs text-purple-950 flex-wrap">
+                <div className="px-4 sm:px-5 pb-3 -mt-1 flex items-center gap-1.5 text-xs text-[#26215C] flex-wrap">
                   <span className="text-[#555]">
                     {isHindi ? '18 वर्ष से कम? अलग कानूनी सुरक्षा लागू होती है —' : 'Under 18? Different protections apply —'}
                   </span>

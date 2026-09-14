@@ -26,18 +26,23 @@ import {
   FileText,
   Lock,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  CheckCircle2,
+  PhoneCall,
+  Scale
 } from 'lucide-react';
 import { Language } from '../types';
-import { hapticAction } from '../utils/haptics';
+import { hapticAction, hapticPanic } from '../utils/haptics';
 import { PrivacyLockdownGuide } from './PrivacyLockdownGuide';
+import { PLATFORM_CANONICAL_NOTICES } from '../data/statutoryNotices';
+import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
 
 interface PlatformTakedownPortalProps {
   language: Language;
   onNavigateToTab?: (tab: string, elementId?: string) => void;
 }
 
-type PlatformTabKey = 'whatsapp' | 'instagram' | 'telegram' | 'google' | 'adult' | 'twitter' | 'cybercrime';
+type PlatformTabKey = 'whatsapp' | 'instagram' | 'telegram' | 'google' | 'adult' | 'twitter';
 
 export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({ 
   language,
@@ -69,6 +74,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
     icon: React.ReactNode;
     turnaround: string;
     directUrl: string;
+    verifiedDate: string | null;
     grievanceEmail?: string;
     statutoryRule: string;
     steps: { en: string[]; hi: string[] };
@@ -81,6 +87,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <MessageCircle className="w-5 h-5 text-emerald-600" />,
       turnaround: isHindi ? '< 24 घंटे (IT नियम 2021)' : '< 24 Hours (IT Rules 2021)',
       directUrl: 'https://www.whatsapp.com/contact/forms/147171412035889',
+      verifiedDate: 'Sep 2024',
       grievanceEmail: 'grievance_officer_wa@support.whatsapp.com',
       statutoryRule: 'Rule 3(2)(b) Information Technology Rules, 2021',
       steps: {
@@ -95,8 +102,8 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
           'grievance_officer_wa@support.whatsapp.com पर ईमेल भेजकर 24 घंटे में अकाउंट बैन और सामग्री हटाने की मांग करें।',
         ],
       },
-      noticeSubject: 'URGENT: Notice under Rule 3(2)(b) IT Rules 2021 for Immediate Takedown of Non-Consensual Media',
-      noticeBody: 'Dear WhatsApp India Grievance Officer,\n\nI am writing to submit an urgent grievance under Rule 3(2)(b) of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021.\n\nPerpetrator Phone Number: [Insert Offender Number with +91]\nOffender Display Name: [Insert Name]\nViolation: Circulation/threat of non-consensual intimate imagery.\n\nUnder Rule 3(2)(b), intermediaries are legally mandated to disable access to such material within 24 hours of receiving notice. Please ban the offending account and preserve server logs for law enforcement under Section 91 CrPC/BNSS.\n\nAttached: Uncropped screenshots of harassment/extortion.',
+      noticeSubject: PLATFORM_CANONICAL_NOTICES.whatsapp.subject,
+      noticeBody: PLATFORM_CANONICAL_NOTICES.whatsapp.body,
     },
     instagram: {
       name: isHindi ? 'इंस्टाग्राम व फेसबुक (Meta India)' : 'Instagram & Facebook (Meta India)',
@@ -104,6 +111,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Instagram className="w-5 h-5 text-rose-600" />,
       turnaround: isHindi ? '< 24 घंटे' : '< 24 Hours',
       directUrl: 'https://help.instagram.com/contact/584460464982589',
+      verifiedDate: 'Sep 2024',
       grievanceEmail: 'grievance-officer-india@support.instagram.com',
       statutoryRule: 'Rule 3(2)(b) IT Rules 2021 & Meta Safety Policies',
       steps: {
@@ -118,8 +126,8 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
           '12 घंटे में कार्रवाई न होने पर नोडल अधिकारी को ईमेल नोटिस भेजें।',
         ],
       },
-      noticeSubject: 'URGENT: Rule 3(2)(b) IT Rules 2021 Takedown Demand - Non-Consensual Intimate Image',
-      noticeBody: 'Dear Meta India Grievance Officer,\n\nThis is an urgent takedown demand under Rule 3(2)(b) of the Information Technology Rules, 2021.\n\nOffending Profile / Post URL: [Insert Instagram Profile or Post Link]\nPerpetrator Username: @[Insert Username]\n\nThe material depicts non-consensual intimate imagery/harassment. Rule 3(2)(b) mandates removal within 24 hours without exception. Kindly terminate access and preserve IP/registration telemetry.\n\nSincerely,\n[Your Name / Confidential Complainant]',
+      noticeSubject: PLATFORM_CANONICAL_NOTICES.instagram.subject,
+      noticeBody: PLATFORM_CANONICAL_NOTICES.instagram.body,
     },
     telegram: {
       name: isHindi ? 'टेलीग्राम (Telegram Abuse & Bots)' : 'Telegram Abuse & Deepfake Bots',
@@ -127,6 +135,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Send className="w-5 h-5 text-sky-600" />,
       turnaround: isHindi ? '24 - 48 घंटे' : '24 - 48 Hours',
       directUrl: 'https://telegram.org/support',
+      verifiedDate: 'Aug 2024',
       grievanceEmail: 'cops@telegram.org, abuse@telegram.org, stopca@telegram.org',
       statutoryRule: 'Rule 3(2)(b) IT Rules 2021 & Telegram TOS',
       steps: {
@@ -141,8 +150,8 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
           'cops@telegram.org और stopca@telegram.org पर ईमेल भेजें और @notoscam बॉट पर शिकायत दर्ज करें।',
         ],
       },
-      noticeSubject: 'CRITICAL ABUSE: Urgent Takedown of Non-Consensual Media / AI Deepfake Bot',
-      noticeBody: 'Dear Telegram Abuse & Enforcement Team,\n\nI am reporting an illegal channel / bot operating in violation of Telegram Terms and Indian Law:\n\nChannel / Bot Link: [Insert t.me link]\nBot Username: @[Insert bot handle]\nNature of Infringement: Non-consensual explicit material / deepfake morphing.\n\nPlease immediately terminate this channel/bot and preserve account identification data for cyber law enforcement.\n\nThank you.',
+      noticeSubject: PLATFORM_CANONICAL_NOTICES.telegram.subject,
+      noticeBody: PLATFORM_CANONICAL_NOTICES.telegram.body,
     },
     google: {
       name: isHindi ? 'गूगल सर्च व इमेजेस (Google De-Index)' : 'Google Search & Images De-Indexing',
@@ -150,6 +159,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Search className="w-5 h-5 text-amber-600" />,
       turnaround: isHindi ? '24 - 72 घंटे' : '24 - 72 Hours',
       directUrl: 'https://support.google.com/websearch/troubleshooter/3111061',
+      verifiedDate: 'Sep 2024',
       statutoryRule: 'Google Non-Consensual Explicit Media Removal Policy',
       steps: {
         en: [
@@ -163,8 +173,8 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
           'वे सर्च कीवर्ड्स बताएं जिनसे यह परिणाम दिखता है। गूगल पूरी दुनिया के सर्च नतीजों से इसे हटा देता है।',
         ],
       },
-      noticeSubject: 'Google Search De-Listing Request under Non-Consensual Explicit Content Policy',
-      noticeBody: 'Please use the direct Google Troubleshooter form link below to submit with cryptographic verification.',
+      noticeSubject: PLATFORM_CANONICAL_NOTICES.google.subject,
+      noticeBody: PLATFORM_CANONICAL_NOTICES.google.body,
     },
     adult: {
       name: isHindi ? 'एडल्ट वेबसाइट्स व क्लाउडफ्लेयर शटडाउन' : 'Adult / Pirate Sites & Cloudflare Abuse',
@@ -172,6 +182,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Film className="w-5 h-5 text-rose-700" />,
       turnaround: isHindi ? '24 - 48 घंटे' : '24 - 48 Hours',
       directUrl: 'https://abuse.cloudflare.com',
+      verifiedDate: 'Aug 2024',
       statutoryRule: '18 U.S.C. 2257 / DMCA / IT Act Section 67A',
       steps: {
         en: [
@@ -185,8 +196,8 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
           'क्लाउडफ्लेयर असली वेब होस्टिंग कंपनी को नोटिस भेजकर मुख्य सर्वर से फाइलें डिलीट करवाता है।',
         ],
       },
-      noticeSubject: 'Cloudflare Abuse Notification: Non-Consensual Intimate Material Origin Server Deletion',
-      noticeBody: 'Submitted directly through the Cloudflare verified abuse form for root host dispatch.',
+      noticeSubject: PLATFORM_CANONICAL_NOTICES.adult.subject,
+      noticeBody: PLATFORM_CANONICAL_NOTICES.adult.body,
     },
     twitter: {
       name: isHindi ? 'एक्स / ट्विटर (X Non-Consensual Nudity)' : 'X / Twitter Takedown Portal',
@@ -194,6 +205,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Twitter className="w-5 h-5 text-[#111]" />,
       turnaround: isHindi ? '< 24 घंटे' : '< 24 Hours',
       directUrl: 'https://help.twitter.com/forms/safety-and-sensitive-content/private-information',
+      verifiedDate: 'Sep 2024',
       grievanceEmail: 'grievance-officer-india@twitter.com',
       statutoryRule: 'X Safety Policy & Rule 3(2)(b) IT Rules 2021',
       steps: {
@@ -208,30 +220,8 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
           'X कंटेंट को तुरंत हटाकर अपराधी का अकाउंट हमेशा के लिए सस्पेंड कर देता है।',
         ],
       },
-      noticeSubject: 'URGENT: Takedown of Non-Consensual Intimate Media under Rule 3(2)(b) IT Rules',
-      noticeBody: 'Dear X Grievance Officer,\n\nI request immediate removal of the offending post located at: [Insert Tweet URL]\nHandle: @[Insert Handle]\n\nThis contains non-consensual explicit material subject to mandatory 24-hour takedown under Indian IT Rules.\n\nThank you.',
-    },
-    cybercrime: {
-      name: isHindi ? 'राष्ट्रीय साइबर अपराध पोर्टल (1930)' : 'National Cyber Crime Portal (1930)',
-      badge: isHindi ? 'आधिकारिक पुलिस ई-एफआईआर' : 'Official Police E-FIR & Investigation',
-      icon: <FileText className="w-5 h-5 text-indigo-700" />,
-      turnaround: isHindi ? 'तत्काल एफआईआर दर्ज' : 'Instant E-Complaint Registered',
-      directUrl: 'https://cybercrime.gov.in',
-      statutoryRule: 'BNS Section 73 (Confidential Identity) & IT Act Sec 67A',
-      steps: {
-        en: [
-          'Visit cybercrime.gov.in and select "Report Crime Against Women/Children".',
-          'Choose "Report Anonymously" if you want rapid action against URLs without giving your personal identity, or "Report & Track" for full police prosecution.',
-          'Provide suspect handles, phone numbers, and URLs to initiate court takedown directives.',
-        ],
-        hi: [
-          'cybercrime.gov.in पर जाएं और "Report Crime Against Women/Children" चुनें।',
-          'यदि आप अपनी पहचान बताए बिना लिंक हटवाना चाहती हैं तो "Report Anonymously" चुनें, या एफआईआर के लिए "Report & Track" चुनें।',
-          'स्क्रीनशॉट व ब्लैकमेलर का नंबर दर्ज करें। पुलिस अदालत के जरिए लिंक ब्लॉक करवाती है।',
-        ],
-      },
-      noticeSubject: 'National Cyber Crime Reporting Portal Grievance',
-      noticeBody: 'File officially through cybercrime.gov.in or dial 1930 for financial freeze within the golden hour.',
+      noticeSubject: PLATFORM_CANONICAL_NOTICES.twitter.subject,
+      noticeBody: PLATFORM_CANONICAL_NOTICES.twitter.body,
     },
   };
 
@@ -244,7 +234,6 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
     { id: 'google', label: 'Google Search', icon: <Search className="w-4 h-4 text-amber-600" /> },
     { id: 'adult', label: 'Adult Sites', icon: <Film className="w-4 h-4 text-rose-700" /> },
     { id: 'twitter', label: 'X (Twitter)', icon: <Twitter className="w-4 h-4 text-neutral-800" /> },
-    { id: 'cybercrime', label: 'Police 1930', icon: <FileText className="w-4 h-4 text-indigo-700" /> },
   ];
 
   return (
@@ -289,24 +278,34 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
           </div>
 
           <div className="flex flex-col sm:flex-row gap-2.5 shrink-0 self-start sm:self-center w-full sm:w-auto">
-            <a
-              href="https://stopncii.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-[#111] font-bold text-xs sm:text-sm transition-all shadow-sm active:scale-97"
-            >
-              <span>👩 {isHindi ? '18+: StopNCII.org खोलें' : '18+: Open StopNCII.org'}</span>
-              <ExternalLink className="w-4 h-4" />
-            </a>
-            <a
-              href="https://takeitdown.ncmec.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white/15 hover:bg-white/25 text-white border border-white/20 font-bold text-xs sm:text-sm transition-all active:scale-97"
-            >
-              <span>👧 {isHindi ? '18 से कम: Take It Down' : 'Under 18: Take It Down'}</span>
-              <ExternalLink className="w-4 h-4" />
-            </a>
+            <div className="flex flex-col items-start sm:items-end gap-1">
+              <a
+                href="https://stopncii.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-[#111] font-bold text-xs sm:text-sm transition-all shadow-sm active:scale-97 w-full sm:w-auto"
+              >
+                <span>👩 {isHindi ? '18+: StopNCII.org खोलें' : '18+: Open StopNCII.org'}</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+              <span className="text-[10px] text-emerald-300 font-semibold px-2">
+                {isHindi ? 'सत्यापित: Sep 2024' : 'Verified: Sep 2024'}
+              </span>
+            </div>
+            <div className="flex flex-col items-start sm:items-end gap-1">
+              <a
+                href="https://takeitdown.ncmec.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white/15 hover:bg-white/25 text-white border border-white/20 font-bold text-xs sm:text-sm transition-all active:scale-97 w-full sm:w-auto"
+              >
+                <span>👧 {isHindi ? '18 से कम: Take It Down' : 'Under 18: Take It Down'}</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+              <span className="text-[10px] text-white/70 font-semibold px-2">
+                {isHindi ? 'सत्यापित: Sep 2024' : 'Verified: Sep 2024'}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -383,30 +382,56 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
               </div>
             </div>
 
-            {/* Primary Action Button */}
-            <a
-              href={selectedPlatform.directUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#1A1A1A] hover:bg-black text-white font-bold text-xs sm:text-sm transition-all shadow-xs shrink-0 active:scale-97"
-            >
-              <span>{isHindi ? 'आधिकारिक रिमूवल फॉर्म खोलें' : 'Open Official Takedown Portal'}</span>
-              <ExternalLink className="w-4 h-4 text-amber-300" />
-            </a>
+            {/* Primary Action Button & Verification Marker */}
+            <div className="flex flex-col sm:items-end gap-1.5 shrink-0">
+              <a
+                href={selectedPlatform.directUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#1A1A1A] hover:bg-black text-white font-bold text-xs sm:text-sm transition-all shadow-xs shrink-0 active:scale-97"
+              >
+                <span>{isHindi ? 'आधिकारिक रिमूवल फॉर्म खोलें' : 'Open Official Takedown Portal'}</span>
+                <ExternalLink className="w-4 h-4 text-amber-300" />
+              </a>
+              {selectedPlatform.verifiedDate ? (
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F6E56]">
+                  <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                  <span>{isHindi ? `पोर्टल सत्यापित: ${selectedPlatform.verifiedDate}` : `Portal Verified: ${selectedPlatform.verifiedDate}`}</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#8B6D5C]">
+                  <HelpCircle className="w-3 h-3 text-[#8B6D5C] shrink-0" />
+                  <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before use'}</span>
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* Grievance Email Bar with 1-Click Copy */}
+          {/* Grievance Email Bar with 1-Click Copy & Verification Status */}
           {selectedPlatform.grievanceEmail && (
             <div className="p-3.5 sm:p-4 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-[#E1F5EE] text-[#0F6E56] flex items-center justify-center shrink-0">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#777]">
-                    {isHindi ? 'भारत सरकार मान्यता प्राप्त नोडल ईमेल' : 'Official Grievance Officer Email'}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#777]">
+                      {isHindi ? 'भारत सरकार मान्यता प्राप्त नोडल ईमेल' : 'Official Grievance Officer Email'}
+                    </span>
+                    {selectedPlatform.verifiedDate ? (
+                      <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F6E56] bg-[#E1F5EE] px-2 py-0.5 rounded-full border border-[#B7E4D7]">
+                        <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                        <span>{isHindi ? `सत्यापित: ${selectedPlatform.verifiedDate}` : `Verified: ${selectedPlatform.verifiedDate}`}</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-[10.5px] font-medium text-[#8B6D5C] bg-[#FAF8F3] px-2 py-0.5 rounded-full border border-[#E8E2DC]">
+                        <HelpCircle className="w-3 h-3 text-[#8B6D5C] shrink-0" />
+                        <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before use'}</span>
+                      </span>
+                    )}
                   </div>
-                  <div className="font-mono text-xs sm:text-sm font-bold text-[#1A1A1A] truncate">
+                  <div className="font-mono text-xs sm:text-sm font-bold text-[#1A1A1A] truncate mt-0.5">
                     {selectedPlatform.grievanceEmail}
                   </div>
                 </div>
@@ -448,7 +473,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
             </ol>
           </div>
 
-          {/* Statutory Notice Quick Copy */}
+          {/* Statutory Notice Quick Copy (Unified with e-FIR Generator) */}
           {selectedPlatform.noticeBody && (
             <div className="pt-2 border-t border-[#F0EBE6] space-y-2">
               <div className="flex items-center justify-between">
@@ -478,6 +503,69 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
               </pre>
             </div>
           )}
+        </div>
+
+        {/* DEDICATED ESCALATION PATH: POLICE 1930 & E-FIR (Moved out of platform selector) */}
+        <div className="bg-gradient-to-br from-[#FAF8F3] to-[#F5EFEB] border border-[#E8E2DC] rounded-3xl p-5 sm:p-7 shadow-xs space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#993556]/10 text-[#993556] text-xs font-bold uppercase tracking-wider border border-[#993556]/20">
+                <ShieldAlert className="w-3.5 h-3.5 text-[#993556]" />
+                <span>{isHindi ? 'सरकारी पुलिस कार्रवाई • 24/7 हेल्पलाइन' : 'Government Escalation Path • 24/7 Helpline'}</span>
+              </div>
+              <h4 className="text-base sm:text-lg font-bold text-[#1A1A1A]">
+                {isHindi ? 'प्लेटफॉर्म के बजाय सीधे पुलिस में रिपोर्ट करें' : 'Need Formal Criminal Investigation or Extortion Arrest?'}
+              </h4>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F6E56] bg-[#E1F5EE] px-2.5 py-1 rounded-full border border-[#B7E4D7]">
+                <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                <span>{isHindi ? 'सत्यापित पोर्टल: Sep 2024' : 'Verified Portal: Sep 2024'}</span>
+              </span>
+            </div>
+          </div>
+
+          <p className="text-xs sm:text-sm text-[#444] leading-relaxed">
+            {isHindi
+              ? 'सोशल मीडिया प्लेटफॉर्म केवल अपनी वेबसाइट से लिंक हटाते हैं। यदि अपराधी पैसे मांग रहा है, ब्लैकमेल कर रहा है या धमकी दे रहा है, तो सीधे साइबर अपराध पुलिस 1930 पर कॉल करें या आधिकारिक ई-एफआईआर दर्ज करें। पुलिस अपराधी का बैंक/UPI खाता फ्रीज करती है और BNS धारा 73 के तहत पीड़िता की पहचान पूर्णतः गोपनीय रखी जाती है।'
+              : 'Intermediary takedowns only remove content from social platform servers. If an offender is blackmailing you for money, making threats, or circulating files widely, escalate directly to the National Cyber Crime Police. Police can freeze extortion bank/UPI accounts, issue server preservation summons under Section 94 BNSS, and prosecute under Section 67A IT Act. Complainant identity is strictly protected under Section 73 BNS.'}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <a
+              href="tel:1930"
+              onClick={() => hapticPanic()}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#DC2626] hover:bg-[#B91C1C] text-white font-bold text-xs sm:text-sm transition-all shadow-xs active:scale-97"
+            >
+              <PhoneCall className="w-4 h-4 text-white" />
+              <span>{isHindi ? '1930 डायल करें (तत्काल साइबर पुलिस)' : 'Call 1930 Cyber Police'}</span>
+            </a>
+
+            <a
+              href="https://cybercrime.gov.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white hover:bg-[#F3EFEC] text-[#1A1A1A] border border-[#DED9D4] font-bold text-xs sm:text-sm transition-all shadow-xs active:scale-97"
+            >
+              <span>{isHindi ? 'cybercrime.gov.in खोलें' : 'Open cybercrime.gov.in'}</span>
+              <ExternalLink className="w-4 h-4 text-[#777]" />
+            </a>
+
+            {onNavigateToTab && (
+              <button
+                type="button"
+                onClick={() => {
+                  hapticAction();
+                  onNavigateToTab('report');
+                }}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#26215C] hover:bg-[#1C1844] text-white font-bold text-xs sm:text-sm transition-all shadow-xs active:scale-97 cursor-pointer"
+              >
+                <FileText className="w-4 h-4 text-amber-300" />
+                <span>{isHindi ? 'निर्देशित ई-एफआईआर ड्राफ्टर खोलें' : 'Open Guided e-FIR Generator'}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -536,15 +624,23 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                     : 'Once Google approves removal for one URL, its duplicate matching algorithm automatically de-lists matching copies across all other mirror websites globally.'}
                 </p>
               </div>
-              <a
-                href="https://support.google.com/websearch/troubleshooter/3111061"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-colors w-full"
-              >
-                <span>{isHindi ? 'गूगल रिमूवल फॉर्म खोलें' : 'Open Google De-Indexer'}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+              <div className="space-y-1.5">
+                <a
+                  href="https://support.google.com/websearch/troubleshooter/3111061"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-colors w-full"
+                >
+                  <span>{isHindi ? 'गूगल रिमूवल फॉर्म खोलें' : 'Open Google De-Indexer'}</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+                <div className="text-center">
+                  <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F6E56]">
+                    <CheckCircle2 className="w-3 h-3 text-[#0F6E56]" />
+                    <span>{isHindi ? 'सत्यापित: Sep 2024' : 'Verified: Sep 2024'}</span>
+                  </span>
+                </div>
+              </div>
             </div>
 
             {/* Tool 2: Cloudflare Host Strike */}
@@ -565,15 +661,23 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                     : 'Over 80% of fringe clone adult sites use Cloudflare to hide their hosting. Submitting an abuse report compels the actual hosting provider to delete root files.'}
                 </p>
               </div>
-              <a
-                href="https://abuse.cloudflare.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition-colors w-full"
-              >
-                <span>{isHindi ? 'क्लाउडफ्लेयर एब्यूज फॉर्म खोलें' : 'Open Cloudflare Abuse'}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+              <div className="space-y-1.5">
+                <a
+                  href="https://abuse.cloudflare.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition-colors w-full"
+                >
+                  <span>{isHindi ? 'क्लाउडफ्लेयर एब्यूज फॉर्म खोलें' : 'Open Cloudflare Abuse'}</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+                <div className="text-center">
+                  <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F6E56]">
+                    <CheckCircle2 className="w-3 h-3 text-[#0F6E56]" />
+                    <span>{isHindi ? 'सत्यापित: Aug 2024' : 'Verified: Aug 2024'}</span>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -590,7 +694,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
           className="w-full p-5 sm:p-6 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF8F3]/60 transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[#E1F5EE] text-[#0F6E56] flex items-center justify-center shrink-0">
               <Lock className="w-5 h-5" />
             </div>
             <div>
@@ -598,7 +702,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 <h4 className="text-sm sm:text-base font-bold text-[#1A1A1A]">
                   {isHindi ? 'सोशल मीडिया अकाउंट प्राइवेसी लॉकडाउन' : 'Account Privacy & Harassment Lockdown'}
                 </h4>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 hidden sm:inline-block">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E1F5EE] text-[#0F6E56] border border-[#A2E2CD] hidden sm:inline-block">
                   {isHindi ? 'सेटिंग्स चेकलिस्ट' : 'Settings Checklist'}
                 </span>
               </div>
@@ -619,6 +723,21 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
             <PrivacyLockdownGuide language={language} />
           </div>
         )}
+      </div>
+
+      {/* 6. CANONICAL LEGAL DISCLAIMER & NON-AFFILIATION NOTICE */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] text-xs text-[#666] flex items-start gap-3">
+        <div className="w-8 h-8 rounded-xl bg-[#E1F5EE] text-[#0F6E56] flex items-center justify-center shrink-0">
+          <Scale className="w-4 h-4" />
+        </div>
+        <div className="space-y-1">
+          <div className="font-bold text-[#1A1A1A]">
+            {isHindi ? 'वैधानिक अस्वीकरण व गैर-संबद्धता सूचना' : 'Legal Disclaimer & Non-Affiliation Notice'}
+          </div>
+          <p className="leading-relaxed">
+            {isHindi ? LEGAL_DISCLAIMER.full.hi : LEGAL_DISCLAIMER.full.en}
+          </p>
+        </div>
       </div>
     </div>
   );

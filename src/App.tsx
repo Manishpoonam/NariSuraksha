@@ -539,7 +539,11 @@ export default function App() {
             <div className="flex items-center gap-2 text-xs text-[#666]">
               <span className="inline-flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full font-semibold border border-emerald-200">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                <span>{isHindi ? 'सभी चेक टिक व ड्राफ्ट स्वतः सहेजे गए हैं' : 'All checkmarks & entries auto-saved'}</span>
+                <span>
+                  {isHindi 
+                    ? 'इस निजी सत्र में सुरक्षित — टैब बंद करने पर साफ़ हो जाएगा' 
+                    : 'Saved to this private session — cleared when you close this tab'}
+                </span>
               </span>
             </div>
           </div>

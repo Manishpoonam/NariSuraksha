@@ -77,8 +77,11 @@ export const CloudSyncIndicator: React.FC<CloudSyncIndicatorProps> = ({
           {/* Status Text: Unambiguously verified local storage */}
           <div className="flex items-center gap-1">
             <span className="whitespace-nowrap font-medium text-[11px] sm:text-xs">
-              <span className="hidden sm:inline">
+              <span className="hidden md:inline">
                 {isHindi ? 'क्लाउड सिंक बंद • प्रमाणित' : 'No Cloud Sync • Verified'}
+              </span>
+              <span className="hidden sm:inline md:hidden">
+                {isHindi ? 'क्लाउड बंद • लोकल' : 'No Cloud Sync'}
               </span>
               <span className="sm:hidden">
                 {isHindi ? 'लोकल • प्रमाणित' : 'Local-Only • Verified'}

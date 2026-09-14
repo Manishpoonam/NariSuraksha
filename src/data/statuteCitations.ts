@@ -172,6 +172,25 @@ export const STATUTE_REGISTRY: Record<string, StatuteCitation> = {
     verificationStatus: 'VERIFIED_GAZETTE',
   },
 
+  // BNSS Section 94: Summons to Produce Documents or Electronic Records (Replaces Section 91 CrPC)
+  BNSS_94: {
+    id: 'BNSS_94',
+    act: 'Bharatiya Nagarik Suraksha Sanhita, 2023',
+    section: 'Section 94',
+    legacyEquivalent: 'Section 91, Code of Criminal Procedure (CrPC)',
+    shortLabel: { en: 'BNSS Sec 94 (Production & Preservation of Records)', hi: 'BNSS धारा 94 (दस्तावेज व सर्वर रिकॉर्ड प्रस्तुति)' },
+    heading: {
+      en: 'Summons to Produce Document, Electronic Communication, or Other Thing',
+      hi: 'दस्तावेज, इलेक्ट्रॉनिक संचार व सर्वर डेटा प्रस्तुत करने का वैधानिक आदेश'
+    },
+    penalSummary: {
+      en: 'Empowers police officers and courts to direct intermediaries, telecom providers, and individuals to preserve and produce electronic logs, IP addresses, subscriber data, and chat records necessary for investigation.',
+      hi: 'जांच अधिकारी या अदालत को सोशल मीडिया प्लेटफॉर्म, टेलीकॉम कंपनियों व व्यक्तियों को सर्वर लॉग, आईपी एड्रेस व चैट रिकॉर्ड प्रस्तुत करने का आदेश देने का वैधानिक अधिकार देता है।'
+    },
+    bailable: true,
+    verificationStatus: 'VERIFIED_GAZETTE',
+  },
+
   // IT Act Section 66E: Violation of Privacy
   IT_ACT_66E: {
     id: 'IT_ACT_66E',
