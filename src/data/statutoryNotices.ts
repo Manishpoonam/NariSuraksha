@@ -90,19 +90,19 @@ Attached: Evidentiary screenshots and verification hashes.`;
 export const PLATFORM_CANONICAL_NOTICES: Record<string, { subject: string; body: string }> = {
   whatsapp: generateIntermediaryStatutoryNotice({
     platformName: 'WhatsApp India (Meta Platforms Inc.)',
-    recipientEmail: 'grievance_officer_wa@support.whatsapp.com',
+    recipientEmail: '[Submit via WhatsApp Settings > Help > Contact Us or support@whatsapp.com]',
     targetIdentifier: 'Perpetrator Phone Number: [Insert Offender Number with +91]\nOffender Display Name: [Insert Name / Group Link]',
     incidentType: 'Circulation and extortion threat involving non-consensual intimate imagery on WhatsApp.',
   }),
   instagram: generateIntermediaryStatutoryNotice({
     platformName: 'Instagram & Facebook (Meta Platforms Inc.)',
-    recipientEmail: 'grievance-officer-india@support.instagram.com',
+    recipientEmail: '[Submit via Meta Intimate Image Portal or FBGOIndia@fb.com]',
     targetIdentifier: 'Offending Profile / Post URL: [Insert Instagram Profile or Post Link]\nPerpetrator Username: @[Insert Username]',
     incidentType: 'Non-consensual intimate imagery and harassment hosted on Instagram/Meta platforms.',
   }),
   telegram: generateIntermediaryStatutoryNotice({
     platformName: 'Telegram FZ-LLC (Abuse & Enforcement)',
-    recipientEmail: 'cops@telegram.org, abuse@telegram.org, stopca@telegram.org',
+    recipientEmail: 'abuse@telegram.org, stopCA@telegram.org',
     targetIdentifier: 'Channel / Bot / Message Link: [Insert t.me link]\nBot Username: @[Insert bot handle if AI deepfake tool]',
     incidentType: 'Unauthorized transmission of non-consensual explicit material and deepfake bot operations.',
   }),
@@ -117,8 +117,8 @@ export const PLATFORM_CANONICAL_NOTICES: Record<string, { subject: string; body:
     incidentType: 'Non-consensual adult media hosted in violation of IT Act Section 67A and international safe harbor regulations.',
   }),
   twitter: generateIntermediaryStatutoryNotice({
-    platformName: 'X Corp. (Twitter India Grievance)',
-    recipientEmail: 'grievance-officer-india@twitter.com',
+    platformName: 'X Corp. (Twitter Grievance Redressal)',
+    recipientEmail: '[Submit via X Online Grievance Form at help.x.com/forms]',
     targetIdentifier: 'Offending Tweet / Post URL: [Insert X/Tweet Link]\nAuthor Handle: @[Insert X Handle]',
     incidentType: 'Non-consensual intimate media published on X in violation of Rule 3(2)(b) and X Safety Policy.',
   }),

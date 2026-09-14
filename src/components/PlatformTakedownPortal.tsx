@@ -29,7 +29,8 @@ import {
   ChevronUp,
   CheckCircle2,
   PhoneCall,
-  Scale
+  Scale,
+  AlertTriangle
 } from 'lucide-react';
 import { Language } from '../types';
 import { hapticAction, hapticPanic } from '../utils/haptics';
@@ -74,8 +75,9 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
     icon: React.ReactNode;
     turnaround: string;
     directUrl: string;
-    verifiedDate: string | null;
+    portalVerifiedDate: string | null;
     grievanceEmail?: string;
+    grievanceEmailVerifiedDate?: string | null;
     statutoryRule: string;
     steps: { en: string[]; hi: string[] };
     noticeSubject: string;
@@ -86,20 +88,21 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       badge: isHindi ? '24 घंटे में अनिवार्य निष्कासन' : 'Mandatory 24-Hr Indian Takedown',
       icon: <MessageCircle className="w-5 h-5 text-emerald-600" />,
       turnaround: isHindi ? '< 24 घंटे (IT नियम 2021)' : '< 24 Hours (IT Rules 2021)',
-      directUrl: 'https://www.whatsapp.com/contact/forms/147171412035889',
-      verifiedDate: 'Sep 2024',
+      directUrl: 'https://www.whatsapp.com/contact/',
+      portalVerifiedDate: null, // WhatsApp lacks a standalone 24-hr intimate image web portal; routes users to in-app reporting
       grievanceEmail: 'grievance_officer_wa@support.whatsapp.com',
+      grievanceEmailVerifiedDate: null, // Address not published on WhatsApp primary compliance landing pages
       statutoryRule: 'Rule 3(2)(b) Information Technology Rules, 2021',
       steps: {
         en: [
-          'In WhatsApp chat with perpetrator, tap Profile > Scroll down > Tap "Report Contact". (WhatsApp receives last 5 messages as official server evidence).',
-          'If circulating in a group, tap Group Info > Tap "Report Group".',
-          'Send formal notice to grievance_officer_wa@support.whatsapp.com with the perpetrator’s phone number (+91...) and uncropped threat screenshots.',
+          'In chat screen: tap the 3 dots (⋮) in the top-right corner > tap "More" > select "Report" (or optionally "Report and block"). You can also tap the contact name at the top and scroll down to "Report".',
+          'If circulating in a group: tap the 3 dots (⋮) in the top-right > tap "More" > "Report", or tap Group info and scroll down to "Report Group".',
+          'For formal escalation: submit via WhatsApp Settings > Help > Contact Us or email grievance contact (unverified inbox — confirm delivery receipt).',
         ],
         hi: [
-          'चैट में प्रोफाइल पर जाएं > नीचे "Report Contact" पर टैप करें। (व्हाट्सएप को पिछले 5 संदेश सर्वर सबूत के रूप में मिलते हैं)।',
-          'यदि ग्रुप में भेजा गया है, तो ग्रुप इंफो में जाकर "Report Group" करें।',
-          'grievance_officer_wa@support.whatsapp.com पर ईमेल भेजकर 24 घंटे में अकाउंट बैन और सामग्री हटाने की मांग करें।',
+          'चैट स्क्रीन में: ऊपर दाईं ओर 3 डॉट्स (⋮) पर टैप करें > "More" (अधिक) चुनें > "Report" (रिपोर्ट) पर टैप करें (या "Report and block" चुनें)। या ऊपर नाम पर टैप करके नीचे "Report" चुन सकते हैं।',
+          'यदि ग्रुप में साझा किया गया है: ऊपर दाईं ओर 3 डॉट्स (⋮) > "More" > "Report" चुनें, या ग्रुप जानकारी खोलकर नीचे "Report Group" चुनें।',
+          'औपचारिक शिकायत के लिए: व्हाट्सएप सेटिंग्स > हेल्प > Contact Us के जरिए भेजें या ग्रीवेंस पते पर ईमेल करें (असत्यापित इनबॉक्स — डिलीवरी रसीद जांचें)।',
         ],
       },
       noticeSubject: PLATFORM_CANONICAL_NOTICES.whatsapp.subject,
@@ -111,19 +114,20 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Instagram className="w-5 h-5 text-rose-600" />,
       turnaround: isHindi ? '< 24 घंटे' : '< 24 Hours',
       directUrl: 'https://help.instagram.com/contact/584460464982589',
-      verifiedDate: 'Sep 2024',
-      grievanceEmail: 'grievance-officer-india@support.instagram.com',
+      portalVerifiedDate: null, // Numeric Help Center form IDs frequently relocate or require active user session
+      grievanceEmail: 'FBGOIndia@fb.com',
+      grievanceEmailVerifiedDate: null, // Meta India Grievance inbox; direct email response SLAs are unverified
       statutoryRule: 'Rule 3(2)(b) IT Rules 2021 & Meta Safety Policies',
       steps: {
         en: [
-          'On the post, story, or profile: Tap three dots (...) > Report > Select "Nudity or sexual activity" > "Non-consensual intimate imagery".',
-          'Submit Meta’s Dedicated Intimate Image Form (direct URL below). Meta cross-matches and purges across Instagram, Facebook, and Messenger.',
-          'Email the India Grievance Officer if not removed within 12 hours.',
+          'On the offending post, story, reel, or profile: tap the three dots (...) > Report > select "Nudity or sexual activity" / "Bullying or harassment".',
+          'Submit Meta’s Dedicated Intimate Image Form (link below; verify active session) to purge across Instagram and Facebook.',
+          'Use StopNCII.org (below) to pre-emptively hash and block the media before or during circulation.',
         ],
         hi: [
-          'पोस्ट या प्रोफाइल पर 3 डॉट्स (...) दबाएं > Report > "Nudity or sexual activity" > "Non-consensual intimate imagery" चुनें।',
-          'मेटा के विशेष इंटिमेट इमेज रिमूवल फॉर्म (नीचे दिए बटन) पर शिकायत दर्ज करें। मेटा इंस्टाग्राम व फेसबुक दोनों से इसे हटाता है।',
-          '12 घंटे में कार्रवाई न होने पर नोडल अधिकारी को ईमेल नोटिस भेजें।',
+          'आपत्तिजनक पोस्ट, स्टोरी, रील या प्रोफाइल पर 3 डॉट्स (...) दबाएं > Report > "Nudity or sexual activity" या "Bullying or harassment" चुनें।',
+          'मेटा के इंटिमेट इमेज रिमूवल फॉर्म (नीचे लिंक; लॉगिन जांचें) पर शिकायत दर्ज करें।',
+          'मेटा ऐप्स पर प्रसार रोकने के लिए नीचे दिए गए StopNCII.org टूल का उपयोग करके पहले ही डिजिटल हैश ब्लॉक बनाएं।',
         ],
       },
       noticeSubject: PLATFORM_CANONICAL_NOTICES.instagram.subject,
@@ -135,19 +139,20 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Send className="w-5 h-5 text-sky-600" />,
       turnaround: isHindi ? '24 - 48 घंटे' : '24 - 48 Hours',
       directUrl: 'https://telegram.org/support',
-      verifiedDate: 'Aug 2024',
-      grievanceEmail: 'cops@telegram.org, abuse@telegram.org, stopca@telegram.org',
+      portalVerifiedDate: null, // General support form, not an intimate image expedited takedown pipeline
+      grievanceEmail: 'abuse@telegram.org, stopCA@telegram.org',
+      grievanceEmailVerifiedDate: null, // Listed in telegram.org/faq for general abuse/CSAM, but Telegram lacks a verified 24-hr Indian IT Rules SLA
       statutoryRule: 'Rule 3(2)(b) IT Rules 2021 & Telegram TOS',
       steps: {
         en: [
-          'Long-press offending message/post in Telegram > Tap "Report" > Select "Illegal Adult Content" or "Personal Data".',
-          'Copy the exact permanent link of the channel or message (e.g. t.me/channel_name/1234).',
-          'Email cops@telegram.org and stopca@telegram.org specifying Indian IT Rules violation. Also report to the @notoscam bot on Telegram.',
+          'In the channel, group, or chat: long-press the offending message or media > select "Report" > choose "Illegal Adult Content" or "Personal Data".',
+          'Copy the permanent link of the post, channel, or message (e.g. t.me/... link) and note the bot or account username.',
+          'Email abuse@telegram.org and stopCA@telegram.org with the links and context (response times vary; also report via police/1930 for urgent blocking orders).',
         ],
         hi: [
-          'टेलीग्राम मैसेज पर लॉन्ग-प्रेस करें > "Report" > "Illegal Adult Content" चुनें।',
-          'चैनल या मैसेज का सटीक t.me लिंक (e.g. t.me/channel/123) कॉपी करें।',
-          'cops@telegram.org और stopca@telegram.org पर ईमेल भेजें और @notoscam बॉट पर शिकायत दर्ज करें।',
+          'चैनल, ग्रुप या चैट में: आपत्तिजनक मैसेज या मीडिया पर लॉन्ग-प्रेस करें > "Report" चुनें > "Illegal Adult Content" चुनें।',
+          'चैनल या संदेश का सटीक t.me लिंक कॉपी करें और बॉट/यूजरनेम नोट करें।',
+          'abuse@telegram.org और stopCA@telegram.org पर लिंक भेजें (प्रतिक्रिया समय अनिश्चित है; तत्काल आदेश के लिए 1930 पर भी रिपोर्ट करें)।',
         ],
       },
       noticeSubject: PLATFORM_CANONICAL_NOTICES.telegram.subject,
@@ -159,18 +164,18 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Search className="w-5 h-5 text-amber-600" />,
       turnaround: isHindi ? '24 - 72 घंटे' : '24 - 72 Hours',
       directUrl: 'https://support.google.com/websearch/troubleshooter/3111061',
-      verifiedDate: 'Sep 2024',
+      portalVerifiedDate: 'Mar 2026', // Source: Google Search Help Center Troubleshooter ID 3111061
       statutoryRule: 'Google Non-Consensual Explicit Media Removal Policy',
       steps: {
         en: [
-          'Open Google’s official "Remove explicit personal images from Google Search" form.',
-          'Provide the URLs of the webpages and the specific Google Image search results displaying the media.',
-          'List search queries that trigger the results (e.g., your name, phone number, or handle). Google purges the links globally and activates automated duplicate matching.',
+          'Open Google’s official "Remove explicit personal images from Google Search" troubleshooter (verified link below).',
+          'Submit the webpage URLs hosting the content and the specific Google Image search results displaying the media.',
+          'List search queries that trigger the results (e.g., your name, phone number, or handle). Google reviews and de-indexes matching search results.',
         ],
         hi: [
-          'गूगल के आधिकारिक "Remove explicit personal images" फॉर्म पर जाएं।',
-          'उन सभी वेब पेजों और गूगल इमेजेस के लिंक (URLs) दर्ज करें।',
-          'वे सर्च कीवर्ड्स बताएं जिनसे यह परिणाम दिखता है। गूगल पूरी दुनिया के सर्च नतीजों से इसे हटा देता है।',
+          'गूगल के आधिकारिक "Remove explicit personal images from Google Search" फॉर्म (सत्यापित लिंक) पर जाएं।',
+          'कंटेंट होस्ट करने वाले वेबपेज के लिंक और गूगल सर्च रिजल्ट्स के यूआरएल दर्ज करें।',
+          'वे सर्च कीवर्ड्स बताएं जिनसे यह परिणाम दिखता है। गूगल समीक्षा करके सर्च नतीजों से इसे हटाता है।',
         ],
       },
       noticeSubject: PLATFORM_CANONICAL_NOTICES.google.subject,
@@ -182,18 +187,18 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Film className="w-5 h-5 text-rose-700" />,
       turnaround: isHindi ? '24 - 48 घंटे' : '24 - 48 Hours',
       directUrl: 'https://abuse.cloudflare.com',
-      verifiedDate: 'Aug 2024',
+      portalVerifiedDate: 'Mar 2026', // Source: Cloudflare Trust & Safety abuse reporting portal
       statutoryRule: '18 U.S.C. 2257 / DMCA / IT Act Section 67A',
       steps: {
         en: [
-          'Do NOT communicate with rogue pirate site webmasters.',
+          'Do NOT communicate with rogue pirate site webmasters or pay extortion demands.',
           'Over 80% of adult clone sites use Cloudflare reverse proxies to conceal their host. File a report on abuse.cloudflare.com under "Non-Consensual Sexual Content".',
-          'Cloudflare transmits the legal takedown strike directly to the actual origin host and domain registrar, compelling immediate server file deletion.',
+          'Cloudflare transmits the legal takedown strike directly to the actual origin host and domain registrar, compelling upstream file deletion.',
         ],
         hi: [
           'अनजान पायरेट वेबसाइटों के एडमिन से कभी पैसे देकर बात न करें।',
           '80% से ज्यादा ऐसी साइट्स क्लाउडफ्लेयर के जरिए चलती हैं। abuse.cloudflare.com पर "Non-Consensual Sexual Content" में रिपोर्ट करें।',
-          'क्लाउडफ्लेयर असली वेब होस्टिंग कंपनी को नोटिस भेजकर मुख्य सर्वर से फाइलें डिलीट करवाता है।',
+          'क्लाउडफ्लेयर असली वेब होस्टिंग कंपनी और डोमेन रजिस्ट्रार को नोटिस भेजकर मुख्य सर्वर से फाइलें डिलीट करवाता है।',
         ],
       },
       noticeSubject: PLATFORM_CANONICAL_NOTICES.adult.subject,
@@ -205,19 +210,20 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Twitter className="w-5 h-5 text-[#111]" />,
       turnaround: isHindi ? '< 24 घंटे' : '< 24 Hours',
       directUrl: 'https://help.twitter.com/forms/safety-and-sensitive-content/private-information',
-      verifiedDate: 'Sep 2024',
+      portalVerifiedDate: null, // X form URLs frequently change or redirect to help.x.com
       grievanceEmail: 'grievance-officer-india@twitter.com',
+      grievanceEmailVerifiedDate: null, // Public grievance inbox retired; X mandates web form submissions
       statutoryRule: 'X Safety Policy & Rule 3(2)(b) IT Rules 2021',
       steps: {
         en: [
-          'On the offending post, tap the three dots (...) > Report > Select "Sensitive media" > "Non-consensual nudity".',
-          'Open X’s dedicated Non-Consensual Intimate Media portal (link below) and submit the tweet URL.',
-          'X permanently terminates access and bans the offender’s account across devices.',
+          'On the offending post: tap the three dots (...) > Report Post > select "Sensitive media" or "Non-consensual nudity".',
+          'Submit a report through X’s dedicated Non-Consensual Intimate Media portal (link below).',
+          'If circulation continues, file with National Cyber Crime portal (cybercrime.gov.in) to trigger Section 79 intermediary notice.',
         ],
         hi: [
-          'पोस्ट पर 3 डॉट्स (...) टैप करें > Report > "Sensitive media" > "Non-consensual nudity" चुनें।',
-          'X के समर्पित वेब फॉर्म पर ट्वीट का लिंक दर्ज करें।',
-          'X कंटेंट को तुरंत हटाकर अपराधी का अकाउंट हमेशा के लिए सस्पेंड कर देता है।',
+          'पोस्ट पर 3 डॉट्स (...) टैप करें > Report Post > "Sensitive media" या "Non-consensual nudity" चुनें।',
+          'X के समर्पित वेब फॉर्म पर ट्वीट का लिंक दर्ज करें (नीचे लिंक)।',
+          'यदि सामग्री नहीं हटती है, तो राष्ट्रीय साइबर अपराध पोर्टल (cybercrime.gov.in) पर धारा 79 नोटिस जारी करवाने के लिए शिकायत करें।',
         ],
       },
       noticeSubject: PLATFORM_CANONICAL_NOTICES.twitter.subject,
@@ -288,8 +294,9 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 <span>👩 {isHindi ? '18+: StopNCII.org खोलें' : '18+: Open StopNCII.org'}</span>
                 <ExternalLink className="w-4 h-4" />
               </a>
-              <span className="text-[10px] text-emerald-300 font-semibold px-2">
-                {isHindi ? 'सत्यापित: Sep 2024' : 'Verified: Sep 2024'}
+              <span className="inline-flex items-center gap-1 text-[10px] text-emerald-300 font-semibold px-2">
+                <CheckCircle2 className="w-3 h-3 text-emerald-300 shrink-0" />
+                <span>{isHindi ? 'सत्यापित: SWGfL / Meta पार्टनर' : 'Verified: SWGfL / Meta Partner'}</span>
               </span>
             </div>
             <div className="flex flex-col items-start sm:items-end gap-1">
@@ -302,8 +309,9 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 <span>👧 {isHindi ? '18 से कम: Take It Down' : 'Under 18: Take It Down'}</span>
                 <ExternalLink className="w-4 h-4" />
               </a>
-              <span className="text-[10px] text-white/70 font-semibold px-2">
-                {isHindi ? 'सत्यापित: Sep 2024' : 'Verified: Sep 2024'}
+              <span className="inline-flex items-center gap-1 text-[10px] text-white/80 font-semibold px-2">
+                <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+                <span>{isHindi ? 'सत्यापित: NCMEC आधिकारिक' : 'Verified: Official NCMEC'}</span>
               </span>
             </div>
           </div>
@@ -393,14 +401,14 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 <span>{isHindi ? 'आधिकारिक रिमूवल फॉर्म खोलें' : 'Open Official Takedown Portal'}</span>
                 <ExternalLink className="w-4 h-4 text-amber-300" />
               </a>
-              {selectedPlatform.verifiedDate ? (
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F6E56]">
-                  <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
-                  <span>{isHindi ? `पोर्टल सत्यापित: ${selectedPlatform.verifiedDate}` : `Portal Verified: ${selectedPlatform.verifiedDate}`}</span>
+              {selectedPlatform.portalVerifiedDate ? (
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F6E56] bg-[#E1F5EE] px-2.5 py-0.5 rounded-full border border-[#B7E4D7]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
+                  <span>{isHindi ? `पोर्टल सत्यापित: ${selectedPlatform.portalVerifiedDate}` : `Portal Verified: ${selectedPlatform.portalVerifiedDate}`}</span>
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#8B6D5C]">
-                  <HelpCircle className="w-3 h-3 text-[#8B6D5C] shrink-0" />
+                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                   <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before use'}</span>
                 </span>
               )}
@@ -419,14 +427,14 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                     <span className="text-[11px] font-bold uppercase tracking-wider text-[#777]">
                       {isHindi ? 'भारत सरकार मान्यता प्राप्त नोडल ईमेल' : 'Official Grievance Officer Email'}
                     </span>
-                    {selectedPlatform.verifiedDate ? (
+                    {selectedPlatform.grievanceEmailVerifiedDate ? (
                       <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F6E56] bg-[#E1F5EE] px-2 py-0.5 rounded-full border border-[#B7E4D7]">
                         <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
-                        <span>{isHindi ? `सत्यापित: ${selectedPlatform.verifiedDate}` : `Verified: ${selectedPlatform.verifiedDate}`}</span>
+                        <span>{isHindi ? `सत्यापित: ${selectedPlatform.grievanceEmailVerifiedDate}` : `Verified: ${selectedPlatform.grievanceEmailVerifiedDate}`}</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[10.5px] font-medium text-[#8B6D5C] bg-[#FAF8F3] px-2 py-0.5 rounded-full border border-[#E8E2DC]">
-                        <HelpCircle className="w-3 h-3 text-[#8B6D5C] shrink-0" />
+                      <span className="inline-flex items-center gap-1 text-[10.5px] font-medium text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                        <AlertTriangle className="w-3 h-3 text-amber-600 shrink-0" />
                         <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before use'}</span>
                       </span>
                     )}
@@ -637,7 +645,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 <div className="text-center">
                   <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F6E56]">
                     <CheckCircle2 className="w-3 h-3 text-[#0F6E56]" />
-                    <span>{isHindi ? 'सत्यापित: Sep 2024' : 'Verified: Sep 2024'}</span>
+                    <span>{isHindi ? 'सत्यापित: Google सहायता केंद्र #3111061' : 'Verified: Google Help Center #3111061'}</span>
                   </span>
                 </div>
               </div>
@@ -674,7 +682,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 <div className="text-center">
                   <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F6E56]">
                     <CheckCircle2 className="w-3 h-3 text-[#0F6E56]" />
-                    <span>{isHindi ? 'सत्यापित: Aug 2024' : 'Verified: Aug 2024'}</span>
+                    <span>{isHindi ? 'सत्यापित: Cloudflare Trust & Safety' : 'Verified: Cloudflare Trust & Safety'}</span>
                   </span>
                 </div>
               </div>
