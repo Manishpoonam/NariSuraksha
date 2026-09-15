@@ -637,18 +637,18 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
             <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] space-y-3 flex flex-col justify-between">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-sky-700 uppercase tracking-wide">
-                    {isHindi ? '1. गूगल ऑटोमैटिक मिरर पर्ज' : '1. Google Search De-Index'}
+                  <span className="text-xs font-bold text-[#26215C] uppercase tracking-wide">
+                    {isHindi ? '1. गूगल सर्च रिजल्ट्स से लिंक हटाएं' : '1. Remove From Google Search Results'}
                   </span>
                   <Globe className="w-4 h-4 text-sky-600" />
                 </div>
                 <h5 className="text-sm font-bold text-[#1A1A1A]">
-                  {isHindi ? 'सभी डुप्लीकेट साइट्स से 1 बार में खात्मा' : 'Purges All Mirror Copies from Search Worldwide'}
+                  {isHindi ? 'सर्च रिजल्ट्स से डुप्लीकेट कॉपियां हटाएं' : 'Removes Duplicate Copies Across Search Results'}
                 </h5>
                 <p className="text-xs text-[#666] leading-relaxed">
                   {isHindi
-                    ? 'गूगल के एआई एल्गोरिदम के तहत, 1 बार रिपोर्ट करने पर गूगल सभी क्लोन व डुप्लीकेट साइटों से उस वीडियो/फोटो को सर्च और इमेज रिजल्ट्स से खुद मिटा देता है।'
-                    : 'Once Google approves removal for one URL, its duplicate matching algorithm automatically de-lists matching copies across all other mirror websites globally.'}
+                    ? 'गूगल के एल्गोरिदम के तहत, 1 बार रिपोर्ट स्वीकृत होने पर गूगल सभी अन्य क्लोन व डुप्लीकेट वेबसाइटों से उस सामग्री को सर्च व इमेज रिजल्ट्स से हटा देता है।'
+                    : 'Once Google approves removal for one URL, its duplicate matching algorithm automatically de-lists matching copies across other mirror websites globally.'}
                 </p>
               </div>
               <div className="space-y-1.5">
@@ -656,10 +656,11 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                   href="https://support.google.com/websearch/troubleshooter/3111061"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-colors w-full"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#26215C] hover:bg-[#1C1844] text-white text-xs font-bold transition-all shadow-xs active:scale-97 w-full cursor-pointer"
                 >
-                  <span>{isHindi ? 'गूगल रिमूवल फॉर्म खोलें' : 'Open Google De-Indexer'}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <Globe className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                  <span>{isHindi ? 'गूगल रिमूवल फॉर्म खोलें' : 'Open Google Removal Request'}</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-white/70 shrink-0" />
                 </a>
                 <div className="text-center">
                   <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F6E56]">
@@ -670,22 +671,22 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
               </div>
             </div>
 
-            {/* Tool 2: Cloudflare Host Strike */}
+            {/* Tool 2: Cloudflare Host Report */}
             <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] space-y-3 flex flex-col justify-between">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-orange-700 uppercase tracking-wide">
-                    {isHindi ? '2. क्लाउडफ्लेयर होस्ट स्ट्राइक' : '2. Cloudflare Origin Host Kill-Switch'}
+                  <span className="text-xs font-bold text-[#26215C] uppercase tracking-wide">
+                    {isHindi ? '2. वेबसाइट की होस्टिंग कंपनी को रिपोर्ट करें' : '2. Report the Website\'s Hosting Company'}
                   </span>
-                  <ShieldAlert className="w-4 h-4 text-orange-600" />
+                  <ShieldAlert className="w-4 h-4 text-orange-500" />
                 </div>
                 <h5 className="text-sm font-bold text-[#1A1A1A]">
-                  {isHindi ? '80% एडल्ट साइट्स का असली सर्वर बंद' : 'Direct Hosting Server File Deletion'}
+                  {isHindi ? 'होस्टिंग प्रदाता को रिपोर्ट भेजें' : 'Report Directly to the Site\'s Host'}
                 </h5>
                 <p className="text-xs text-[#666] leading-relaxed">
                   {isHindi
-                    ? '80% से ज्यादा क्लोन एडल्ट साइट्स क्लाउडफ्लेयर पर निर्भर हैं। abuse.cloudflare.com पर रिपोर्ट करने से उनके मुख्य सर्वर से फाइलें तुरंत डिलीट करवा दी जाती हैं।'
-                    : 'Over 80% of fringe clone adult sites use Cloudflare to hide their hosting. Submitting an abuse report compels the actual hosting provider to delete root files.'}
+                    ? 'कई क्लोन या पायरेट वेबसाइटें अपनी मूल पहचान छुपाने के लिए क्लाउडफ्लेयर जैसी सेवाओं का उपयोग करती हैं। एब्यूज रिपोर्ट दर्ज करने से वेबसाइट की मुख्य होस्टिंग कंपनी को सूचना मिलती है, जो सामग्री को हटाने या साइट को ऑफलाइन करने के कदम उठा सकती है।'
+                    : 'Many clone or pirate websites use services like Cloudflare to route their traffic. Submitting an abuse report informs the site\'s hosting provider, who can take steps to remove it or take it offline.'}
                 </p>
               </div>
               <div className="space-y-1.5">
@@ -693,10 +694,11 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                   href="https://abuse.cloudflare.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold transition-colors w-full"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#26215C] hover:bg-[#1C1844] text-white text-xs font-bold transition-all shadow-xs active:scale-97 w-full cursor-pointer"
                 >
-                  <span>{isHindi ? 'क्लाउडफ्लेयर एब्यूज फॉर्म खोलें' : 'Open Cloudflare Abuse'}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <ShieldAlert className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                  <span>{isHindi ? 'क्लाउडफ्लेयर एब्यूज फॉर्म खोलें' : 'Open Cloudflare Abuse Form'}</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-white/70 shrink-0" />
                 </a>
                 <div className="text-center">
                   <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F6E56]">

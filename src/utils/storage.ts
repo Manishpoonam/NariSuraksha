@@ -29,6 +29,7 @@ export const STORAGE_KEYS = {
   IDLE_TIMEOUT_SEC: 'idle_timeout_sec',
   CUSTOM_STEALTH_KEY: 'custom_stealth_hotkey',
   DISGUISE_MANIFEST_OPT_IN: 'disguise_pwa_manifest_opt_in',
+  LOCKDOWN_CHECKLIST: 'lockdown_checklist_v1',
 } as const;
 
 /**

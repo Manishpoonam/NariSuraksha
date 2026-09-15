@@ -12,44 +12,46 @@ import {
   AlertCircle,
   Key,
   RotateCcw,
-  CheckCircle2
+  CheckCircle2,
+  Check
 } from 'lucide-react';
 import { Language } from '../types';
+import { sessionDraft, STORAGE_KEYS } from '../utils/storage';
 
 interface PrivacyLockdownGuideProps {
   language: Language;
 }
 
-const STORAGE_KEY = 'suraksha_lockdown_checklist_v1';
-
 export const PrivacyLockdownGuide: React.FC<PrivacyLockdownGuideProps> = ({ language }) => {
   const isHindi = language === 'hi';
+
+  // Session-only storage: cleared on tab/browser close to protect users on shared or monitored devices
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>(() => {
+    // Purge legacy localStorage data to prevent security leaks on shared devices
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.warn('Could not parse lockdown checklist', e);
-    }
-    return {};
+      localStorage.removeItem('suraksha_lockdown_checklist_v1');
+    } catch (_) {}
+    return sessionDraft.get<Record<string, boolean>>(STORAGE_KEYS.LOCKDOWN_CHECKLIST, {});
   });
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(completedSteps));
-    } catch (e) {
-      console.warn('Could not save lockdown checklist', e);
-    }
+    sessionDraft.set(STORAGE_KEYS.LOCKDOWN_CHECKLIST, completedSteps);
   }, [completedSteps]);
 
   const toggleStep = (id: string) => {
     setCompletedSteps(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleReset = () => {
-    if (window.confirm(isHindi ? 'क्या आप सभी टिक रीसेट करना चाहते हैं?' : 'Reset all privacy checklist tick marks?')) {
-      setCompletedSteps({});
+  const handleReset = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
     }
+    sessionDraft.remove(STORAGE_KEYS.LOCKDOWN_CHECKLIST);
+    try {
+      localStorage.removeItem('suraksha_lockdown_checklist_v1');
+    } catch (_) {}
+    setCompletedSteps({});
   };
 
   const platforms = [
@@ -209,6 +211,8 @@ export const PrivacyLockdownGuide: React.FC<PrivacyLockdownGuideProps> = ({ lang
     }
   ];
 
+  const activeCount = Object.values(completedSteps).filter(Boolean).length;
+
   return (
     <section id="privacy-lockdown-guide" className="space-y-6 scroll-mt-48">
       <div className="border-b border-[#F0EBE6] pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -229,18 +233,31 @@ export const PrivacyLockdownGuide: React.FC<PrivacyLockdownGuideProps> = ({ lang
         </div>
 
         {/* Save Status & Reset Controls */}
-        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#F3EFEC] text-[#8B6D5C] rounded-full text-xs font-semibold">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0 flex-wrap">
+          <span
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+              activeCount > 0
+                ? 'bg-[#E1F5EE] text-[#0F6E56] border border-[#B7E4D7]'
+                : 'bg-[#FAF8F3] text-[#666] border border-[#E8E2DC]'
+            }`}
+          >
+            <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 ${activeCount > 0 ? 'text-[#0F6E56]' : 'text-[#888]'}`} />
             <span>
-              {Object.values(completedSteps).filter(Boolean).length} {isHindi ? 'चरण पूर्ण (सुरक्षित)' : 'steps completed (saved)'}
+              {activeCount > 0
+                ? isHindi
+                  ? `${activeCount} सुरक्षा सक्रिय — अब आप तक पहुंचना बहुत कठिन है`
+                  : `${activeCount} protections active — you're already harder to reach`
+                : isHindi
+                  ? 'सत्र-आधारित चेकलिस्ट (टैब बंद होने पर स्वतः मिट जाएगी)'
+                  : 'Session checklist (cleared on tab close)'}
             </span>
           </span>
-          {Object.values(completedSteps).filter(Boolean).length > 0 && (
+          {activeCount > 0 && (
             <button
+              type="button"
               onClick={handleReset}
-              className="inline-flex items-center gap-1 px-2.5 py-1 text-xs text-[#888] hover:text-[#DC2626] transition-colors cursor-pointer"
-              title={isHindi ? 'रीसेट करें' : 'Reset checks'}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium text-[#666] hover:text-[#DC2626] hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-all cursor-pointer active:scale-95"
+              title={isHindi ? 'सभी टिक रीसेट करें' : 'Reset active protections'}
             >
               <RotateCcw className="w-3 h-3" />
               <span>{isHindi ? 'रीसेट' : 'Reset'}</span>
@@ -302,25 +319,33 @@ export const PrivacyLockdownGuide: React.FC<PrivacyLockdownGuideProps> = ({ lang
                     onClick={() => toggleStep(st.id)}
                     className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 select-none ${
                       isChecked
-                        ? 'bg-[#F3EFEC] border-[#DED9D4] text-[#1A1A1A]'
+                        ? 'bg-[#E1F5EE]/60 border-[#B7E4D7] text-[#1A1A1A]'
                         : 'bg-white hover:bg-[#FAF9F6] border-[#E8E2DC] text-[#1A1A1A]'
                     }`}
                   >
-                    <button
-                      type="button"
-                      className="mt-0.5 focus:outline-none shrink-0"
-                    >
+                    <div className="mt-0.5 shrink-0">
                       {isChecked ? (
-                        <CheckSquare className="w-5 h-5 text-[#8B6D5C]" />
+                        <div className="w-5 h-5 rounded-md bg-[#0F6E56] text-white flex items-center justify-center shadow-xs">
+                          <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        </div>
                       ) : (
-                        <Square className="w-5 h-5 text-[#AAA]" />
+                        <div className="w-5 h-5 rounded-md border-2 border-[#D1CCC7] hover:border-[#8B6D5C] bg-white transition-colors" />
                       )}
-                    </button>
+                    </div>
 
-                    <div className="space-y-1">
-                      <h4 className={`text-sm sm:text-base font-bold ${isChecked ? 'text-[#8B6D5C] line-through opacity-80' : 'text-[#1A1A1A]'}`}>
-                        {st.title[language]}
-                      </h4>
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h4 className={`text-sm sm:text-base font-bold transition-colors ${
+                          isChecked ? 'text-[#0F6E56]' : 'text-[#1A1A1A]'
+                        }`}>
+                          {st.title[language]}
+                        </h4>
+                        {isChecked && (
+                          <span className="text-[10px] font-semibold px-2 py-0.2 rounded-full bg-[#E1F5EE] text-[#0F6E56] border border-[#B7E4D7]">
+                            {isHindi ? 'सक्रिय' : 'Active'}
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs sm:text-sm text-[#444] leading-relaxed">
                         {st.instruction[language]}
                       </p>
