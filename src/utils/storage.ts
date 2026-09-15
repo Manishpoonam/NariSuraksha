@@ -226,6 +226,14 @@ export function saveComplaintDraft(data: ComplaintFormData, saveToPersistent: bo
 }
 
 /**
+ * Clears complaint draft from both session and persistent storage engines.
+ */
+export function clearComplaintDraft(): void {
+  sessionDraft.remove(STORAGE_KEYS.COMPLAINT_DRAFT);
+  persistentDraft.remove(STORAGE_KEYS.COMPLAINT_DRAFT);
+}
+
+/**
  * Emergency Footprint Purge
  * Erases ALL session and persistent artifacts across all keys.
  */

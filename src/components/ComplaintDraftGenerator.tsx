@@ -24,18 +24,20 @@ import {
   HelpCircle,
   AlertCircle,
   Scale,
-  Baby
+  Baby,
+  RotateCcw
 } from 'lucide-react';
 import { Language, IncidentCategory, ComplaintFormData, CloudSyncState } from '../types';
 import { exportCourtReadyPDF } from '../utils/pdfExport';
 import { notifyDraftSaving, subscribeToSync, getCloudSyncState } from '../utils/cloudSync';
 import { hapticAction, hapticSuccess } from '../utils/haptics';
-import { loadComplaintDraft, saveComplaintDraft } from '../utils/storage';
+import { loadComplaintDraft, saveComplaintDraft, clearComplaintDraft } from '../utils/storage';
 import { LEGAL_FRAMEWORK_AUDIT } from '../data/legalContentMeta';
 import { PocsoMinorShieldModal } from './PocsoMinorShieldModal';
 import { HumanReferralCard } from './HumanReferralCard';
 import { AnonymousFeedbackPrompt } from './AnonymousFeedbackPrompt';
 import { LegalDisclaimerNotice } from './LegalDisclaimerNotice';
+import { TraumaInformedStepTracker } from './TraumaInformedStepTracker';
 import { generateIntermediaryStatutoryNotice } from '../data/statutoryNotices';
 import { getStatuteCitationsForIncident } from '../data/statuteCitations';
 
@@ -64,26 +66,51 @@ export const ComplaintDraftGenerator: React.FC<ComplaintDraftGeneratorProps> = (
 }) => {
   const isHindi = language === 'hi';
 
-  const defaultFormData: ComplaintFormData = {
+  const emptyFormData: ComplaintFormData = {
     incidentType: (initialCategory as IncidentCategory) || 'extortion_blackmail',
-    victimAlias: 'Victim / Ms. A (Identity Protected under Sec 73 BNS)',
+    victimAlias: '',
     contactEmailOrPhone: '',
     accusedKnown: 'unknown',
-    accusedDetails: '+91 98XXXXXXXX / Telegram @username',
-    platformsInvolved: ['WhatsApp', 'Telegram'],
+    accusedDetails: '',
+    platformsInvolved: [],
     linksOrUsernames: '',
-    extortionAmountDemanded: '₹50,000',
-    threatDetails: 'Demanding immediate payment via UPI and threatening to send intimate photos to family and college contacts within 2 hours.',
+    extortionAmountDemanded: '',
+    threatDetails: '',
     evidenceList: [
       'Full-screen chat screenshots with phone number and timestamps',
       'UPI ID / Payment QR code provided by the extortionist',
       'URLs of the abusive channels/posts',
     ],
-    cityState: 'New Delhi, India',
+    cityState: '',
     language: language,
   };
 
-  const [initialDraftState] = useState(() => loadComplaintDraft(defaultFormData));
+  const [initialDraftState] = useState(() => {
+    const loaded = loadComplaintDraft(emptyFormData);
+    const d = loaded.data;
+    // Sanitize any legacy mock/prefilled strings saved in previous sessions
+    const isLegacyMockAccused = d.accusedDetails === '+91 98XXXXXXXX / Telegram @username';
+    const isLegacyMockThreat = d.threatDetails?.includes('Demanding immediate payment via UPI and threatening');
+    const isLegacyMockAlias = d.victimAlias === 'Victim / Ms. A (Identity Protected under Sec 73 BNS)';
+    const isLegacyMockCity = d.cityState === 'New Delhi, India';
+
+    if (isLegacyMockAccused || isLegacyMockThreat || isLegacyMockAlias || isLegacyMockCity) {
+      return {
+        data: {
+          ...d,
+          victimAlias: isLegacyMockAlias ? '' : d.victimAlias,
+          accusedDetails: isLegacyMockAccused ? '' : d.accusedDetails,
+          platformsInvolved: isLegacyMockAccused ? [] : d.platformsInvolved,
+          cityState: isLegacyMockCity ? '' : d.cityState,
+          threatDetails: isLegacyMockThreat ? '' : d.threatDetails,
+          extortionAmountDemanded: isLegacyMockThreat ? '' : d.extortionAmountDemanded,
+        },
+        isPersistedLocally: loaded.isPersistedLocally,
+      };
+    }
+    return loaded;
+  });
+
   const [formData, setFormData] = useState<ComplaintFormData>(initialDraftState.data);
   const [persistDraftLocally, setPersistDraftLocally] = useState<boolean>(initialDraftState.isPersistedLocally);
   const [isMinorIncident, setIsMinorIncident] = useState<boolean>(false);
@@ -97,6 +124,16 @@ export const ComplaintDraftGenerator: React.FC<ComplaintDraftGeneratorProps> = (
   const [copied, setCopied] = useState<boolean>(false);
   const [showMobilePreview, setShowMobilePreview] = useState<boolean>(false);
   const [syncState, setSyncState] = useState<CloudSyncState>(() => getCloudSyncState());
+
+  const handleResetWizard = () => {
+    hapticAction();
+    clearComplaintDraft();
+    setFormData(emptyFormData);
+    setCurrentStep(1);
+    setShowMobilePreview(false);
+    setPdfGenerated(false);
+    setCopied(false);
+  };
 
   useEffect(() => {
     return subscribeToSync(setSyncState);
@@ -152,7 +189,7 @@ export const ComplaintDraftGenerator: React.FC<ComplaintDraftGeneratorProps> = (
       return `सेवा में,
 श्रीमान पुलिस अधीक्षक / प्रभारी अधिकारी,
 साइबर अपराध प्रकोष्ठ (Cyber Crime Cell) / संबंधित थाना,
-${formData.cityState}
+${formData.cityState || '[जिला व राज्य / संबंधित थाना क्षेत्र]'}
 
 विषय: ${isMinorIncident ? '[POCSO एवं IT Act 67B] ' : ''}${subjectTitle}।
 
@@ -163,13 +200,13 @@ ${incidentStatutes.provisionsText}
 
 मैं सम्मानपूर्वक यह शिकायत दर्ज कर रही हूँ। भारतीय न्याय संहिता, 2023 की धारा 73 एवं POCSO धारा 19 के अनुसार मेरी पहचान पूर्णतः गोपनीय रखी जाए:
 
-1. पीड़िता का विवरण: ${formData.victimAlias} (संपर्क: ${formData.contactEmailOrPhone || 'गोपनीय / ऑन-रिकॉर्ड'})${isMinorIncident ? '\n* नोट: पीड़िता घटना के समय 18 वर्ष से कम आयु की नाबालिग है। POCSO अधिनियम के तहत तत्काल अनिवार्य FIR दर्ज की जाए।' : ''}
+1. पीड़िता का विवरण: ${formData.victimAlias || '[सुश्री X (पहचान सुरक्षित BNS 73)]'} (संपर्क: ${formData.contactEmailOrPhone || 'गोपनीय / ऑन-रिकॉर्ड'})${isMinorIncident ? '\n* नोट: पीड़िता घटना के समय 18 वर्ष से कम आयु की नाबालिग है। POCSO अधिनियम के तहत तत्काल अनिवार्य FIR दर्ज की जाए।' : ''}
 2. घटना की प्रकृति: ${formData.incidentType === 'extortion_blackmail' ? 'साइबर सेक्सटॉर्शन व जबरन वसूली (BNS धारा 308)' : formData.incidentType === 'ai_deepfake_morph' ? 'AI डीपफेक / मॉर्फ्ड अश्लील फोटो (BNS धारा 336)' : 'व्हाट्सएप/टेलीग्राम पर गैर-सहमति से अश्लील सामग्री का प्रसार'}
-3. आरोपी का विवरण: ${formData.accusedKnown === 'known' ? 'परिचित व्यक्ति: ' : 'अज्ञात साइबर अपराधी: '} ${formData.accusedDetails}
+3. आरोपी का विवरण: ${formData.accusedKnown === 'known' ? 'परिचित व्यक्ति: ' : 'अज्ञात साइबर अपराधी: '} ${formData.accusedDetails || '[आरोपी का विवरण / मोबाइल नंबर / सोशल मीडिया हैंडल]'}
 4. प्रयुक्त प्लेटफॉर्म: ${formData.platformsInvolved.join(', ') || 'व्हाट्सएप, टेलीग्राम'}
 5. संबंधित लिंक / फोन नंबर: ${formData.linksOrUsernames || 'स्क्रीनशॉट में संलग्न'}
 6. मांगी गई फिरौती / ब्लैकमेल विवरण: ${formData.extortionAmountDemanded || 'अघोषित'}
-7. घटना का संक्षिप्त विवरण: ${formData.threatDetails}
+7. घटना का संक्षिप्त विवरण: ${formData.threatDetails || '[धमकी व जबरन वसूली का विवरण दर्ज करें]'}
 
 लागू होने वाले वैधानिक आधार (Statutory Grounds):
 ${incidentStatutes.groundsList.join('\n')}
@@ -183,7 +220,7 @@ ${incidentStatutes.groundsList.join('\n')}
 दिनांक: ${dateStr}
 संलग्नक: स्क्रीनशॉट एवं फॉरेंसिक साक्ष्य की प्रति (BSA धारा 63 प्रमाण-पत्र)।
 भवदीया,
-${formData.victimAlias}`;
+${formData.victimAlias || '[पीड़िता (पहचान सुरक्षित)]'}`;
     }
 
     const subjectTitleEn = formData.incidentType === 'extortion_blackmail'
@@ -197,7 +234,7 @@ ${formData.victimAlias}`;
     return `TO,
 THE OFFICER-IN-CHARGE / SUPERINTENDENT OF POLICE,
 CYBER CRIME POLICE STATION,
-${formData.cityState.toUpperCase()}
+${(formData.cityState || '[DISTRICT / POLICE JURISDICTION]').toUpperCase()}
 
 SUBJECT: Formal Criminal Complaint for ${isMinorIncident ? 'POCSO VIOLATION (MINOR INVOLVED), ' : ''}${subjectTitleEn}.
 
@@ -208,13 +245,13 @@ RESPECTED SIR/MADAM,
 
 I am submitting this formal complaint regarding an ongoing criminal offense perpetrated against me:
 
-1. COMPLAINANT IDENTIFIER: ${formData.victimAlias} (Contact: ${formData.contactEmailOrPhone || 'Confidential / Kept on Police Record'})${isMinorIncident ? '\n* CRITICAL NOTE: Depicted individual is a minor (<18). Case attracts mandatory non-bailable POCSO provisions.' : ''}
+1. COMPLAINANT IDENTIFIER: ${formData.victimAlias || '[Victim / Ms. A (Identity Protected under Sec 73 BNS)]'} (Contact: ${formData.contactEmailOrPhone || 'Confidential / Kept on Police Record'})${isMinorIncident ? '\n* CRITICAL NOTE: Depicted individual is a minor (<18). Case attracts mandatory non-bailable POCSO provisions.' : ''}
 2. NATURE OF INCIDENT: ${formData.incidentType === 'extortion_blackmail' ? 'Cyber Sextortion & Extortion (BNS 308)' : formData.incidentType === 'ai_deepfake_morph' ? 'AI Deepfake / Non-Consensual Morphed Media (BNS 336)' : 'Non-Consensual Intimate Image Dissemination'}
-3. ACCUSED DETAILS: ${formData.accusedKnown === 'known' ? 'Known Individual: ' : 'Unknown Cyber Criminal: '} ${formData.accusedDetails}
+3. ACCUSED DETAILS: ${formData.accusedKnown === 'known' ? 'Known Individual: ' : 'Unknown Cyber Criminal: '} ${formData.accusedDetails || '[Suspect Details / Mobile Number / Platform Handle]'}
 4. PLATFORMS USED: ${formData.platformsInvolved.join(', ') || 'WhatsApp, Telegram'}
 5. OFFENDING IDENTIFIERS / LINKS: ${formData.linksOrUsernames || 'Preserved in attached screenshots'}
 6. EXTORTION DEMANDS: ${formData.extortionAmountDemanded || 'None / Coercion'}
-7. CHRONOLOGY OF THREATS: ${formData.threatDetails}
+7. CHRONOLOGY OF THREATS: ${formData.threatDetails || '[Threat details, blackmail chronology, and demands]'}
 
 STATUTORY GROUNDS:
 ${incidentStatutes.groundsList.join('\n')}
@@ -231,7 +268,7 @@ DATE: ${dateStr}
 ENCLOSURES: Preserved full-screen chat evidence, transaction records, and account identifiers.
 
 RESPECTFULLY SUBMITTED,
-${formData.victimAlias}`;
+${formData.victimAlias || '[Victim / Ms. A]'}`;
   };
 
   // Generate 24-Hour Intermediary Notice text from shared statutoryNotice module
@@ -240,7 +277,7 @@ ${formData.victimAlias}`;
       platformName: formData.platformsInvolved.join(' / ') || 'Intermediary Platform',
       targetIdentifier: formData.linksOrUsernames || 'Attached in the evidentiary exhibit',
       incidentType: formData.incidentType,
-      victimAlias: formData.victimAlias,
+      victimAlias: formData.victimAlias || 'Victim / Complainant (Identity Protected under Sec 73 BNS)',
       dateStr: new Date().toLocaleDateString('en-IN'),
     });
     return body;
@@ -256,14 +293,14 @@ SPECIAL PETITION UNDER SECTION 10 OF THE NATIONAL COMMISSION FOR WOMEN ACT, 1990
 IN THE MATTER OF:
 Urgent Intervention and Protection for Victim of Cyber-Harassment, Extortion, and Non-Consensual Intimate Media Dissemination.
 
-Petitioner: ${formData.victimAlias} (Identity Protected)
-Location: ${formData.cityState}
+Petitioner: ${formData.victimAlias || '[Victim / Petitioner (Identity Protected)]'}
+Location: ${formData.cityState || '[City, State]'}
 
 1. BRIEF SUMMARY:
 The petitioner is being subjected to severe cyber sextortion, intimidation, and unauthorized dissemination of private media.
-Accused: ${formData.accusedDetails}
-Platforms: ${formData.platformsInvolved.join(', ')}
-Summary: ${formData.threatDetails}
+Accused: ${formData.accusedDetails || '[Suspect details / Online handle]'}
+Platforms: ${formData.platformsInvolved.length > 0 ? formData.platformsInvolved.join(', ') : 'Online Platforms'}
+Summary: ${formData.threatDetails || '[Threat summary and extortion details]'}
 
 2. PRAYER:
 The Petitioner respectfully prays that this Commission may be pleased to:
@@ -272,7 +309,7 @@ b) Ensure the identity of the petitioner is safeguarded in accordance with Supre
 c) Facilitate psychiatric counseling and legal aid support.
 
 RESPECTFULLY SUBMITTED,
-${formData.victimAlias}`;
+${formData.victimAlias || '[Victim / Petitioner]'}`;
   };
 
   const getActiveText = () => {
@@ -322,6 +359,36 @@ ${formData.victimAlias}`;
     { number: 4, title: isHindi ? 'समीक्षा व ड्राफ्ट' : '4. Complaint Draft', desc: isHindi ? 'PDF व सबमिशन' : 'Official PDF & copy' },
   ];
 
+  // Dynamic Genuine Completion Checks:
+  // Step 1: Incident category + threat summary are filled
+  const isStep1Complete = Boolean(
+    formData.incidentType &&
+    formData.threatDetails &&
+    formData.threatDetails.trim().length > 0
+  );
+
+  // Step 2: Suspect/channel info is entered
+  const isStep2Complete = Boolean(
+    (formData.accusedDetails && formData.accusedDetails.trim().length > 0) ||
+    (formData.platformsInvolved && formData.platformsInvolved.length > 0) ||
+    (formData.linksOrUsernames && formData.linksOrUsernames.trim().length > 0)
+  );
+
+  // Step 3: Identity/city fields are set
+  const isStep3Complete = Boolean(
+    formData.victimAlias &&
+    formData.victimAlias.trim().length > 0 &&
+    formData.cityState &&
+    formData.cityState.trim().length > 0
+  );
+
+  // Step 4 has no "next" state, it is the destination
+  const completedStepNumbers = [
+    ...(isStep1Complete ? [1] : []),
+    ...(isStep2Complete ? [2] : []),
+    ...(isStep3Complete ? [3] : []),
+  ];
+
   return (
     <section 
       id="complaint-draft-generator"
@@ -344,65 +411,46 @@ ${formData.victimAlias}`;
               : 'Answer simple questions to structure a formal complaint draft for submission to the Cyber Crime Police or National Portal.'}
           </p>
         </div>
+
+        {/* Reset Action (Desktop) */}
+        <button
+          type="button"
+          onClick={handleResetWizard}
+          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#26215C]/15 bg-white text-[#5A5672] hover:text-[#993556] hover:border-[#993556]/30 hover:bg-[#FBEAF0]/40 transition-all text-xs font-semibold cursor-pointer shrink-0 shadow-xs active:scale-95 min-h-[36px]"
+          title={isHindi ? 'सभी 4 चरणों का फॉर्म डेटा रीसेट करें' : 'Reset all 4 wizard steps and form data'}
+        >
+          <RotateCcw className="w-3.5 h-3.5 text-[#85819C]" />
+          <span>{isHindi ? 'फॉर्म रीसेट करें' : 'Reset Wizard'}</span>
+        </button>
       </div>
 
       {/* Top Advisory Disclaimer */}
       <LegalDisclaimerNotice language={language} compact />
 
-      {/* 2. SOFT PROGRESS INDICATOR */}
-      <div className="bg-white p-4 sm:p-5 rounded-[22px] border border-[#26215C]/10 shadow-soft">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
-          {steps.map((s) => {
-            const isCompleted = currentStep > s.number;
-            const isCurrent = currentStep === s.number;
-            return (
-              <button
-                key={s.number}
-                onClick={() => {
-                  hapticAction();
-                  setCurrentStep(s.number);
-                  setShowMobilePreview(false);
-                }}
-                className={`p-2.5 sm:p-3 rounded-xl text-left transition-all cursor-pointer flex items-center gap-2.5 min-h-[44px] ${
-                  isCurrent
-                    ? 'bg-[#26215C] text-white shadow-soft'
-                    : isCompleted
-                    ? 'bg-[#E1F5EE] text-[#0F6E56] hover:bg-[#D5EFE7]'
-                    : 'bg-[#FAF8F3] text-[#85819C] hover:bg-[#F3EFEC]'
-                }`}
-              >
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ${
-                  isCurrent
-                    ? 'bg-[#993556] text-white'
-                    : isCompleted
-                    ? 'bg-[#0F6E56] text-white'
-                    : 'bg-white text-[#85819C]'
-                }`}>
-                  {isCompleted ? <Check className="w-3.5 h-3.5" /> : s.number}
-                </div>
-                <div className="min-w-0">
-                  <div className="text-xs sm:text-sm font-semibold truncate leading-tight">
-                    {s.title}
-                  </div>
-                  <div className={`text-[10px] hidden sm:block truncate ${isCurrent ? 'text-[#D2CCE7]' : 'text-[#85819C]'}`}>
-                    {s.desc}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      {/* 2. TRAUMA-INFORMED STEP TRACKER */}
+      <TraumaInformedStepTracker
+        steps={steps}
+        currentStep={currentStep}
+        completedStepNumbers={completedStepNumbers}
+        onStepClick={(stepNumber) => {
+          hapticAction();
+          setCurrentStep(stepNumber);
+          setShowMobilePreview(false);
+        }}
+        onReset={handleResetWizard}
+        language={language}
+        theme="light"
+      />
 
-      {/* Mobile-Only Dual-View Switcher: Prevents 600px scrolling on small mobile screens */}
-      <div className="lg:hidden flex items-center bg-[#FAF8F3] p-1 rounded-2xl border border-[#26215C]/12">
+      {/* Mobile-Only Dual-View Switcher + Reset Bar */}
+      <div className="lg:hidden flex items-center gap-1.5 bg-[#FAF8F3] p-1 rounded-2xl border border-[#26215C]/12">
         <button
           type="button"
           onClick={() => {
             hapticAction();
             setShowMobilePreview(false);
           }}
-          className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all text-center cursor-pointer min-h-[44px] ${
+          className={`flex-1 py-2 px-2.5 rounded-xl text-xs font-bold transition-all text-center cursor-pointer min-h-[44px] ${
             !showMobilePreview
               ? 'bg-[#26215C] text-white shadow-soft'
               : 'text-[#5A5672] hover:text-[#26215C]'
@@ -416,14 +464,23 @@ ${formData.victimAlias}`;
             hapticAction();
             setShowMobilePreview(true);
           }}
-          className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold transition-all text-center cursor-pointer min-h-[44px] flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-2 px-2.5 rounded-xl text-xs font-bold transition-all text-center cursor-pointer min-h-[44px] flex items-center justify-center gap-1.5 ${
             showMobilePreview
               ? 'bg-[#26215C] text-white shadow-soft'
               : 'text-[#5A5672] hover:text-[#26215C]'
           }`}
         >
-          <span>{isHindi ? '📄 तैयार शिकायत पत्र देखें' : '📄 View Ready PDF'}</span>
+          <span>{isHindi ? '📄 तैयार पत्र देखें' : '📄 View Ready PDF'}</span>
           <span className="w-2 h-2 rounded-full bg-[#0F6E56] animate-pulse" />
+        </button>
+        <button
+          type="button"
+          onClick={handleResetWizard}
+          className="px-2.5 py-2 rounded-xl text-xs font-semibold text-[#85819C] hover:text-[#993556] hover:bg-white transition-all cursor-pointer min-h-[44px] flex items-center gap-1 shrink-0 active:scale-95"
+          title={isHindi ? 'फॉर्म रीसेट करें' : 'Reset Form'}
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          <span className="text-[11px] font-semibold">{isHindi ? 'रीसेट' : 'Reset'}</span>
         </button>
       </div>
 
@@ -642,6 +699,25 @@ ${formData.victimAlias}`;
                     placeholder="₹50,000 / Nil"
                   />
                 </div>
+
+                {/* Primary Forward Advancement Button */}
+                <div className="pt-3 border-t border-[#26215C]/10 flex items-center justify-between gap-3">
+                  <span className="text-xs text-[#5A5672]">
+                    {isHindi ? 'चरण 1 का 4 • किसी भी समय बदलाव संभव' : 'Step 1 of 4 • Freely editable'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      hapticAction();
+                      setCurrentStep(2);
+                      setShowMobilePreview(false);
+                    }}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-[#26215C] hover:bg-[#1E1949] text-white transition-all shadow-soft cursor-pointer min-h-[44px] active:scale-98"
+                  >
+                    <span>{isHindi ? 'तैयार होने पर आगे बढ़ें' : "Continue when you're ready"}</span>
+                    <ArrowRight className="w-4 h-4 text-[#F3C5D6]" />
+                  </button>
+                </div>
               </motion.div>
             )}
 
@@ -744,6 +820,34 @@ ${formData.victimAlias}`;
                     placeholder="https://t.me/example_channel/1234 or Instagram profile"
                   />
                 </div>
+
+                {/* Primary Forward Advancement Button */}
+                <div className="pt-3 border-t border-[#26215C]/10 flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      hapticAction();
+                      setCurrentStep(1);
+                      setShowMobilePreview(false);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium text-[#5A5672] hover:text-[#26215C] hover:bg-[#FAF8F3] transition-colors cursor-pointer min-h-[42px]"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>{isHindi ? 'पिछला चरण' : 'Back'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      hapticAction();
+                      setCurrentStep(3);
+                      setShowMobilePreview(false);
+                    }}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-[#26215C] hover:bg-[#1E1949] text-white transition-all shadow-soft cursor-pointer min-h-[44px] active:scale-98"
+                  >
+                    <span>{isHindi ? 'तैयार होने पर आगे बढ़ें' : "Continue when you're ready"}</span>
+                    <ArrowRight className="w-4 h-4 text-[#F3C5D6]" />
+                  </button>
+                </div>
               </motion.div>
             )}
 
@@ -811,6 +915,34 @@ ${formData.victimAlias}`;
                     className="w-full text-base sm:text-sm p-3.5 rounded-xl border border-[#26215C]/15 bg-[#FAF8F3] focus:bg-white focus:border-[#26215C] focus:outline-none text-[#26215C] transition-colors"
                     placeholder={isHindi ? 'केवल पुलिस जांच अधिकारी हेतु (वैकल्पिक)' : 'For investigation officer record only (Optional)'}
                   />
+                </div>
+
+                {/* Primary Forward Advancement Button */}
+                <div className="pt-3 border-t border-[#26215C]/10 flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      hapticAction();
+                      setCurrentStep(2);
+                      setShowMobilePreview(false);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium text-[#5A5672] hover:text-[#26215C] hover:bg-[#FAF8F3] transition-colors cursor-pointer min-h-[42px]"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>{isHindi ? 'पिछला चरण' : 'Back'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      hapticAction();
+                      setCurrentStep(4);
+                      setShowMobilePreview(false);
+                    }}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-[#26215C] hover:bg-[#1E1949] text-white transition-all shadow-soft cursor-pointer min-h-[44px] active:scale-98"
+                  >
+                    <span>{isHindi ? 'तैयार होने पर आगे बढ़ें' : "Continue when you're ready"}</span>
+                    <ArrowRight className="w-4 h-4 text-[#F3C5D6]" />
+                  </button>
                 </div>
               </motion.div>
             )}
@@ -1003,53 +1135,46 @@ ${formData.victimAlias}`;
                 <div className="pt-1">
                   <AnonymousFeedbackPrompt language={language} flowId="legal_generator_export" />
                 </div>
+
+                {/* Step 4 Navigation: Return to step 1 & Reset */}
+                <div className="pt-3 border-t border-[#26215C]/10 flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      hapticAction();
+                      setCurrentStep(3);
+                      setShowMobilePreview(false);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium text-[#5A5672] hover:text-[#26215C] hover:bg-[#FAF8F3] transition-colors cursor-pointer min-h-[42px]"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>{isHindi ? 'पिछला चरण' : 'Back to Identity'}</span>
+                  </button>
+
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        hapticAction();
+                        setCurrentStep(1);
+                      }}
+                      className="text-xs text-[#5A5672] hover:text-[#26215C] underline cursor-pointer"
+                    >
+                      {isHindi ? 'चरण 1 पर लौटें' : 'Return to step 1'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleResetWizard}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#26215C]/15 bg-[#FAF8F3] text-xs font-medium text-[#85819C] hover:text-[#993556] hover:bg-[#FBEAF0]/40 transition-colors cursor-pointer min-h-[36px]"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>{isHindi ? 'रीसेट' : 'Reset Wizard'}</span>
+                    </button>
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* STEP NAVIGATION BUTTONS */}
-          <div className="pt-4 border-t border-[#26215C]/10 flex items-center justify-between gap-3">
-            {currentStep > 1 ? (
-              <button
-                type="button"
-                onClick={() => {
-                  hapticAction();
-                  setCurrentStep((s) => s - 1);
-                }}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium text-[#5A5672] hover:text-[#26215C] hover:bg-[#FAF8F3] transition-colors cursor-pointer min-h-[42px]"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span>{isHindi ? 'पिछला' : 'Back'}</span>
-              </button>
-            ) : (
-              <div />
-            )}
-
-            {currentStep < 4 ? (
-              <button
-                type="button"
-                onClick={() => {
-                  hapticAction();
-                  setCurrentStep((s) => s + 1);
-                }}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-[#26215C] hover:bg-[#1E1949] text-white transition-all shadow-soft cursor-pointer min-h-[44px]"
-              >
-                <span>{isHindi ? 'आगे बढ़ें' : 'Continue when you’re ready'}</span>
-                <ArrowRight className="w-4 h-4 text-[#F3C5D6]" />
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  hapticAction();
-                  setCurrentStep(1);
-                }}
-                className="text-xs text-[#5A5672] hover:text-[#26215C] underline cursor-pointer"
-              >
-                {isHindi ? 'पहले कदम पर लौटें' : 'Return to step 1'}
-              </button>
-            )}
-          </div>
         </div>
 
         {/* RIGHT COLUMN: LIVE COMPLAINT DRAFT PREVIEW (DESKTOP LIVE / MOBILE TOGGLE) */}

@@ -43,6 +43,7 @@ import {
 import { Language, IncidentCategory } from '../types';
 import { hapticCamouflage, hapticSOS, hapticAction, hapticPanic, hapticSuccess } from '../utils/haptics';
 import { PocsoMinorShieldModal } from './PocsoMinorShieldModal';
+import { TraumaInformedStepTracker } from './TraumaInformedStepTracker';
 import { smoothScrollTo } from '../utils/scroll';
 import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
 
@@ -290,25 +291,6 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
     },
   ];
 
-  // Trauma-informed breathing animation for current step:
-  // Slow, gentle diaphragmatic pace (2.8s) provides somatic grounding without visual distress.
-  // Uses purely non-layout-impacting boxShadow ring pulse (zero scale transform) to ensure
-  // the circle's layout box and vertical midpoint never shift or displace the connecting line.
-  const currentStepBreathing = prefersReducedMotion
-    ? {}
-    : {
-        boxShadow: [
-          '0 0 0 0px rgba(243, 197, 214, 0.45)',
-          '0 0 0 5px rgba(243, 197, 214, 0)',
-          '0 0 0 0px rgba(243, 197, 214, 0.45)',
-        ],
-        transition: {
-          duration: 2.8,
-          repeat: Infinity,
-          ease: 'easeInOut' as const,
-        },
-      };
-
   // Scenarios list for Step 2
   const scenariosList: {
     key: CrisisScenarioKey;
@@ -419,122 +401,21 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
         </div>
       </div>
 
-      {/* 2. UNIFIED 'RESCUE PATH' STEPPER HEADER */}
-      <div className="bg-[#201B52] border-b border-white/10 px-3 sm:px-6 md:px-8 py-3.5 sm:py-4">
-        {/* Minimal sequence position label: purely informational, zero time-pressure */}
-        <div className="flex items-center justify-between text-xs mb-3 text-[#D2CCE7]">
-          <div className="flex items-center gap-2">
-            <span className="text-[#F3C5D6] font-bold text-xs">
-              {isHindi ? `चरण ${currentStep} का 4` : `Step ${currentStep} of 4`}
-            </span>
-            <span className="text-white/30">•</span>
-            <span className="text-white font-medium truncate max-w-[220px] sm:max-w-none">
-              {stepsConfig[currentStep - 1].title.replace(/^\d+\.\s*/, '')}
-            </span>
-          </div>
-          <span className="text-[11px] text-[#9E93C4] hidden sm:inline-block">
-            {isHindi ? 'सभी चरण कभी भी सुलभ हैं' : 'All steps freely accessible'}
-          </span>
-        </div>
-
-        {/* 4-Step Interactive Navigation with Integrated Slim Connecting Progress Treatment */}
-        <div className="relative">
-          {/* Mobile connecting line: calculated explicitly relative to the fixed 32px circle's vertical midpoint */}
-          <div 
-            className="sm:hidden absolute left-[12.5%] right-[12.5%] h-[2px] bg-white/15 -translate-y-1/2 pointer-events-none z-0" 
-            style={{ top: 'calc(1px + 0.5rem + 16px)' }}
-            aria-hidden="true"
-          >
-            <div 
-              className="h-full bg-[#0F6E56] transition-all duration-300 rounded-full"
-              style={{
-                width: `${
-                  completedSteps.includes(3) ? 100 :
-                  completedSteps.includes(2) ? 66.6 :
-                  completedSteps.includes(1) ? 33.3 : 0
-                }%`
-              }}
-            />
-          </div>
-
-          {/* Stepper Grid: responsive across mobile (<=428px), tablet (429-1024px), and desktop (>=1025px) */}
-          <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 md:gap-3 relative z-10">
-            {stepsConfig.map((s) => {
-              const isCompleted = completedSteps.includes(s.step);
-              const isCurrent = s.step === currentStep;
-
-              return (
-                <div key={s.step} className="relative">
-                  {/* Slim connector line segment between cards on tablet & desktop */}
-                  {s.step < 4 && (
-                    <div
-                      className={`hidden sm:block absolute -right-2 sm:-right-2.5 md:-right-3 top-1/2 -translate-y-1/2 w-2 sm:w-2.5 md:w-3 h-[2px] transition-colors duration-300 pointer-events-none z-20 ${
-                        isCompleted ? 'bg-[#0F6E56]' : 'bg-white/15'
-                      }`}
-                      aria-hidden="true"
-                    />
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => goToStep(s.step)}
-                    aria-label={`${isHindi ? 'चरण' : 'Step'} ${s.step}: ${s.title}${isCompleted ? (isHindi ? ' (पूर्ण)' : ' (Completed)') : ''}${isCurrent ? (isHindi ? ' (वर्तमान)' : ' (Current)') : ''}`}
-                    aria-current={isCurrent ? 'step' : undefined}
-                    className={`w-full text-left transition-all cursor-pointer rounded-xl sm:rounded-2xl border min-h-[50px] sm:min-h-[56px] flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-2.5 md:gap-3 p-2 sm:p-2.5 md:p-3 active:scale-98 ${
-                      isCurrent
-                        ? 'bg-white/15 border-[#F3C5D6] text-white shadow-xs ring-1 ring-[#F3C5D6]/30'
-                        : isCompleted
-                        ? 'bg-[#0F6E56]/15 border-[#0F6E56]/40 text-[#FAF8F3] hover:bg-[#0F6E56]/25 hover:border-[#0F6E56]/60'
-                        : 'bg-white/[0.03] border-white/10 text-[#9E93C4] hover:text-white hover:border-white/20 hover:bg-white/5'
-                    }`}
-                  >
-                    {/* Step marker node: Teal when completed, Plum with gentle pulse when current, Neutral gray when upcoming */}
-                    {/* Fixed 32x32px layout box across all states ensures the connecting line always intersects the vertical center */}
-                    <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
-                      <motion.div
-                        animate={isCurrent ? currentStepBreathing : {}}
-                        className={`w-8 h-8 rounded-full box-border border flex items-center justify-center font-bold text-xs shrink-0 transition-colors relative z-10 ${
-                          isCurrent
-                            ? 'bg-[#993556] text-white border-[#F3C5D6] ring-2 ring-[#F3C5D6]/50 ring-offset-1 ring-offset-[#201B52]'
-                            : isCompleted
-                            ? 'bg-[#0F6E56] text-white border-[#0F6E56]'
-                            : 'bg-[#201B52] sm:bg-white/10 text-[#D2CCE7]/80 border-white/20'
-                        }`}
-                      >
-                        {isCompleted ? (
-                          <Check className="w-4 h-4 text-white" />
-                        ) : (
-                          <span>{s.step}</span>
-                        )}
-                      </motion.div>
-                    </div>
-
-                    {/* Step label: responsive typography for mobile, tablet, and desktop */}
-                    <div className="w-full sm:w-auto truncate text-center sm:text-left min-w-0">
-                      {/* Mobile compact title */}
-                      <div className={`sm:hidden text-[10px] font-semibold truncate ${
-                        isCurrent ? 'text-white' : isCompleted ? 'text-teal-200' : 'text-[#9E93C4]'
-                      }`}>
-                        {s.shortTitle}
-                      </div>
-
-                      {/* Tablet/Desktop full title */}
-                      <div className={`hidden sm:block text-xs font-bold leading-tight truncate ${
-                        isCurrent ? 'text-white' : isCompleted ? 'text-[#FAF8F3]' : 'text-[#FAF8F3]/80'
-                      }`}>
-                        {s.title}
-                      </div>
-                      <div className="hidden md:block text-[10px] text-[#D2CCE7] truncate">
-                        {s.subtitle}
-                      </div>
-                    </div>
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      {/* 2. UNIFIED 'RESCUE PATH' STEPPER HEADER (TRAUMA-INFORMED SHARED COMPONENT) */}
+      <TraumaInformedStepTracker
+        steps={stepsConfig.map((s) => ({
+          number: s.step,
+          title: s.title,
+          shortTitle: s.shortTitle,
+          desc: s.subtitle,
+        }))}
+        currentStep={currentStep}
+        completedStepNumbers={completedSteps}
+        onStepClick={goToStep}
+        language={language}
+        theme="dark"
+        className="rounded-none border-x-0 border-t-0 border-b border-white/10 px-3 sm:px-6 md:px-8 py-3.5 sm:py-4 bg-[#201B52]"
+      />
 
       {/* 3. STEPPER BODY (STEP-BY-STEP CONTENT) */}
       <div className="p-5 sm:p-8 space-y-6">
