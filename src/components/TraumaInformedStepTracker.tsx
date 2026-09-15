@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { Check, RotateCcw } from 'lucide-react';
 import { Language } from '../types';
 
@@ -219,74 +219,64 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
                   type="button"
                   onClick={() => onStepClick(s.number)}
                   aria-label={`${isHindi ? 'चरण' : 'Step'} ${s.number}: ${s.title}${
-                    isCompleted ? (isHindi ? ' (पूर्ण)' : ' (Completed)') : ''
-                  }${isCurrent ? (isHindi ? ' (वर्तमान)' : ' (Current)') : ''}`}
+                    isCompleted
+                      ? isHindi
+                        ? ' (पूर्ण)'
+                        : ' (Completed)'
+                      : isCurrent
+                      ? isHindi
+                        ? ' (वर्तमान)'
+                        : ' (Current)'
+                      : ''
+                  }`}
                   aria-current={isCurrent ? 'step' : undefined}
                   className={`w-full text-left transition-all cursor-pointer rounded-xl sm:rounded-2xl border min-h-[48px] sm:min-h-[56px] flex flex-col sm:flex-row items-center sm:items-center gap-1 sm:gap-2.5 md:gap-3 p-1.5 sm:p-2.5 md:p-3 active:scale-98 ${
-                    isCurrent
+                    isCompleted
+                      ? theme === 'dark'
+                        ? `bg-[#0F6E56]/15 border-[#0F6E56]/40 text-[#FAF8F3] hover:bg-[#0F6E56]/25 hover:border-[#0F6E56]/60 ${
+                            isCurrent ? 'ring-1 ring-[#0F6E56]/50 shadow-xs' : ''
+                          }`
+                        : `bg-[#E1F5EE]/40 border-[#0F6E56]/30 text-[#0F6E56] hover:bg-[#E1F5EE]/70 hover:border-[#0F6E56]/50 ${
+                            isCurrent ? 'ring-1 ring-[#0F6E56]/40 shadow-soft' : ''
+                          }`
+                      : isCurrent
                       ? theme === 'dark'
                         ? 'bg-white/15 border-[#F3C5D6] text-white shadow-xs ring-1 ring-[#F3C5D6]/30'
                         : 'bg-[#FAF8F3] border-[#993556]/40 text-[#26215C] shadow-soft ring-1 ring-[#993556]/25'
-                      : isCompleted
-                      ? theme === 'dark'
-                        ? 'bg-[#0F6E56]/15 border-[#0F6E56]/40 text-[#FAF8F3] hover:bg-[#0F6E56]/25 hover:border-[#0F6E56]/60'
-                        : 'bg-[#E1F5EE]/40 border-[#0F6E56]/30 text-[#0F6E56] hover:bg-[#E1F5EE]/70 hover:border-[#0F6E56]/50'
                       : theme === 'dark'
                       ? 'bg-white/[0.03] border-white/10 text-[#9E93C4] hover:text-white hover:border-white/20 hover:bg-white/5'
                       : 'bg-[#FAF8F3]/50 border-[#26215C]/10 text-[#5A5672] hover:bg-[#FAF8F3] hover:border-[#26215C]/20'
                   }`}
                 >
                   {/* Step Marker Node:
-                      - Teal when genuinely completed (with clean thin-stroke checkmark)
-                      - Plum with gentle somatic pulse when current
-                      - Muted neutral when upcoming
-                      - Fixed 32px (mobile) / 36px (desktop) layout box ensures connecting line never displaces
+                      - Completed: solid teal fill with checkmark icon in place of number (no badge overlay)
+                      - Current: plum fill with number and gentle somatic pulse
+                      - Upcoming: muted gray outline with number
+                      - Fixed 32px (mobile) / 36px (desktop) box ensures connector line alignment never shifts
                   */}
                   <div className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center shrink-0">
                     <motion.div
-                      animate={isCurrent ? breathingAnimation : {}}
+                      animate={!isCompleted && isCurrent ? breathingAnimation : {}}
                       className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full box-border border flex items-center justify-center font-bold text-xs shrink-0 transition-colors relative z-10 ${
-                        isCurrent
+                        isCompleted
+                          ? 'bg-[#0F6E56] text-white border-[#0F6E56]'
+                          : isCurrent
                           ? theme === 'dark'
                             ? 'bg-[#993556] text-white border-[#F3C5D6] ring-2 ring-[#F3C5D6]/50 ring-offset-1 ring-offset-[#201B52]'
                             : 'bg-[#993556] text-white border-[#993556] ring-2 ring-[#993556]/30 ring-offset-1 ring-offset-white'
-                          : isCompleted
-                          ? 'bg-[#0F6E56] text-white border-[#0F6E56]'
                           : theme === 'dark'
                           ? 'bg-[#201B52] sm:bg-white/10 text-[#D2CCE7]/80 border-white/20'
                           : 'bg-white text-[#5A5672] border-[#26215C]/20'
                       }`}
                     >
-                      {/* Step Number remains permanently visible underneath/behind */}
-                      <span className="text-xs font-bold leading-none select-none">
-                        {s.number}
-                      </span>
-                    </motion.div>
-
-                    {/* Tick Badge Placement:
-                        Small badge overlaid at the top-right corner of the step circle.
-                        The step number remains visible behind it — both are visible at once!
-                    */}
-                    <AnimatePresence>
-                      {isCompleted && (
-                        <motion.div
-                          key={`check-badge-${s.number}`}
-                          initial={prefersReducedMotion ? { opacity: 1 } : { scale: 0, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          exit={prefersReducedMotion ? { opacity: 0 } : { scale: 0, opacity: 0 }}
-                          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                          className={`absolute -top-1 -right-1 z-20 w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-full flex items-center justify-center shadow-xs ${
-                            theme === 'dark'
-                              ? 'bg-[#0F6E56] text-white border-2 border-[#201B52]'
-                              : 'bg-[#0F6E56] text-white border-2 border-white'
-                          }`}
-                          title={isHindi ? 'चरण पूर्ण' : 'Step Completed'}
-                          aria-hidden="true"
-                        >
-                          <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[2.8] text-white" />
-                        </motion.div>
+                      {isCompleted ? (
+                        <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.8] text-white" aria-hidden="true" />
+                      ) : (
+                        <span className="text-xs font-bold leading-none select-none">
+                          {s.number}
+                        </span>
                       )}
-                    </AnimatePresence>
+                    </motion.div>
                   </div>
 
                   {/* Step Typography Hierarchy:
@@ -298,14 +288,14 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
                     {/* Mobile Label (<=639px): Clean truncation, no overflow */}
                     <div
                       className={`sm:hidden text-[10px] font-bold leading-tight truncate px-0.5 ${
-                        isCurrent
-                          ? theme === 'dark'
-                            ? 'text-white'
-                            : 'text-[#26215C]'
-                          : isCompleted
+                        isCompleted
                           ? theme === 'dark'
                             ? 'text-teal-200'
                             : 'text-[#0F6E56]'
+                          : isCurrent
+                          ? theme === 'dark'
+                            ? 'text-white'
+                            : 'text-[#26215C]'
                           : theme === 'dark'
                           ? 'text-[#9E93C4]'
                           : 'text-[#5A5672]'
@@ -317,14 +307,14 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
                     {/* Tablet/Desktop Title (>=640px) */}
                     <div
                       className={`hidden sm:block text-xs sm:text-sm font-bold leading-tight truncate ${
-                        isCurrent
-                          ? theme === 'dark'
-                            ? 'text-white'
-                            : 'text-[#26215C]'
-                          : isCompleted
+                        isCompleted
                           ? theme === 'dark'
                             ? 'text-[#FAF8F3]'
                             : 'text-[#0F6E56]'
+                          : isCurrent
+                          ? theme === 'dark'
+                            ? 'text-white'
+                            : 'text-[#26215C]'
                           : theme === 'dark'
                           ? 'text-[#FAF8F3]/80'
                           : 'text-[#26215C]/80'
@@ -337,14 +327,14 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
                     {s.desc && (
                       <div
                         className={`text-[9px] sm:text-[10px] md:text-[11px] truncate leading-tight mt-0.5 hidden xs:block ${
-                          isCurrent
-                            ? theme === 'dark'
-                              ? 'text-[#D2CCE7]'
-                              : 'text-[#5A5672]'
-                            : isCompleted
+                          isCompleted
                             ? theme === 'dark'
                               ? 'text-teal-300/80'
                               : 'text-[#0F6E56]/80'
+                            : isCurrent
+                            ? theme === 'dark'
+                              ? 'text-[#D2CCE7]'
+                              : 'text-[#5A5672]'
                             : theme === 'dark'
                             ? 'text-[#9E93C4]/80'
                             : 'text-[#85819C]'
