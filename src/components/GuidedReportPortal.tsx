@@ -60,72 +60,38 @@ export const GuidedReportPortal: React.FC<GuidedReportPortalProps> = ({
 
   return (
     <div className="space-y-6 scroll-mt-48" id="guided-report-portal">
-      {/* 1. SINGLE, CLEAR HERO CARD */}
-      <div className="p-6 sm:p-7 rounded-3xl bg-white border border-[#E8E2DC] shadow-xs space-y-4">
-        <div className="flex items-center gap-2">
-          <span className="px-3 py-1 rounded-full bg-[#26215C]/10 text-[#26215C] text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
-            <Scale className="w-3.5 h-3.5 text-[#26215C]" />
-            <span>{isHindi ? 'कानूनी शिकायत एवं पुलिस ई-एफआईआर' : 'Police Complaint & Legal Action'}</span>
-          </span>
-          <span className="text-xs text-[#777] hidden sm:inline-block">
-            {isHindi ? 'BNS धारा 73 व BSA धारा 63 प्रारूप' : 'Sec 73 BNS & Sec 63 BSA Aligned'}
-          </span>
-        </div>
-
-        <h2 className="text-xl sm:text-2xl font-bold text-[#1A1A1A] tracking-tight">
-          {isHindi 
-            ? 'साइबर सेल हेतु औपचारिक शिकायत ड्राफ्ट तैयार करें' 
-            : 'Generate Formal Police Complaint Draft & Access National Cyber Portal'}
-        </h2>
-        
-        <p className="text-xs sm:text-sm text-[#666] max-w-3xl leading-relaxed">
-          {isHindi
-            ? 'भारतीय साक्ष्य अधिनियम (BSA) धारा 63 डिजिटल साक्ष्य घोषणा प्रारूप के साथ पुलिस शिकायत पत्र तैयार करें, या राष्ट्रीय साइबर अपराध पोर्टल (cybercrime.gov.in) पर सीधे शिकायत दर्ज करें। आपकी पहचान कानूनन गोपनीय रखी जाती है।'
-            : 'Draft formal complaints with electronic evidence declarations under Section 63 BSA and identity confidentiality safeguards under Section 73 BNS, or report directly through the National Cyber Crime Portal (1930). 100% private and on-device.'}
-        </p>
-
-        {/* 2-Option Pill Selector */}
-        <div className="pt-1 flex items-center gap-2 overflow-x-auto scrollbar-none">
-          <button
-            type="button"
-            onClick={() => setActiveSubView('drafts')}
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
-              activeSubView === 'drafts'
-                ? 'bg-[#1A1A1A] text-white shadow-xs scale-102'
-                : 'bg-[#FAF8F3] text-[#555] hover:text-[#111] border border-[#E8E2DC] hover:bg-white'
-            }`}
-          >
-            <FileText className="w-4 h-4 text-amber-300" />
-            <span>{isHindi ? '1. ई-एफआईआर ड्राफ्ट जनरेटर (PDF)' : '1. e-FIR Draft Generator (PDF)'}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveSubView('national_portal')}
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
-              activeSubView === 'national_portal'
-                ? 'bg-[#1A1A1A] text-white shadow-xs scale-102'
-                : 'bg-[#FAF8F3] text-[#555] hover:text-[#111] border border-[#E8E2DC] hover:bg-white'
-            }`}
-          >
-            <Building2 className="w-4 h-4 text-indigo-400" />
-            <span>{isHindi ? '2. राष्ट्रीय साइबर पोर्टल (1930)' : '2. National Cyber Portal (1930)'}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* 2. PRIMARY WORKSPACE */}
+      {/* 1. PRIMARY WORKSPACE: Open directly on working wizard or national portal view */}
       {activeSubView === 'drafts' ? (
-        <ComplaintDraftGenerator language={language} initialCategory={initialCategory} />
-      ) : (
-        <NationalCyberPortalHub 
+        <ComplaintDraftGenerator 
           language={language} 
-          onNavigateToDrafts={() => setActiveSubView('drafts')}
-          onNavigateToTab={onNavigateToTab}
+          initialCategory={initialCategory} 
         />
+      ) : (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-[#E8E2DC]">
+            <div className="flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-indigo-600" />
+              <span className="font-semibold text-sm text-[#1A1A1A]">
+                {isHindi ? 'राष्ट्रीय साइबर अपराध रिपोर्टिंग पोर्टल (cybercrime.gov.in)' : 'National Cyber Crime Reporting Portal (1930 / cybercrime.gov.in)'}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActiveSubView('drafts')}
+              className="text-xs font-semibold px-3 py-1.5 rounded-full bg-[#FAF8F3] hover:bg-white border border-[#E8E2DC] text-[#26215C] transition-colors cursor-pointer"
+            >
+              {isHindi ? '← ई-एफआईआर ड्राफ्ट पर वापस जाएं' : '← Back to Draft Generator'}
+            </button>
+          </div>
+          <NationalCyberPortalHub 
+            language={language} 
+            onNavigateToDrafts={() => setActiveSubView('drafts')}
+            onNavigateToTab={onNavigateToTab}
+          />
+        </div>
       )}
 
-      {/* 3. COLLAPSIBLE LEGAL REFERENCE ACCORDIONS (ZERO CLUTTER) */}
+      {/* 2. COLLAPSIBLE LEGAL REFERENCE ACCORDIONS */}
       <div className="space-y-3 pt-2">
         <div className="flex items-center justify-between px-1">
           <h3 className="text-xs font-bold uppercase tracking-wider text-[#8B6D5C]">
@@ -258,6 +224,29 @@ export const GuidedReportPortal: React.FC<GuidedReportPortalProps> = ({
             </div>
           )}
         </div>
+      </div>
+
+      {/* 3. CANONICAL ABOUT LINK (SINGLE NON-REDUNDANT ENTRY) */}
+      <div className="pt-2">
+        <button
+          type="button"
+          onClick={() => {
+            hapticAction();
+            onNavigateToTab?.('support', 'about-trust-section');
+          }}
+          className="w-full p-4 rounded-2xl bg-[#FAF8F3] hover:bg-white border border-[#E8E2DC] text-left flex items-center justify-between text-[#5A5672] hover:text-[#26215C] transition-all group cursor-pointer shadow-2xs"
+        >
+          <div className="flex items-center gap-2.5">
+            <ShieldCheck className="w-4 h-4 text-[#0F6E56]" />
+            <span className="text-xs sm:text-sm font-semibold">
+              {isHindi ? 'नारी सुरक्षा और शून्य डेटा संग्रहण गारंटी के बारे में जानें' : 'About NariSuraksha & Privacy Guarantee'}
+            </span>
+          </div>
+          <span className="text-xs font-bold text-[#993556] group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+            <span>{isHindi ? 'विवरण देखें' : 'Learn more'}</span>
+            <span>→</span>
+          </span>
+        </button>
       </div>
     </div>
   );

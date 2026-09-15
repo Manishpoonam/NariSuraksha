@@ -7,7 +7,8 @@ export type IncidentCategory =
   | 'videocall_sextortion'
   | 'device_hacked_icloud'
   | 'ncii_distribution'
-  | 'account_takeover';
+  | 'account_takeover'
+  | 'known_person_threats';
 
 export interface DecisionNode {
   id: string;
@@ -75,6 +76,7 @@ export interface ComplaintFormData {
   evidenceList: string[];
   cityState: string;
   language: Language;
+  isMinorVictim?: boolean;
 }
 
 export type CloudSyncStatus = 'synced' | 'saving' | 'offline' | 'error';

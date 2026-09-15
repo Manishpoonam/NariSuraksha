@@ -176,7 +176,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
     google: {
       name: isHindi ? 'गूगल सर्च व इमेजेस (Google De-Index)' : 'Google Search & Images De-Indexing',
       badge: isHindi ? 'वैश्विक सर्च रिजल्ट्स से खात्मा' : 'Global Search & Mirror Erasure',
-      icon: <Search className="w-5 h-5 text-amber-600" />,
+      icon: <Search className="w-5 h-5 text-sky-600" />,
       turnaround: isHindi ? '24 - 72 घंटे' : '24 - 72 Hours',
       directUrl: 'https://support.google.com/websearch/troubleshooter/3111061',
       portalVerifiedDate: 'Mar 2026', // Source: Google Search Help Center Troubleshooter ID 3111061
@@ -252,7 +252,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
     { id: 'whatsapp', label: 'WhatsApp', icon: <MessageCircle className="w-4 h-4 text-emerald-600" /> },
     { id: 'instagram', label: 'Instagram / FB', icon: <Instagram className="w-4 h-4 text-rose-600" /> },
     { id: 'telegram', label: 'Telegram', icon: <Send className="w-4 h-4 text-sky-600" /> },
-    { id: 'google', label: 'Google Search', icon: <Search className="w-4 h-4 text-amber-600" /> },
+    { id: 'google', label: 'Google Search', icon: <Search className="w-4 h-4 text-sky-600" /> },
     { id: 'adult', label: 'Adult Sites', icon: <Film className="w-4 h-4 text-rose-700" /> },
     { id: 'twitter', label: 'X (Twitter)', icon: <Twitter className="w-4 h-4 text-neutral-800" /> },
   ];
@@ -414,7 +414,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#1A1A1A] hover:bg-black text-white font-bold text-xs sm:text-sm transition-all shadow-xs shrink-0 active:scale-97"
               >
                 <span>{isHindi ? 'आधिकारिक रिमूवल फॉर्म खोलें' : 'Open Official Takedown Portal'}</span>
-                <ExternalLink className="w-4 h-4 text-amber-300" />
+                <ExternalLink className="w-4 h-4 text-white/80" />
               </a>
               {selectedPlatform.portalVerifiedDate ? (
                 <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F6E56] bg-[#E1F5EE] px-2.5 py-0.5 rounded-full border border-[#B7E4D7]">
@@ -587,7 +587,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 }}
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#26215C] hover:bg-[#1C1844] text-white font-bold text-xs sm:text-sm transition-all shadow-xs active:scale-97 cursor-pointer"
               >
-                <FileText className="w-4 h-4 text-amber-300" />
+                <FileText className="w-4 h-4 text-white/80" />
                 <span>{isHindi ? 'निर्देशित ई-एफआईआर ड्राफ्टर खोलें' : 'Open Guided e-FIR Generator'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>

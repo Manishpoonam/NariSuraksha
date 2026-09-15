@@ -433,3 +433,134 @@ export const OFFENSE_STATUTE_MAPPINGS: Record<string, OffenseStatutePackage> = {
 export function getOffenseStatutePackage(key: string): OffenseStatutePackage {
   return OFFENSE_STATUTE_MAPPINGS[key] || OFFENSE_STATUTE_MAPPINGS.extortion_blackmail;
 }
+
+export interface IncidentStatutesResult {
+  statuteKeys: string[];
+  statutes: StatuteCitation[];
+  provisionsText: string;
+  groundsList: string[];
+  referenceSubjectString: string;
+}
+
+/**
+ * Dynamically resolves statutory citations and legal grounds for complaints and FIR drafts.
+ * Ensures extortion (BNS 308), deepfakes (BNS 336), voyeurism (BNS 77), and takedown (Rule 3(2)(b))
+ * are accurately and dynamically pulled based on the incident category.
+ */
+export function getStatuteCitationsForIncident(
+  incidentType: string,
+  isHindi: boolean = false,
+  isMinor: boolean = false
+): IncidentStatutesResult {
+  const pkg = OFFENSE_STATUTE_MAPPINGS[incidentType] || OFFENSE_STATUTE_MAPPINGS.extortion_blackmail;
+  
+  // Base keys from canonical mapping
+  const baseKeys: string[] = [...pkg.primarySections];
+  if (pkg.supplementalSections) {
+    pkg.supplementalSections.forEach((s) => {
+      if (!baseKeys.includes(s)) baseKeys.push(s);
+    });
+  }
+  
+  // Safeguards always attached to complaints
+  if (!baseKeys.includes('BNS_73')) {
+    baseKeys.push('BNS_73');
+  }
+  if (!baseKeys.includes('BSA_63')) {
+    baseKeys.push('BSA_63');
+  }
+
+  const statutes = baseKeys
+    .map((key) => STATUTE_REGISTRY[key])
+    .filter((s): s is StatuteCitation => Boolean(s));
+
+  // Build provisions lines
+  const lines: string[] = [];
+  
+  if (isMinor) {
+    if (isHindi) {
+      lines.push('- POCSO Act, 2012 (धारा 13, 14, 15): 18 वर्ष से कम आयु की पीड़िता का डिजिटल/यौन शोषण (गैर-जमानती)');
+      lines.push('- IT Act, 2000 (धारा 67B): नाबालिग से संबंधित इलेक्ट्रॉनिक सामग्री का निर्माण या प्रसारण (गैर-जमानती)');
+    } else {
+      lines.push('- Sections 13, 14, 15 of Protection of Children from Sexual Offences (POCSO) Act, 2012 (Non-Bailable)');
+      lines.push('- Section 67B of Information Technology Act, 2000 (Child Sexual Exploitation & CSAM Material - Non-Bailable)');
+    }
+  }
+
+  statutes.forEach((s) => {
+    if (isHindi) {
+      lines.push(`- ${s.act} (${s.section}): ${s.shortLabel.hi}`);
+    } else {
+      lines.push(`- ${s.section}, ${s.act} (${s.shortLabel.en})`);
+    }
+  });
+
+  if (isMinor) {
+    if (isHindi) {
+      lines.push('- POCSO Act धारा 19 व 33: अनिवार्य रिपोर्टिंग व पहचान की पूर्ण गोपनीयता');
+    } else {
+      lines.push('- Section 19 & 33 of POCSO Act, 2012 (Mandatory Reporting & In-Camera Identity Safeguards)');
+    }
+  }
+
+  // Build statutory grounds paragraphs tailored specifically to the incident
+  const groundsList: string[] = [];
+  if (incidentType === 'extortion_blackmail') {
+    if (isHindi) {
+      groundsList.push('1. BNS धारा 308 (जबरन वसूली): किसी व्यक्ति को भय में डालकर धन, संपत्ति या अनुचित लाभ की मांग करना गैर-जमानती संज्ञेय अपराध है।');
+      groundsList.push('2. BNS धारा 351 (आपराधिक धमकी): शारीरिक, मानसिक या प्रतिष्ठा को क्षति पहुंचाने की धमकी देना दंडनीय अपराध है।');
+      groundsList.push('3. IT Act धारा 67A: इलेक्ट्रॉनिक माध्यम से यौन रूप से स्पष्ट सामग्री का प्रसारण करने पर 5 वर्ष तक कारावास व ₹10 लाख जुर्माने का प्रावधान है।');
+      groundsList.push('4. BNS धारा 73: पीड़िता की पहचान किसी भी रूप में सार्वजनिक करना कानूनन निषिद्ध है।');
+    } else {
+      groundsList.push('1. Under Section 308 BNS, putting any person in fear of injury or reputation in order to commit extortion carries severe penal consequences under subsections (2) through (6).');
+      groundsList.push('2. Under Section 351 BNS, threatening injury to person, reputation, or property constitutes criminal intimidation.');
+      groundsList.push('3. Under Section 67A IT Act, transmitting sexually explicit material electronically is a cognizable, non-bailable offense punishable by up to 5 years imprisonment and fine up to ₹10 Lakh on first conviction.');
+      groundsList.push('4. Under Section 73 BNS, publishing or disclosing the name or identity of the victim in public or police records is strictly prohibited by law.');
+    }
+  } else if (incidentType === 'ai_deepfake_morph') {
+    if (isHindi) {
+      groundsList.push('1. BNS धारा 336 (जालसाजी): प्रतिष्ठा धूमिल करने के उद्देश्य से AI या मॉर्फ्ड डिजिटल सामग्री तैयार करना जालसाजी का संज्ञेय अपराध है।');
+      groundsList.push('2. BNS धारा 79: किसी महिला की मर्यादा व लज्जा को आहत करने के इरादे से कोई शब्द, इशारा या कृत्य करना दंडनीय है।');
+      groundsList.push('3. IT Act धारा 66E व 67A: बिना सहमति के शारीरिक निजता का उल्लंघन और अश्लील सामग्री का प्रसारण गैर-जमानती अपराध है।');
+      groundsList.push('4. BNS धारा 73: पीड़िता की पहचान की पूर्ण गोपनीयता कानून द्वारा संरक्षित है।');
+    } else {
+      groundsList.push('1. Under Section 336 BNS, electronic forgery intending that the forged synthetic media shall harm reputation is punishable with imprisonment up to 3 years and fine.');
+      groundsList.push('2. Under Section 79 BNS, any word, gesture, or act intended to insult the modesty of a woman is a cognizable penal offense.');
+      groundsList.push('3. Under Section 66E & 67A IT Act, capturing or transmitting non-consensual sexualized media attracts strict non-bailable penalties.');
+      groundsList.push('4. Under Section 73 BNS, victim identity is safeguarded from public disclosure.');
+    }
+  } else if (incidentType === 'known_person_threats') {
+    if (isHindi) {
+      groundsList.push('1. BNS धारा 77 (दृश्यरतिकता): किसी व्यक्ति की निजी तस्वीरों को बिना सहमति रखना या प्रसारित करने की धमकी देना संज्ञेय अपराध है।');
+      groundsList.push('2. BNS धारा 308 व 351: तस्वीरों को सार्वजनिक करने की धमकी देकर ब्लैकमेल करना जबरन वसूली और आपराधिक धमकी का अपराध है।');
+      groundsList.push('3. IT Act धारा 66E: निजता के उल्लंघन पर 3 साल तक की जेल व ₹2 लाख तक जुर्माना है।');
+      groundsList.push('4. BNS धारा 73: पीड़िता की पहचान पुलिस या सार्वजनिक अभिलेखों में गोपनीय रखना अनिवार्य है।');
+    } else {
+      groundsList.push('1. Under Section 77 BNS (Voyeurism) & Section 66E IT Act, capturing, retaining, or threatening dissemination of private intimate media violates bodily privacy.');
+      groundsList.push('2. Under Sections 308 & 351 BNS, using threats of media disclosure to intimidate or coerce compliance constitutes extortion and criminal intimidation.');
+      groundsList.push('3. Under Section 67A IT Act, actual or attempted transmission of sexually explicit material is non-bailable.');
+      groundsList.push('4. Under Section 73 BNS, victim identity is safeguarded from public disclosure.');
+    }
+  } else {
+    // Default: ncii_distribution
+    if (isHindi) {
+      groundsList.push('1. IT Rules 2021 नियम 3(2)(b): शिकायत मिलने के 24 घंटे के अंदर मध्यवर्ती प्लेटफॉर्म्स द्वारा सामग्री हटाना अनिवार्य है।');
+      groundsList.push('2. IT Act धारा 67A: इलेक्ट्रॉनिक माध्यम से अश्लील सामग्री का प्रसारण गैर-जमानती अपराध है (5 साल तक की जेल व ₹10 लाख जुर्माना)।');
+      groundsList.push('3. BNS धारा 77: बिना सहमति के अंतरंग सामग्री का प्रसार दृश्यरतिकता (Voyeurism) के तहत दंडनीय है।');
+      groundsList.push('4. BNS धारा 73: पीड़िता की पहचान कानूनी रूप से संरक्षित है।');
+    } else {
+      groundsList.push('1. Under Rule 3(2)(b) IT Rules 2021, online intermediaries are legally obligated to disable access to non-consensual intimate imagery within 24 hours.');
+      groundsList.push('2. Under Section 67A IT Act, transmitting sexually explicit material electronically is a cognizable, non-bailable offense punishable by up to 5 years imprisonment.');
+      groundsList.push('3. Under Section 77 BNS (Voyeurism), capturing or distributing private acts without consent is punishable by 1 to 3 years imprisonment on first conviction.');
+      groundsList.push('4. Under Section 73 BNS, publishing or disclosing the name or identity of the victim in public or police records is strictly prohibited by law.');
+    }
+  }
+
+  return {
+    statuteKeys: baseKeys,
+    statutes,
+    provisionsText: lines.join('\n'),
+    groundsList,
+    referenceSubjectString: pkg.unifiedCitationString[isHindi ? 'hi' : 'en']
+  };
+}

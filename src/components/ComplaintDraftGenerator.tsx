@@ -37,6 +37,7 @@ import { HumanReferralCard } from './HumanReferralCard';
 import { AnonymousFeedbackPrompt } from './AnonymousFeedbackPrompt';
 import { LegalDisclaimerNotice } from './LegalDisclaimerNotice';
 import { generateIntermediaryStatutoryNotice } from '../data/statutoryNotices';
+import { getStatuteCitationsForIncident } from '../data/statuteCitations';
 
 interface ComplaintDraftGeneratorProps {
   language: Language;
@@ -133,36 +134,45 @@ export const ComplaintDraftGenerator: React.FC<ComplaintDraftGeneratorProps> = (
   const generatePoliceFIRComplaint = () => {
     const isHindiDraft = language === 'hi';
     const dateStr = new Date().toLocaleDateString('en-IN');
+    const incidentStatutes = getStatuteCitationsForIncident(
+      formData.incidentType,
+      isHindiDraft,
+      isMinorIncident
+    );
 
     if (isHindiDraft) {
+      const subjectTitle = formData.incidentType === 'extortion_blackmail'
+        ? 'साइबर सेक्सटॉर्शन, जबरन वसूली (BNS धारा 308) एवं आपराधिक धमकी के संबंध में औपचारिक शिकायत (FIR दर्ज करने हेतु)'
+        : formData.incidentType === 'ai_deepfake_morph'
+        ? 'AI डीपफेक, डिजिटल जालसाजी (BNS धारा 336) एवं महिला की मर्यादा को ठेस पहुंचाने के संबंध में औपचारिक शिकायत (FIR दर्ज करने हेतु)'
+        : formData.incidentType === 'known_person_threats'
+        ? 'परिचित व्यक्ति द्वारा निजी फोटो लीक करने की धमकी, जबरन वसूली (BNS धारा 308) एवं आपराधिक उत्पीड़न के संबंध में औपचारिक शिकायत (FIR दर्ज करने हेतु)'
+        : 'गैर-सहमति से निजी तस्वीरें/वीडियो लीक करने एवं आपराधिक उत्पीड़न के संबंध में औपचारिक शिकायत (FIR दर्ज करने हेतु)';
+
       return `सेवा में,
 श्रीमान पुलिस अधीक्षक / प्रभारी अधिकारी,
 साइबर अपराध प्रकोष्ठ (Cyber Crime Cell) / संबंधित थाना,
 ${formData.cityState}
 
-विषय: ${isMinorIncident ? '[POCSO एवं IT Act 67B] ' : ''}गैर-सहमति से निजी तस्वीरें/वीडियो लीक करने, जबरन वसूली (ब्लैकमेल), एवं आपराधिक धमकी के संबंध में औपचारिक शिकायत (FIR दर्ज करने हेतु)।
+विषय: ${isMinorIncident ? '[POCSO एवं IT Act 67B] ' : ''}${subjectTitle}।
 
-संदर्भ: ${isMinorIncident ? 'लैंगिक अपराधों से बालकों का संरक्षण (POCSO) अधिनियम 2012 (धारा 13, 14, 15), IT Act 2000 (धारा 67B), ' : ''}सूचना प्रौद्योगिकी अधिनियम, 2000 (धारा 66E, 67, 67A) एवं भारतीय न्याय संहिता (BNS), 2023 (धारा 77, 79, 308, 336, 351)।
+संदर्भ (लागू कानूनी धाराएं):
+${incidentStatutes.provisionsText}
 
 महोदय/महोदया,
 
 मैं सम्मानपूर्वक यह शिकायत दर्ज कर रही हूँ। भारतीय न्याय संहिता, 2023 की धारा 73 एवं POCSO धारा 19 के अनुसार मेरी पहचान पूर्णतः गोपनीय रखी जाए:
 
 1. पीड़िता का विवरण: ${formData.victimAlias} (संपर्क: ${formData.contactEmailOrPhone || 'गोपनीय / ऑन-रिकॉर्ड'})${isMinorIncident ? '\n* नोट: पीड़िता घटना के समय 18 वर्ष से कम आयु की नाबालिग है। POCSO अधिनियम के तहत तत्काल अनिवार्य FIR दर्ज की जाए।' : ''}
-2. घटना की प्रकृति: ${formData.incidentType === 'extortion_blackmail' ? 'साइबर ब्लैकमेल व जबरन वसूली' : formData.incidentType === 'ai_deepfake_morph' ? 'AI डीपफेक / मॉर्फ्ड अश्लील फोटो' : 'व्हाट्सएप/टेलीग्राम पर गैर-सहमति से अश्लील सामग्री का प्रसार'}
+2. घटना की प्रकृति: ${formData.incidentType === 'extortion_blackmail' ? 'साइबर सेक्सटॉर्शन व जबरन वसूली (BNS धारा 308)' : formData.incidentType === 'ai_deepfake_morph' ? 'AI डीपफेक / मॉर्फ्ड अश्लील फोटो (BNS धारा 336)' : 'व्हाट्सएप/टेलीग्राम पर गैर-सहमति से अश्लील सामग्री का प्रसार'}
 3. आरोपी का विवरण: ${formData.accusedKnown === 'known' ? 'परिचित व्यक्ति: ' : 'अज्ञात साइबर अपराधी: '} ${formData.accusedDetails}
 4. प्रयुक्त प्लेटफॉर्म: ${formData.platformsInvolved.join(', ') || 'व्हाट्सएप, टेलीग्राम'}
 5. संबंधित लिंक / फोन नंबर: ${formData.linksOrUsernames || 'स्क्रीनशॉट में संलग्न'}
 6. मांगी गई फिरौती / ब्लैकमेल विवरण: ${formData.extortionAmountDemanded || 'अघोषित'}
 7. घटना का संक्षिप्त विवरण: ${formData.threatDetails}
 
-लागू होने वाली कानूनी धाराएं:
-${isMinorIncident ? '- POCSO Act धारा 13, 14, 15 एवं IT Act धारा 67B: 18 वर्ष से कम आयु के नाबालिग का डिजिटल शोषण व CSAM सामग्री का निर्माण/प्रसारण (गैर-जमानती)।\n' : ''}- IT Act धारा 66E: निजता का उल्लंघन (निजी अंगों/तस्वीरों का अनधिकृत प्रसारण)।
-- IT Act धारा 67 एवं 67A: इलेक्ट्रॉनिक माध्यम से अश्लील व यौन रूप से स्पष्ट सामग्री का प्रसारण।
-- BNS धारा 77 (पुरानी धारा 354C IPC): दृश्यरतिकता (Voyeurism)।
-- BNS धारा 308 (पुरानी धारा 384 IPC): जबरन वसूली (Extortion)।
-- BNS धारा 351 (पुरानी धारा 506 IPC): आपराधिक धमकी (Criminal Intimidation)।
-- BNS धारा 336 (पुरानी धारा 469 IPC): प्रतिष्ठा धूमिल करने हेतु जालसाजी (AI Deepfake/Morphing)।
+लागू होने वाले वैधानिक आधार (Statutory Grounds):
+${incidentStatutes.groundsList.join('\n')}
 
 प्रार्थना:
 अतः आपसे विनम्र निवेदन है कि:
@@ -171,29 +181,35 @@ ${isMinorIncident ? '- POCSO Act धारा 13, 14, 15 एवं IT Act धा
 3. संबंधित सोशल मीडिया प्लेटफॉर्म्स को IT Rules 2021 के तहत 24 घंटे में यह सामग्री हटाने के निर्देश जारी किए जाएं।
 
 दिनांक: ${dateStr}
-संलग्नक: स्क्रीनशॉट एवं फॉरेंसिक साक्ष्य की प्रति।
+संलग्नक: स्क्रीनशॉट एवं फॉरेंसिक साक्ष्य की प्रति (BSA धारा 63 प्रमाण-पत्र)।
 भवदीया,
 ${formData.victimAlias}`;
     }
+
+    const subjectTitleEn = formData.incidentType === 'extortion_blackmail'
+      ? 'Cyber Sextortion, Financial/Video Extortion (Section 308 BNS), and Criminal Intimidation'
+      : formData.incidentType === 'ai_deepfake_morph'
+      ? 'AI Deepfakes, Forgery to Harm Reputation (Section 336 BNS), and Synthetic Media Morphing'
+      : formData.incidentType === 'known_person_threats'
+      ? 'Intimidation, Extortion (Section 308 BNS), and Retaliatory Threat of Private Media Leak by Known Individual'
+      : 'Non-Consensual Dissemination of Intimate Media and Cyber Harassment';
 
     return `TO,
 THE OFFICER-IN-CHARGE / SUPERINTENDENT OF POLICE,
 CYBER CRIME POLICE STATION,
 ${formData.cityState.toUpperCase()}
 
-SUBJECT: Formal Criminal Complaint for ${isMinorIncident ? 'POCSO VIOLATION (MINOR INVOLVED), ' : ''}Non-Consensual Dissemination of Intimate Media, Cyber Sextortion, Blackmail, and Criminal Intimidation.
+SUBJECT: Formal Criminal Complaint for ${isMinorIncident ? 'POCSO VIOLATION (MINOR INVOLVED), ' : ''}${subjectTitleEn}.
 
 UNDER PROVISIONS:
-${isMinorIncident ? '- Sections 13, 14, 15 of Protection of Children from Sexual Offences (POCSO) Act, 2012;\n- Section 67B of Information Technology Act, 2000 (Child Sexual Exploitation & CSAM Material - Non-Bailable);\n' : ''}- Sections 66E, 67, 67A of the Information Technology Act, 2000;
-- Sections 77 (Voyeurism), 79 (Insult to Modesty), 308 (Extortion), 336 (Forgery for Defamation/AI Deepfakes), and 351 (Criminal Intimidation) of the Bharatiya Nyaya Sanhita (BNS), 2023;
-- Identity Protected under Section 73 of the Bharatiya Nyaya Sanhita, 2023${isMinorIncident ? ' and Section 19/33 of POCSO Act 2012' : ''}.
+${incidentStatutes.provisionsText}
 
 RESPECTED SIR/MADAM,
 
 I am submitting this formal complaint regarding an ongoing criminal offense perpetrated against me:
 
 1. COMPLAINANT IDENTIFIER: ${formData.victimAlias} (Contact: ${formData.contactEmailOrPhone || 'Confidential / Kept on Police Record'})${isMinorIncident ? '\n* CRITICAL NOTE: Depicted individual is a minor (<18). Case attracts mandatory non-bailable POCSO provisions.' : ''}
-2. NATURE OF INCIDENT: ${formData.incidentType === 'extortion_blackmail' ? 'Cyber Extortion & Blackmail' : formData.incidentType === 'ai_deepfake_morph' ? 'AI Deepfake / Non-Consensual Morphed Media' : 'Non-Consensual Intimate Image Dissemination'}
+2. NATURE OF INCIDENT: ${formData.incidentType === 'extortion_blackmail' ? 'Cyber Sextortion & Extortion (BNS 308)' : formData.incidentType === 'ai_deepfake_morph' ? 'AI Deepfake / Non-Consensual Morphed Media (BNS 336)' : 'Non-Consensual Intimate Image Dissemination'}
 3. ACCUSED DETAILS: ${formData.accusedKnown === 'known' ? 'Known Individual: ' : 'Unknown Cyber Criminal: '} ${formData.accusedDetails}
 4. PLATFORMS USED: ${formData.platformsInvolved.join(', ') || 'WhatsApp, Telegram'}
 5. OFFENDING IDENTIFIERS / LINKS: ${formData.linksOrUsernames || 'Preserved in attached screenshots'}
@@ -201,9 +217,7 @@ I am submitting this formal complaint regarding an ongoing criminal offense perp
 7. CHRONOLOGY OF THREATS: ${formData.threatDetails}
 
 STATUTORY GROUNDS:
-1. Under Section 67A IT Act, transmitting sexually explicit material electronically is a cognizable, non-bailable offense punishable by up to 5 years imprisonment and fine up to ₹10 Lakh on first conviction.
-2. Under Section 308 BNS, putting any person in fear of injury in order to commit extortion carries penal consequences under subsections (2) through (6).
-3. Under Section 73 BNS, publishing or disclosing the name or identity of the victim in public/police records is strictly prohibited by law.
+${incidentStatutes.groundsList.join('\n')}
 
 PRAYER / RELIEF SOUGHT:
 1. Register a First Information Report (FIR) under the aforementioned sections.
@@ -289,7 +303,7 @@ ${formData.victimAlias}`;
   const handleExportPDF = (action: 'view_print' | 'download_file' = 'view_print', customName?: string) => {
     hapticAction();
     exportCourtReadyPDF(
-      formData,
+      { ...formData, isMinorVictim: isMinorIncident },
       activeTemplate,
       getActiveText(),
       { action, customFileName: customName || neutralFileName }
@@ -329,12 +343,6 @@ ${formData.victimAlias}`;
               ? 'आधिकारिक राष्ट्रीय साइबर पोर्टल व पुलिस थाने में जमा करने हेतु सटीक कानूनी प्रारूप (Complaint Draft) तैयार करें।'
               : 'Answer simple questions to structure a formal complaint draft for submission to the Cyber Crime Police or National Portal.'}
           </p>
-        </div>
-
-        {/* Device privacy confirmation pill */}
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#E1F5EE] border border-[#B7E4D7] text-[#0F6E56] text-xs font-medium self-start sm:self-auto">
-          <Lock className="w-3.5 h-3.5" />
-          <span>{isHindi ? '100% फोन पर सुरक्षित • कोई सर्वर नहीं' : '100% on your device • Never sent to any server'}</span>
         </div>
       </div>
 
@@ -534,6 +542,9 @@ ${formData.victimAlias}`;
                     </option>
                     <option value="ncii_distribution">
                       {isHindi ? 'गैर-सहमति से प्राइवेट फोटो का प्रसार (Leaked Photos)' : 'Non-Consensual Image Dissemination (IT Act 67A)'}
+                    </option>
+                    <option value="known_person_threats">
+                      {isHindi ? 'पूर्व-साथी / परिचित द्वारा ब्लैकमेल व धमकी (Threats by Known Person)' : 'Threats / Revenge Media by Known Person or Ex-Partner (BNS 77, 308)'}
                     </option>
                   </select>
                 </div>
@@ -981,11 +992,6 @@ ${formData.victimAlias}`;
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   </div>
-                </div>
-
-                {/* Legal Advisory Disclaimer */}
-                <div className="pt-2">
-                  <LegalDisclaimerNotice language={language} />
                 </div>
 
                 {/* Human Referral Card */}

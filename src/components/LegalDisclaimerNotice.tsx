@@ -17,7 +17,15 @@ export const LegalDisclaimerNotice: React.FC<LegalDisclaimerNoticeProps> = ({
   const handleScrollToCanonical = (e: React.MouseEvent) => {
     e.preventDefault();
     const el = document.getElementById(LEGAL_DISCLAIMER.anchorId);
-    el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.dispatchEvent(
+        new CustomEvent('navigate-tab', {
+          detail: { tab: 'support', elementId: LEGAL_DISCLAIMER.anchorId },
+        })
+      );
+    }
   };
 
   if (compact) {

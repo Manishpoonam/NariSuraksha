@@ -187,6 +187,18 @@ export default function App() {
     } catch {}
   }, [supportSubTab]);
 
+  // Global listener for cross-component navigation
+  useEffect(() => {
+    const handleCustomNavigate = (e: Event) => {
+      const customEvent = e as CustomEvent<{ tab: string; elementId?: string }>;
+      if (customEvent.detail) {
+        handleNavigateToTab(customEvent.detail.tab, customEvent.detail.elementId);
+      }
+    };
+    window.addEventListener('navigate-tab', handleCustomNavigate);
+    return () => window.removeEventListener('navigate-tab', handleCustomNavigate);
+  }, []);
+
   // Push history and navigate
   const handleNavigateToTab = (tab: string, elementId?: string, pushHistory: boolean = true) => {
     let targetTab = 'rescue';
@@ -634,17 +646,19 @@ export default function App() {
 
             {/* HUB 4: CALM & HELPLINES */}
             {activeTab === 'support' && (
-              <CalmSupportPortal
-                language={language}
-                onNavigateToTab={handleNavigateToTab}
-                defaultSection={supportSubTab === 'scripts' ? 'scripts' : supportSubTab === 'helplines' ? 'helplines' : 'grounding'}
-              />
+              <div className="space-y-8">
+                <CalmSupportPortal
+                  language={language}
+                  onNavigateToTab={handleNavigateToTab}
+                  defaultSection={supportSubTab === 'scripts' ? 'scripts' : supportSubTab === 'helplines' ? 'helplines' : 'grounding'}
+                />
+                <div id="about-trust-section" className="scroll-mt-48">
+                  <AboutTrustSection language={language} />
+                </div>
+              </div>
             )}
           </motion.div>
         </AnimatePresence>
-
-        {/* LEVEL 6: ABOUT THIS SERVICE & ZERO-DATA TRUST SECTION */}
-        <AboutTrustSection language={language} />
       </main>
 
       {/* Footer */}

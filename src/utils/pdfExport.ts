@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import { ComplaintFormData, IncidentCategory } from '../types';
+import { getStatuteCitationsForIncident } from '../data/statuteCitations';
 
 const generatePDFDocument = (
   formData: ComplaintFormData,
@@ -181,15 +182,15 @@ const generatePDFDocument = (
   doc.setFontSize(8);
   doc.setTextColor(40, 40, 40);
 
-  const statutoryItems = [
-    '• Section 66E, Information Technology Act, 2000 (Violation of Privacy & capturing private images).',
-    '• Section 67 & 67A, IT Act, 2000 (Transmitting sexually explicit content electronically — Non-Bailable).',
-    '• Section 73, Bharatiya Nyaya Sanhita, 2023 (Publishing identity of victim of certain offenses).',
-    '• Section 77, Bharatiya Nyaya Sanhita, 2023 (Voyeurism & capturing private acts without consent).',
-    '• Section 308(2), Bharatiya Nyaya Sanhita, 2023 (Extortion by putting person in fear of injury/reputation).',
-    '• Section 351(2), Bharatiya Nyaya Sanhita, 2023 (Criminal Intimidation).',
-    '• Rule 3(2)(b), IT (Intermediary Guidelines) Rules, 2021 (Mandatory 24-hr removal of non-consensual nudity).'
-  ];
+  const incidentStatutes = getStatuteCitationsForIncident(
+    formData.incidentType,
+    false,
+    formData.isMinorVictim
+  );
+
+  const statutoryItems = incidentStatutes.statutes.map(
+    (s) => `• ${s.section}, ${s.act} (${s.shortLabel.en}).`
+  );
 
   statutoryItems.forEach((stat) => {
     checkAddPage(6);
