@@ -68,10 +68,17 @@ export const AnonymousFeedbackPrompt: React.FC<AnonymousFeedbackPromptProps> = (
 
   return (
     <div className="rounded-2xl border border-[#E8E2DC] bg-[#FAF9F6] p-4 sm:p-5 space-y-3">
-      <div className="flex items-start justify-between gap-3">
+      {/* Honest qualitative social-proof copy */}
+      <p className="text-xs text-[#5A5672] leading-relaxed">
+        {isHindi
+          ? 'आप यहाँ डर कर बैठने वाली पहली इंसान नहीं हैं, और न ही आखिरी। यह टूल इसलिए मौजूद है क्योंकि दूसरों को भी इसकी उतनी ही ज़रूरत थी।'
+          : "You're not the first person to sit here scared, and you won't be the last. This exists because others needed it too."}
+      </p>
+
+      <div className="flex items-start justify-between gap-3 pt-0.5">
         <div className="space-y-0.5">
           <div className="flex items-center gap-1.5 text-xs font-bold text-[#1A1A1A]">
-            <MessageSquareHeart className="w-4 h-4 text-[#8B6D5C]" />
+            <MessageSquareHeart className="w-4 h-4 text-[#8B6D5C] shrink-0" />
             <span>
               {isHindi ? 'क्या इस टूल से आपको मदद मिली? (वैकल्पिक व पूरी तरह गोपनीय)' : 'Did this help in your situation? (Optional & 100% Anonymous)'}
             </span>
