@@ -72,8 +72,8 @@ const CONFIDENCE_PINS: ConfidencePin[] = [
     },
     actionLabel: { en: 'View Power Replies', hi: 'कानूनी रिप्लाई देखें' },
     actionTarget: { tab: 'rescue', elementId: 'guided-situation-action-card' },
-    colorClass: 'border-amber-100 hover:border-amber-300',
-    badgeBg: 'bg-amber-50 text-amber-800 border-amber-200'
+    colorClass: 'border-teal-100 hover:border-teal-300',
+    badgeBg: 'bg-teal-50 text-teal-800 border-teal-200'
   },
   {
     id: 'pin_anonymous_shield',
@@ -152,8 +152,8 @@ const CONFIDENCE_PINS: ConfidencePin[] = [
       en: 'Framing the situation factually as cybercrime helps parents focus on protecting you rather than reacting in panic.', 
       hi: 'जब आप इसे साइबर अपराध के रूप में प्रस्तुत करती हैं, तो माता-पिता घबराने के बजाय आपकी सुरक्षा में साथ खड़े होते हैं।' 
     },
-    colorClass: 'border-amber-100 hover:border-amber-300',
-    badgeBg: 'bg-amber-50 text-amber-800 border-amber-200'
+    colorClass: 'border-slate-200 hover:border-slate-300',
+    badgeBg: 'bg-slate-100 text-slate-800 border-slate-200'
   }
 ];
 

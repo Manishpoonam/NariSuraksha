@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   ShieldCheck, 
   ExternalLink, 
@@ -56,6 +56,21 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
   const [copiedNotice, setCopiedNotice] = useState<boolean>(false);
   const [showLockdownDrawer, setShowLockdownDrawer] = useState<boolean>(false);
   const [showMirrorSolutions, setShowMirrorSolutions] = useState<boolean>(false);
+
+  const noticeBoxRef = useRef<HTMLPreElement>(null);
+
+  // Reset statutory notice preview box scroll position to top (scrollTop = 0) on mount and platform tab change
+  useEffect(() => {
+    if (noticeBoxRef.current) {
+      noticeBoxRef.current.scrollTop = 0;
+    }
+    const frameId = requestAnimationFrame(() => {
+      if (noticeBoxRef.current) {
+        noticeBoxRef.current.scrollTop = 0;
+      }
+    });
+    return () => cancelAnimationFrame(frameId);
+  }, [activePlatform]);
 
   const handleCopy = (text: string, type: 'email' | 'notice') => {
     navigator.clipboard.writeText(text);
@@ -120,14 +135,14 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       statutoryRule: 'Rule 3(2)(b) IT Rules 2021 & Meta Safety Policies',
       steps: {
         en: [
-          'On the offending post, story, reel, or profile: tap the three dots (...) > Report > select "Nudity or sexual activity" / "Bullying or harassment".',
-          'Submit Meta’s Dedicated Intimate Image Form (link below; verify active session) to purge across Instagram and Facebook.',
-          'Use StopNCII.org (below) to pre-emptively hash and block the media before or during circulation.',
+          'On the offending post, story, reel, or profile: tap the three dots (...) > Report > select "Nudity or sexual activity" / "Bullying or harassment" (unverified menu path — confirm options in your app version).',
+          'Submit Meta’s Intimate Image Abuse form (link below) while logged into your account (unverified — confirm before use; form may require in-app reporting).',
+          'Use StopNCII.org (official partner tool below) to pre-emptively hash and block the media across participating platforms.',
         ],
         hi: [
-          'आपत्तिजनक पोस्ट, स्टोरी, रील या प्रोफाइल पर 3 डॉट्स (...) दबाएं > Report > "Nudity or sexual activity" या "Bullying or harassment" चुनें।',
-          'मेटा के इंटिमेट इमेज रिमूवल फॉर्म (नीचे लिंक; लॉगिन जांचें) पर शिकायत दर्ज करें।',
-          'मेटा ऐप्स पर प्रसार रोकने के लिए नीचे दिए गए StopNCII.org टूल का उपयोग करके पहले ही डिजिटल हैश ब्लॉक बनाएं।',
+          'आपत्तिजनक पोस्ट, स्टोरी, रील या प्रोफाइल पर: 3 डॉट्स (...) > Report > "Nudity or sexual activity" या "Bullying or harassment" चुनें (असत्यापित मेनू पथ — अपने ऐप वर्जन में पुष्टि करें)।',
+          'मेटा के इंटिमेट इमेज अब्यूज फॉर्म (नीचे लिंक) पर अपने अकाउंट में लॉग-इन रहकर शिकायत दर्ज करें (असत्यापित — उपयोग से पहले पुष्टि करें; लिंक रीडायरेक्ट होने पर ऐप में रिपोर्ट करें)।',
+          'मेटा के आधिकारिक पार्टनर टूल StopNCII.org (नीचे लिंक) का उपयोग करके पहले ही डिजिटल हैश ब्लॉक बनाएं ताकि सहयोगी प्लेटफॉर्म्स पर प्रसार रुक सके।',
         ],
       },
       noticeSubject: PLATFORM_CANONICAL_NOTICES.instagram.subject,
@@ -484,14 +499,14 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
           {/* Statutory Notice Quick Copy (Unified with e-FIR Generator) */}
           {selectedPlatform.noticeBody && (
             <div className="pt-2 border-t border-[#F0EBE6] space-y-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <span className="text-xs font-bold text-[#555]">
                   {isHindi ? 'ईमेल में भेजने के लिए 24-घंटे कानूनी नोटिस टेम्पलेट:' : 'Pre-Drafted 24-Hour Statutory Notice for Email:'}
                 </span>
                 <button
                   type="button"
                   onClick={() => handleCopy(`${selectedPlatform.noticeSubject}\n\n${selectedPlatform.noticeBody}`, 'notice')}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#26215C] hover:underline cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#26215C] hover:underline cursor-pointer shrink-0"
                 >
                   {copiedNotice ? (
                     <>
@@ -506,7 +521,11 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                   )}
                 </button>
               </div>
-              <pre className="p-3.5 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] text-[11px] sm:text-xs text-[#444] font-mono whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto">
+              <pre
+                ref={noticeBoxRef}
+                key={activePlatform}
+                className="p-3.5 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] text-[11px] sm:text-xs text-[#444] font-mono whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto"
+              >
                 {selectedPlatform.noticeBody}
               </pre>
             </div>
@@ -528,7 +547,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
             <div className="flex items-center gap-2 shrink-0">
               <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F6E56] bg-[#E1F5EE] px-2.5 py-1 rounded-full border border-[#B7E4D7]">
                 <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
-                <span>{isHindi ? 'सत्यापित पोर्टल: Sep 2024' : 'Verified Portal: Sep 2024'}</span>
+                <span>{isHindi ? 'सत्यापित: भारत सरकार आधिकारिक पोर्टल (I4C)' : 'Verified: Official Govt Portal (MHA / I4C)'}</span>
               </span>
             </div>
           </div>
@@ -588,7 +607,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
           className="w-full p-5 sm:p-6 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF8F3]/60 transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[#E1F5EE] text-[#0F6E56] flex items-center justify-center shrink-0">
               <Globe className="w-5 h-5" />
             </div>
             <div>
@@ -596,7 +615,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 <h4 className="text-sm sm:text-base font-bold text-[#1A1A1A]">
                   {isHindi ? 'क्या वीडियो कई अनजान मिरर या पायरेट साइट्स पर फैल गया है?' : 'What if Media Has Spread to Multiple Clone or Pirate Mirror Sites?'}
                 </h4>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 hidden sm:inline-block">
+                <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#E1F5EE] text-[#0F6E56] border border-[#B7E4D7] hidden sm:inline-block">
                   {isHindi ? 'मास्टर समाधान' : 'Master Solution'}
                 </span>
               </div>
@@ -655,10 +674,10 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
             <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] space-y-3 flex flex-col justify-between">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-amber-700 uppercase tracking-wide">
+                  <span className="text-xs font-bold text-orange-700 uppercase tracking-wide">
                     {isHindi ? '2. क्लाउडफ्लेयर होस्ट स्ट्राइक' : '2. Cloudflare Origin Host Kill-Switch'}
                   </span>
-                  <ShieldAlert className="w-4 h-4 text-amber-600" />
+                  <ShieldAlert className="w-4 h-4 text-orange-600" />
                 </div>
                 <h5 className="text-sm font-bold text-[#1A1A1A]">
                   {isHindi ? '80% एडल्ट साइट्स का असली सर्वर बंद' : 'Direct Hosting Server File Deletion'}
@@ -674,7 +693,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                   href="https://abuse.cloudflare.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition-colors w-full"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold transition-colors w-full"
                 >
                   <span>{isHindi ? 'क्लाउडफ्लेयर एब्यूज फॉर्म खोलें' : 'Open Cloudflare Abuse'}</span>
                   <ExternalLink className="w-3.5 h-3.5" />

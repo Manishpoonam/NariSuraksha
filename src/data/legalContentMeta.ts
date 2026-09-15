@@ -147,6 +147,23 @@ export const LEGAL_FRAMEWORK_AUDIT: {
         en: 'Any sexually explicit imagery involving a minor (<18) is classified under mandatory reporting guidelines. Absolute statutory confidentiality is required by law.',
         hi: '18 वर्ष से कम उम्र के व्यक्ति से जुड़ी अंतरंग सामग्री पर POCSO कानून के तहत कड़ी कार्रवाई व पूर्ण गोपनीयता लागू होती है।'
       }
+    },
+    'BNSS_94': {
+      statuteCode: 'BNSS_94',
+      section: 'Section 94',
+      actTitle: 'Bharatiya Nagarik Suraksha Sanhita, 2023',
+      replacedLegacySection: 'Section 91, Code of Criminal Procedure (CrPC)',
+      summaryTitle: {
+        en: 'Summons to Produce Electronic Communication & Server Records',
+        hi: 'इलेक्ट्रॉनिक संचार व सर्वर रिकॉर्ड प्रस्तुत करने का वैधानिक आदेश'
+      },
+      lastUpdatedDate: '2026-09-14',
+      statutorySource: 'Gazette of India, Act No. 46 of 2023',
+      verificationStatus: 'AWAITING_EXTERNAL_SIGNOFF',
+      proceduralNote: {
+        en: 'Replaces Section 91 CrPC. Explicitly empowers investigating officers or courts to summon intermediaries, telecom operators, and hosts to preserve and produce digital records, IP logs, and subscriber info.',
+        hi: 'पूर्ववर्ती धारा 91 CrPC का स्थान लेती है। जांच अधिकारी को सर्वर लॉग, आईपी एड्रेस और इलेक्ट्रॉनिक सबूत सुरक्षित रखने और पेश करने का समन जारी करने का अधिकार देती है।'
+      }
     }
   },
 
@@ -154,8 +171,8 @@ export const LEGAL_FRAMEWORK_AUDIT: {
     fir_police: {
       templateId: 'fir_police',
       title: 'Structured Police Complaint Draft (Cyber Cell / 1930)',
-      lastUpdatedDate: '2026-09-11',
-      statutoryBasis: ['BNS Sections 73, 77, 79, 308, 336, 351', 'IT Act Sections 66E, 67, 67A', 'BNSS Section 173'],
+      lastUpdatedDate: '2026-09-14',
+      statutoryBasis: ['BNS Sections 73, 77, 79, 308, 336, 351', 'IT Act Sections 66E, 67, 67A', 'BNSS Sections 94, 173'],
       status: 'INFORMATIONAL_DRAFT'
     },
     intermediary_notice: {

@@ -107,14 +107,14 @@ export const PLATFORM_TAKEDOWNS: PlatformTakedown[] = [
     grievanceEmail: 'grievance-officer-india@support.instagram.com',
     instructions: {
       en: [
-        'Step 1: On the post or profile, tap the three dots (...) > Tap "Report" > Select "It’s inappropriate" > "Nudity or sexual activity" > "Non-consensual intimate imagery".',
-        'Step 2: Submit Meta’s Dedicated Intimate Image Form (direct URL above). Meta matches the image and removes it across Instagram, Facebook, and Messenger.',
-        'Step 3: If not resolved within 12 hours, email grievance-officer-india@support.instagram.com with our generated formal legal notice.',
+        'Step 1: On the offending post, story, or profile: tap the three dots (...) > Report > select "Nudity or sexual activity" / "Bullying or harassment" (unverified menu path — confirm options in your app).',
+        'Step 2: Submit Meta’s Intimate Image Abuse form (direct URL above) while logged into your account (unverified — confirm before use; if link redirects, report in-app).',
+        'Step 3: Use StopNCII.org (Meta partner) to pre-emptively hash and block the media before or during circulation.',
       ],
       hi: [
-        'स्टेप 1: पोस्ट या प्रोफाइल पर 3 डॉट्स (...) पर टैप करें > "Report" > "Nudity or sexual activity" चुनें।',
-        'स्टेप 2: मेटा के विशेष इंटिमेट इमेज रिमूवल फॉर्म (ऊपर दिए लिंक) पर शिकायत भरें। मेटा फेसबुक और इंस्टाग्राम दोनों से इसे हटा देता है।',
-        'स्टेप 3: grievance-officer-india@support.instagram.com पर ईमेल भेजें।',
+        'स्टेप 1: आपत्तिजनक पोस्ट, स्टोरी या प्रोफाइल पर: 3 डॉट्स (...) > Report > "Nudity or sexual activity" या "Bullying or harassment" चुनें (असत्यापित मेनू पथ — अपने ऐप में पुष्टि करें)।',
+        'स्टेप 2: मेटा के इंटिमेट इमेज अब्यूज फॉर्म (ऊपर लिंक) पर अपने अकाउंट में लॉग-इन रहकर शिकायत दर्ज करें (असत्यापित — उपयोग से पहले जांचें; लिंक रीडायरेक्ट होने पर ऐप में रिपोर्ट करें)।',
+        'स्टेप 3: मेटा के पार्टनर टूल StopNCII.org का उपयोग करके पहले ही डिजिटल हैश ब्लॉक बनाएं।',
       ],
     },
     statutoryRule: 'Rule 3(2)(b) Information Technology Rules, 2021',

@@ -188,7 +188,8 @@ export const STATUTE_REGISTRY: Record<string, StatuteCitation> = {
       hi: 'जांच अधिकारी या अदालत को सोशल मीडिया प्लेटफॉर्म, टेलीकॉम कंपनियों व व्यक्तियों को सर्वर लॉग, आईपी एड्रेस व चैट रिकॉर्ड प्रस्तुत करने का आदेश देने का वैधानिक अधिकार देता है।'
     },
     bailable: true,
-    verificationStatus: 'VERIFIED_GAZETTE',
+    verificationStatus: 'FLAGGED_FOR_LEGAL_REVIEW',
+    uncertaintyFlag: 'FLAGGED FOR LEGAL VERIFICATION & CONSOLIDATION: Section 94 of the Bharatiya Nagarik Suraksha Sanhita, 2023 (replacing Section 91 CrPC) specifically adds explicit statutory text authorizing summons to produce "electronic communication" and digital records. Flagged for legal review to verify: (1) whether investigatory summons to foreign intermediaries (Meta, Google, Telegram) under Section 94 BNSS can be served by investigating officers during preliminary enquiry before formal Section 173 BNSS FIR registration; and (2) standard operating procedures for emergency server preservation notices under Section 94 BNSS read with Rule 3(1)(j) IT Rules 2021 (which mandates 180-day data retention upon lawful government requisition).',
   },
 
   // IT Act Section 66E: Violation of Privacy
@@ -316,6 +317,7 @@ export const OFFENSE_STATUTE_MAPPINGS: Record<string, OffenseStatutePackage> = {
       hi: 'जबरन वसूली व ब्लैकमेल'
     },
     primarySections: ['BNS_308', 'BNS_351', 'IT_ACT_66E', 'IT_ACT_67A'],
+    supplementalSections: ['BNSS_94'],
     unifiedCitationString: {
       en: 'BNS Sections 308 (Extortion) and 351 (Criminal Intimidation), read with IT Act Sections 66E and 67A',
       hi: 'BNS धारा 308 (जबरन वसूली) व धारा 351 (आपराधिक धमकी), साथ ही IT एक्ट धारा 66E व 67A'
