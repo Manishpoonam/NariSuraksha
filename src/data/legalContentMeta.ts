@@ -45,7 +45,7 @@ export const LEGAL_FRAMEWORK_AUDIT: {
   templates: Record<string, TemplateAuditRecord>;
 } = {
   systemVersion: '2.4.0-BNS-2024',
-  lastUpdatedDate: '2026-09-11',
+  lastUpdatedDate: 'Periodically Reviewed',
   complianceNotice: 'Indexed directly from official Gazette notifications for BNS 2023, BNSS 2023, BSA 2023, and IT Act 2000. Template drafts are provided for law enforcement reporting assistance, not formal legal representation.',
 
   statutes: {
@@ -58,7 +58,7 @@ export const LEGAL_FRAMEWORK_AUDIT: {
         en: 'Prohibition on Disclosing Victim Identity',
         hi: 'पीड़िता की पहचान उजागर करने पर कानूनी प्रतिबंध'
       },
-      lastUpdatedDate: '2026-09-11',
+      lastUpdatedDate: 'Periodically Reviewed',
       statutorySource: 'Gazette of India, Act No. 45 of 2023',
       verificationStatus: 'GAZETTE_INDEXED',
       proceduralNote: {
@@ -75,7 +75,7 @@ export const LEGAL_FRAMEWORK_AUDIT: {
         en: 'Extortion & Criminal Demands',
         hi: 'जबरन वसूली (एक्सटोर्शन)'
       },
-      lastUpdatedDate: '2026-09-11',
+      lastUpdatedDate: 'Periodically Reviewed',
       statutorySource: 'Gazette of India, Act No. 45 of 2023',
       verificationStatus: 'GAZETTE_INDEXED',
       proceduralNote: {
@@ -92,7 +92,7 @@ export const LEGAL_FRAMEWORK_AUDIT: {
         en: 'Voyeurism & Non-Consensual Capture of Private Media',
         hi: 'निजी पलों की अनधिकृत रिकॉर्डिंग व प्रसारण (Voyeurism)'
       },
-      lastUpdatedDate: '2026-09-11',
+      lastUpdatedDate: 'Periodically Reviewed',
       statutorySource: 'Gazette of India, Act No. 45 of 2023',
       verificationStatus: 'GAZETTE_INDEXED',
       proceduralNote: {
@@ -108,7 +108,7 @@ export const LEGAL_FRAMEWORK_AUDIT: {
         en: 'Transmitting Sexually Explicit Material in Electronic Form',
         hi: 'इलेक्ट्रॉनिक माध्यम से अश्लील सामग्री का प्रसारण'
       },
-      lastUpdatedDate: '2026-09-11',
+      lastUpdatedDate: 'Periodically Reviewed',
       statutorySource: 'Information Technology (Amendment) Act, 2008',
       verificationStatus: 'GAZETTE_INDEXED',
       proceduralNote: {
@@ -124,7 +124,7 @@ export const LEGAL_FRAMEWORK_AUDIT: {
         en: '24-Hour Removal Requirement for Non-Consensual Intimate Imagery',
         hi: 'मध्यवर्ती प्लेटफॉर्म्स द्वारा 24 घंटे में सामग्री हटाने का नियम'
       },
-      lastUpdatedDate: '2026-09-11',
+      lastUpdatedDate: 'Periodically Reviewed',
       statutorySource: 'Ministry of Electronics and Information Technology (MeitY)',
       verificationStatus: 'GAZETTE_INDEXED',
       proceduralNote: {
@@ -140,7 +140,7 @@ export const LEGAL_FRAMEWORK_AUDIT: {
         en: 'Protection of Minors (<18) from Digital Exploitation & CSAM',
         hi: 'नाबालिगों (<18 वर्ष) का डिजिटल शोषण व CSAM से संरक्षण'
       },
-      lastUpdatedDate: '2026-09-11',
+      lastUpdatedDate: 'Periodically Reviewed',
       statutorySource: 'Protection of Children from Sexual Offences Act, 2012',
       verificationStatus: 'GAZETTE_INDEXED',
       proceduralNote: {
@@ -157,7 +157,7 @@ export const LEGAL_FRAMEWORK_AUDIT: {
         en: 'Summons to Produce Electronic Communication & Server Records',
         hi: 'इलेक्ट्रॉनिक संचार व सर्वर रिकॉर्ड प्रस्तुत करने का वैधानिक आदेश'
       },
-      lastUpdatedDate: '2026-09-14',
+      lastUpdatedDate: 'Periodically Reviewed',
       statutorySource: 'Gazette of India, Act No. 46 of 2023',
       verificationStatus: 'AWAITING_EXTERNAL_SIGNOFF',
       proceduralNote: {
@@ -171,28 +171,28 @@ export const LEGAL_FRAMEWORK_AUDIT: {
     fir_police: {
       templateId: 'fir_police',
       title: 'Structured Police Complaint Draft (Cyber Cell / 1930)',
-      lastUpdatedDate: '2026-09-14',
+      lastUpdatedDate: 'Periodically Reviewed',
       statutoryBasis: ['BNS Sections 73, 77, 79, 308, 336, 351', 'IT Act Sections 66E, 67, 67A', 'BNSS Sections 94, 173'],
       status: 'INFORMATIONAL_DRAFT'
     },
     intermediary_notice: {
       templateId: 'intermediary_notice',
       title: '24-Hour Emergency Takedown Notice to Intermediaries',
-      lastUpdatedDate: '2026-09-11',
+      lastUpdatedDate: 'Periodically Reviewed',
       statutoryBasis: ['Rule 3(2)(b) IT Rules 2021', 'Section 79 IT Act 2000'],
       status: 'INFORMATIONAL_DRAFT'
     },
     ncw_petition: {
       templateId: 'ncw_petition',
       title: 'National Commission for Women (NCW) Grievance Submission Draft',
-      lastUpdatedDate: '2026-09-11',
+      lastUpdatedDate: 'Periodically Reviewed',
       statutoryBasis: ['Section 10 National Commission for Women Act, 1990'],
       status: 'INFORMATIONAL_DRAFT'
     },
     pocso_notice: {
       templateId: 'pocso_notice',
       title: 'NCPCR / POCSO Minor Safeguard Reporting Draft',
-      lastUpdatedDate: '2026-09-11',
+      lastUpdatedDate: 'Periodically Reviewed',
       statutoryBasis: ['POCSO Act 2012', 'Section 67B IT Act'],
       status: 'INFORMATIONAL_DRAFT'
     }

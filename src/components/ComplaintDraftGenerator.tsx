@@ -1019,12 +1019,12 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
                     <Scale className="w-3.5 h-3.5 text-[#0F6E56]" />
                     <span>
                       {isHindi 
-                        ? `कानूनी धाराएं: BNS 2023 व IT Act गजट अधिसूचना के अनुसार (${LEGAL_FRAMEWORK_AUDIT.lastUpdatedDate})`
-                        : `Statutes indexed: BNS 2023 & IT Act Official Gazette (${LEGAL_FRAMEWORK_AUDIT.lastUpdatedDate})`}
+                        ? 'कानूनी धाराएं: BNS 2023 व IT Act गजट अधिसूचना (समय-समय पर समीक्षित)'
+                        : 'Statutes indexed: BNS 2023 & IT Act Official Gazette (Periodically Reviewed)'}
                     </span>
                   </div>
                   <span className="text-[10px] font-bold text-[#0F6E56] px-2 py-0.5 rounded-full bg-[#E1F5EE]">
-                    Gazette Indexed
+                    {isHindi ? 'नियमित समीक्षित' : 'Periodically Reviewed'}
                   </span>
                 </div>
 

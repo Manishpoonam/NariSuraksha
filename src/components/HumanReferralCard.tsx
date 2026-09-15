@@ -14,7 +14,9 @@ import {
   ChevronDown, 
   ChevronUp,
   Clock,
-  Sparkles
+  Sparkles,
+  CheckCircle2,
+  AlertTriangle
 } from 'lucide-react';
 import { Language } from '../types';
 import { REFERRAL_PARTNERS, ReferralPartner } from '../data/referralPartners';
@@ -67,10 +69,23 @@ export const HumanReferralCard: React.FC<HumanReferralCardProps> = ({
               className="bg-white rounded-2xl border border-[#E8E2DC] hover:border-[#CBD5E1] transition-all p-4 space-y-3 shadow-xs"
             >
               <div className="flex items-start justify-between gap-2">
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B6D5C]">
-                    {partner.organizationType} • {partner.feeStructure}
-                  </span>
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B6D5C]">
+                      {partner.organizationType} • {partner.feeStructure}
+                    </span>
+                    {partner.verification?.isVerified ? (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#E1F5EE] text-[#0F6E56] border border-[#B7E4D7]">
+                        <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                        <span>{isHindi ? `सत्यापित: ${partner.verification.source.hi}` : `Verified: ${partner.verification.source.en}`}</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200">
+                        <AlertTriangle className="w-3 h-3 text-amber-600 shrink-0" />
+                        <span>{isHindi ? 'असत्यापित' : 'Unverified'}</span>
+                      </span>
+                    )}
+                  </div>
                   <h4 className="text-sm font-bold text-[#1A1A1A] leading-snug">
                     {partner.name[language]}
                   </h4>

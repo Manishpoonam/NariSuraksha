@@ -298,7 +298,7 @@ export const STATUTE_REGISTRY: Record<string, StatuteCitation> = {
  * Used across the 5 scenarios in GirlsRescueGuide and other triage flows.
  */
 export interface OffenseStatutePackage {
-  scenarioKey: 'extortion_blackmail' | 'ncii_distribution' | 'ai_deepfake_morph' | 'known_person_threats' | 'identity_and_procedural_rights';
+  scenarioKey: string;
   title: { en: string; hi: string };
   primarySections: string[]; // keys into STATUTE_REGISTRY
   supplementalSections?: string[];
@@ -424,6 +424,102 @@ export const OFFENSE_STATUTE_MAPPINGS: Record<string, OffenseStatutePackage> = {
       hi: 'BNS धारा 73 व BNSS धारा 173 के अंतर्गत वैधानिक प्रक्रिया अनुरोध:\n\nसेवा में: जांच अधिकारी / साइबर क्राइम सेल\n\nमैं साइबर उत्पीड़न के संबंध में यह शिकायत प्रस्तुत कर रही हूँ। भारतीय न्याय संहिता 2023 की धारा 73 के अनुसार पीड़िता की पहचान या नाम उजागर करना कानूनन प्रतिबंधित है। इसके अलावा, भारतीय नागरिक सुरक्षा संहिता 2023 की धारा 173 के तहत मैं अपना बयान केवल महिला पुलिस अधिकारी द्वारा ही गोपनीय माहौल में दर्ज कराने के अपने वैधानिक अधिकार का अनुरोध करती हूँ।'
     },
     practitionerNote: 'BNS 73 imposes 2-year imprisonment on anyone disclosing the identity of victims of intimate offenses. BNSS 173 mandates female officer recording. Both empower the victim to demand strict procedural privacy.'
+  },
+
+  // 6. Video Call Sextortion (Mapped explicitly to Extortion & IT Act provisions)
+  videocall_sextortion: {
+    scenarioKey: 'videocall_sextortion',
+    title: {
+      en: 'Video Call Sextortion & Immediate Blackmail',
+      hi: 'वीडियो कॉल सेक्सटॉर्शन व जबरन वसूली'
+    },
+    primarySections: ['BNS_308', 'BNS_351', 'IT_ACT_66E', 'IT_ACT_67A'],
+    supplementalSections: ['BNSS_94'],
+    unifiedCitationString: {
+      en: 'BNS Sections 308 (Extortion) and 351 (Criminal Intimidation), read with IT Act Sections 66E and 67A',
+      hi: 'BNS धारा 308 (जबरन वसूली) व धारा 351 (आपराधिक धमकी), साथ ही IT एक्ट धारा 66E व 67A'
+    },
+    headerSummaryBadge: {
+      en: 'BNS 308, 351 & IT Act 66E/67A',
+      hi: 'BNS 308, 351 व IT एक्ट 66E/67A'
+    },
+    warningNoticeText: {
+      en: 'This communication is being recorded and submitted directly to the National Cyber Crime Reporting Portal (1930) and Cyber Police Station under Section 66E and Section 67A of the Information Technology Act, 2000, and Sections 308 (Extortion) and 351 (Criminal Intimidation) of the Bharatiya Nyaya Sanhita (BNS), 2023. Any transmission of recorded video calls constitutes a non-bailable criminal offense. All further actions are being handled through official law enforcement channels.',
+      hi: 'यह बातचीत और आपका संपर्क विवरण नेशनल साइबर क्राइम पोर्टल (1930) और साइबर पुलिस को IT एक्ट की धारा 66E, 67A और भारतीय न्याय संहिता (BNS) 2023 की धारा 308 (जबरन वसूली) व 351 (आपराधिक धमकी) के तहत साक्ष्य के रूप में दर्ज कराया जा चुका है।'
+    },
+    practitionerNote: 'Video call entrapment with immediate extortion demands is charged primarily under BNS 308 (Extortion) and 351 (Intimidation).'
+  },
+
+  // 7. Viral Leaked Media
+  viral_leaked: {
+    scenarioKey: 'viral_leaked',
+    title: {
+      en: 'Viral Dissemination & Leakage of Private Media',
+      hi: 'इंटरनेट पर निजी तस्वीरों का वायरल प्रसार'
+    },
+    primarySections: ['IT_RULES_3_2_B', 'IT_ACT_66E', 'IT_ACT_67A', 'BNS_77'],
+    supplementalSections: ['BNSS_94'],
+    unifiedCitationString: {
+      en: 'Rule 3(2)(b) IT Rules 2021, IT Act Sections 66E & 67A, and BNS Section 77 (Voyeurism)',
+      hi: 'IT नियम 2021 (नियम 3(2)(b)), IT एक्ट धारा 66E व 67A, और BNS धारा 77'
+    },
+    headerSummaryBadge: {
+      en: 'Rule 3(2)(b) IT Rules 2021 & BNS 77',
+      hi: 'IT नियम 3(2)(b) व BNS 77'
+    },
+    warningNoticeText: {
+      en: 'URGENT STATUTORY TAKEDOWN NOTICE: Under Rule 3(2)(b) of the Information Technology Rules, 2021, online intermediaries are legally obligated to disable access to non-consensual intimate imagery within 24 hours of receiving this notice.',
+      hi: 'अति-आवश्यक वैधानिक निष्कासन नोटिस: IT नियम 2021 के नियम 3(2)(b) के अंतर्गत 24 घंटे में सामग्री हटाना अनिवार्य है।'
+    },
+    practitionerNote: 'Immediate 24-hour takedown under IT Rules 2021 Rule 3(2)(b) alongside penal provisions.'
+  },
+
+  // 8. Device Hacked / Cloud Account Compromise
+  device_hacked_icloud: {
+    scenarioKey: 'device_hacked_icloud',
+    title: {
+      en: 'Device Hacked / Cloud Account Compromise with Extortion',
+      hi: 'डिवाइस हैक व जबरन वसूली'
+    },
+    primarySections: ['BNS_308', 'IT_ACT_66E', 'BNS_351'],
+    supplementalSections: ['BNSS_94'],
+    unifiedCitationString: {
+      en: 'BNS Section 308 (Extortion), IT Act Section 66E, and BNS Section 351 (Criminal Intimidation)',
+      hi: 'BNS धारा 308 (जबरन वसूली), IT एक्ट धारा 66E व BNS धारा 351'
+    },
+    headerSummaryBadge: {
+      en: 'BNS 308 & IT Act 66E',
+      hi: 'BNS 308 व IT एक्ट 66E'
+    },
+    warningNoticeText: {
+      en: 'Unauthorized access to device records followed by extortion threats violates Section 308 BNS and IT Act provisions.',
+      hi: 'अनधिकृत डेटा एक्सेस और फिरौती की मांग BNS धारा 308 और IT एक्ट के तहत संज्ञेय अपराध है।'
+    },
+    practitionerNote: 'Hacking coupled with blackmail is charged under extortion (BNS 308) and privacy breach (IT Act 66E).'
+  },
+
+  // 9. Account Takeover
+  account_takeover: {
+    scenarioKey: 'account_takeover',
+    title: {
+      en: 'Account Takeover & Impersonation Blackmail',
+      hi: 'खाता हैक व ब्लैकमेल'
+    },
+    primarySections: ['BNS_308', 'IT_ACT_66E', 'BNS_351'],
+    supplementalSections: ['BNSS_94'],
+    unifiedCitationString: {
+      en: 'BNS Section 308 (Extortion), IT Act Section 66E, and BNS Section 351',
+      hi: 'BNS धारा 308 (जबरन वसूली) व IT एक्ट धारा 66E'
+    },
+    headerSummaryBadge: {
+      en: 'BNS 308 & IT Act 66E',
+      hi: 'BNS 308 व IT एक्ट 66E'
+    },
+    warningNoticeText: {
+      en: 'Compromising accounts and issuing extortion demands constitutes non-bailable offenses under BNS 308.',
+      hi: 'खाता हैक कर जबरन वसूली करना BNS धारा 308 के तहत संज्ञेय अपराध है।'
+    },
+    practitionerNote: 'Impersonation and blackmail invoke BNS 308 alongside privacy protections.'
   }
 };
 
@@ -460,6 +556,23 @@ export function getStatuteCitationsForIncident(
     pkg.supplementalSections.forEach((s) => {
       if (!baseKeys.includes(s)) baseKeys.push(s);
     });
+  }
+
+  // Explicitly ensure BNS 308 is present and prioritized at the very top for extortion/blackmail categories
+  const isExtortionCategory = 
+    incidentType === 'extortion_blackmail' || 
+    incidentType === 'videocall_sextortion' || 
+    incidentType.toLowerCase().includes('extortion') || 
+    incidentType.toLowerCase().includes('blackmail');
+
+  if (isExtortionCategory) {
+    if (!baseKeys.includes('BNS_308')) {
+      baseKeys.unshift('BNS_308');
+    } else if (baseKeys[0] !== 'BNS_308') {
+      const idx = baseKeys.indexOf('BNS_308');
+      baseKeys.splice(idx, 1);
+      baseKeys.unshift('BNS_308');
+    }
   }
   
   // Safeguards always attached to complaints
@@ -505,7 +618,7 @@ export function getStatuteCitationsForIncident(
 
   // Build statutory grounds paragraphs tailored specifically to the incident
   const groundsList: string[] = [];
-  if (incidentType === 'extortion_blackmail') {
+  if (incidentType === 'extortion_blackmail' || isExtortionCategory) {
     if (isHindi) {
       groundsList.push('1. BNS धारा 308 (जबरन वसूली): किसी व्यक्ति को भय में डालकर धन, संपत्ति या अनुचित लाभ की मांग करना गैर-जमानती संज्ञेय अपराध है।');
       groundsList.push('2. BNS धारा 351 (आपराधिक धमकी): शारीरिक, मानसिक या प्रतिष्ठा को क्षति पहुंचाने की धमकी देना दंडनीय अपराध है।');

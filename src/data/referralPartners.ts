@@ -37,6 +37,10 @@ export interface ReferralPartner {
   };
   operatingHours: string;
   feeStructure: '100% Free' | 'Pro Bono' | 'Subsidized';
+  verification: {
+    isVerified: boolean;
+    source: { en: string; hi: string };
+  };
 }
 
 export const REFERRAL_PARTNERS: ReferralPartner[] = [
@@ -69,7 +73,14 @@ export const REFERRAL_PARTNERS: ReferralPartner[] = [
       actionUri: 'https://www.cyberpeace.org'
     },
     operatingHours: 'Mon - Sat (10:00 AM - 6:00 PM IST)',
-    feeStructure: '100% Free'
+    feeStructure: '100% Free',
+    verification: {
+      isVerified: true,
+      source: {
+        en: 'CyberPeace Foundation (cyberpeace.org)',
+        hi: 'CyberPeace Foundation (cyberpeace.org)'
+      }
+    }
   },
   {
     id: 'icall_tiss',
@@ -100,7 +111,14 @@ export const REFERRAL_PARTNERS: ReferralPartner[] = [
       actionUri: 'mailto:icall@tiss.edu'
     },
     operatingHours: 'Mon - Sat (10:00 AM - 8:00 PM IST)',
-    feeStructure: '100% Free'
+    feeStructure: '100% Free',
+    verification: {
+      isVerified: true,
+      source: {
+        en: 'TISS Mumbai (icallhelpline.org)',
+        hi: 'TISS मुंबई (icallhelpline.org)'
+      }
+    }
   },
   {
     id: 'sneha_crisis_centre',
@@ -131,7 +149,14 @@ export const REFERRAL_PARTNERS: ReferralPartner[] = [
       actionUri: 'https://snehamumbai.org'
     },
     operatingHours: '24/7 Crisis Hotline',
-    feeStructure: '100% Free'
+    feeStructure: '100% Free',
+    verification: {
+      isVerified: true,
+      source: {
+        en: 'SNEHA Mumbai (snehamumbai.org)',
+        hi: 'SNEHA मुंबई (snehamumbai.org)'
+      }
+    }
   },
   {
     id: 'nalsa_free_legal_aid',
@@ -162,6 +187,13 @@ export const REFERRAL_PARTNERS: ReferralPartner[] = [
       actionUri: 'https://nalsa.gov.in'
     },
     operatingHours: '24/7 Toll-Free',
-    feeStructure: '100% Free'
+    feeStructure: '100% Free',
+    verification: {
+      isVerified: true,
+      source: {
+        en: 'NALSA Portal (nalsa.gov.in) / Statutory Helpline',
+        hi: 'राष्ट्रीय विधिक सेवा प्राधिकरण (nalsa.gov.in)'
+      }
+    }
   }
 ];
