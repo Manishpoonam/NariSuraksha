@@ -70,7 +70,7 @@ export const GuidedReportPortal: React.FC<GuidedReportPortalProps> = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-[#E8E2DC]">
             <div className="flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-indigo-600" />
+              <Building2 className="w-5 h-5 text-[#8B6D5C]" />
               <span className="font-semibold text-sm text-[#1A1A1A]">
                 {isHindi ? 'राष्ट्रीय साइबर अपराध रिपोर्टिंग पोर्टल (cybercrime.gov.in)' : 'National Cyber Crime Reporting Portal (1930 / cybercrime.gov.in)'}
               </span>
@@ -78,7 +78,7 @@ export const GuidedReportPortal: React.FC<GuidedReportPortalProps> = ({
             <button
               type="button"
               onClick={() => setActiveSubView('drafts')}
-              className="text-xs font-semibold px-3 py-1.5 rounded-full bg-[#FAF8F3] hover:bg-white border border-[#E8E2DC] text-[#26215C] transition-colors cursor-pointer"
+              className="text-xs font-semibold px-3 py-1.5 rounded-full bg-[#FAF8F3] hover:bg-white border border-[#E8E2DC] text-[#8B6D5C] transition-colors cursor-pointer"
             >
               {isHindi ? '← ई-एफआईआर ड्राफ्ट पर वापस जाएं' : '← Back to Draft Generator'}
             </button>
@@ -152,16 +152,16 @@ export const GuidedReportPortal: React.FC<GuidedReportPortalProps> = ({
             className="w-full p-5 sm:p-6 flex items-center justify-between text-left cursor-pointer hover:bg-[#FAF8F3]/60 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center shrink-0">
-                <Building2 className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-900 border border-amber-200/70 flex items-center justify-center shrink-0">
+                <Building2 className="w-5 h-5 text-amber-800" />
               </div>
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <h4 className="text-sm sm:text-base font-bold text-[#1A1A1A]">
                     {isHindi ? 'राज्य साइबर अपराध पुलिस सेल निर्देशिका' : 'State Cyber Crime Police Directory (All 28 States & UTs)'}
                   </h4>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 hidden sm:inline-block">
-                    {isHindi ? 'फोन व ईमेल' : 'Verified Contacts'}
+                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300/80 inline-flex items-center gap-1">
+                    {isHindi ? 'निर्देशिका — सत्यापन जारी' : 'Directory — Under Verification'}
                   </span>
                 </div>
                 <p className="text-xs text-[#666]">
@@ -177,7 +177,7 @@ export const GuidedReportPortal: React.FC<GuidedReportPortalProps> = ({
           </button>
 
           {showStateDirectory && (
-            <div className="p-5 sm:p-6 pt-2 border-t border-[#F0EBE6]">
+            <div className="p-3.5 sm:p-6 pt-2 border-t border-[#F0EBE6]">
               <StateCyberDirectory language={language} />
             </div>
           )}
@@ -234,7 +234,7 @@ export const GuidedReportPortal: React.FC<GuidedReportPortalProps> = ({
             hapticAction();
             onNavigateToTab?.('support', 'about-trust-section');
           }}
-          className="w-full p-4 rounded-2xl bg-[#FAF8F3] hover:bg-white border border-[#E8E2DC] text-left flex items-center justify-between text-[#5A5672] hover:text-[#26215C] transition-all group cursor-pointer shadow-2xs"
+          className="w-full p-4 rounded-2xl bg-[#FAF8F3] hover:bg-white border border-[#E8E2DC] text-left flex items-center justify-between text-[#555] hover:text-[#1A1A1A] transition-all group cursor-pointer shadow-2xs"
         >
           <div className="flex items-center gap-2.5">
             <ShieldCheck className="w-4 h-4 text-[#0F6E56]" />

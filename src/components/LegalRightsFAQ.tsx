@@ -82,7 +82,7 @@ export const LegalRightsFAQ: React.FC<LegalRightsFAQProps> = ({ language }) => {
           <p className="text-xs sm:text-sm text-[#444] leading-relaxed">
             {isHindi
               ? 'साइबर अपराधों में किसी भी थाने में जीरो एफआईआर दर्ज कराई जा सकती है। कोई भी पुलिस स्टेशन अधिकार क्षेत्र का बहाना नहीं बना सकता।'
-              : 'Zero FIR can be lodged at ANY police station in India without jurisdictional refusal; the case is transferred automatically.'}
+              : 'Zero FIR can be lodged at any police station in India without jurisdictional refusal; the case is transferred automatically.'}
           </p>
         </div>
 

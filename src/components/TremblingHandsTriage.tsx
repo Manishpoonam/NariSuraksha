@@ -263,19 +263,19 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
             {/* Minor */}
             <button
               onClick={() => handleSelectAge('minor')}
-              className="p-5 sm:p-6 rounded-2xl border-2 border-indigo-400 hover:border-indigo-600 bg-indigo-50/50 hover:bg-indigo-100/60 text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 active:scale-98 shadow-sm group min-h-[90px]"
+              className="p-5 sm:p-6 rounded-2xl border-2 border-[#26215C]/30 hover:border-[#26215C] bg-[#FAF8F3] hover:bg-[#F3EFEA] text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 active:scale-98 shadow-xs group min-h-[90px]"
             >
               <div className="flex items-center justify-between w-full">
-                <span className="text-xs font-black uppercase tracking-wider text-indigo-900 bg-indigo-200/80 px-2.5 py-0.5 rounded-full">
+                <span className="text-xs font-bold tracking-wider text-[#26215C] bg-[#E8E6F3] px-2.5 py-0.5 rounded-full">
                   {isHindi ? '18 से कम (स्कूल / कॉलेज)' : 'Under 18 (Minor)'}
                 </span>
-                <ArrowRight className="w-5 h-5 text-indigo-700 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 text-[#26215C] group-hover:translate-x-1 transition-transform" />
               </div>
               <div>
-                <span className="text-lg font-bold text-indigo-950 block">
+                <span className="text-lg font-bold text-[#1A1A1A] block">
                   {isHindi ? 'मेरी उम्र 18 वर्ष से कम है' : 'I am Under 18'}
                 </span>
-                <span className="text-xs text-indigo-800 block mt-0.5">
+                <span className="text-xs text-[#666] block mt-0.5">
                   {isHindi ? 'Take It Down हैश और POCSO धारा 13/15 सुरक्षा' : 'Take It Down NCMEC & strict POCSO legal protection'}
                 </span>
               </div>
@@ -312,8 +312,8 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
               </span>
               <h4 className={`text-base font-black ${hasPaid ? 'text-rose-950' : 'text-emerald-950'}`}>
                 {hasPaid 
-                  ? (isHindi ? 'कदम 1: तुरंत 1930 डायल करें (गोल्डन 2 घंटे)' : 'Step 1: Call 1930 IMMEDIATELY (Golden 2-Hour Rule)')
-                  : (isHindi ? 'कदम 1: एक रुपया भी न दें — बिल्कुल ब्लॉक न करें' : 'Step 1: NEVER Pay ₹1 — Do Not Block Yet')}
+                  ? (isHindi ? 'कदम 1: तुरंत 1930 डायल करें (गोल्डन 2 घंटे)' : 'Step 1: Call 1930 Immediately (Golden 2-Hour Window)')
+                  : (isHindi ? 'कदम 1: एक रुपया भी न दें — बिल्कुल ब्लॉक न करें' : 'Step 1: Withhold All Payment — Do Not Block Yet')}
               </h4>
             </div>
             
@@ -340,17 +340,17 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
           </div>
 
           {/* Action 2: Digital Takedown Tool */}
-          <div className="p-5 rounded-2xl border-2 border-indigo-200 bg-indigo-50/60 space-y-3">
+          <div className="p-5 rounded-2xl border border-[#26215C]/20 bg-[#FAF8F3] space-y-3">
             <div className="flex items-center gap-2">
-              <span className="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-black text-white">
+              <span className="w-7 h-7 rounded-full bg-[#26215C] flex items-center justify-center text-xs font-bold text-white">
                 2
               </span>
-              <h4 className="text-base font-black text-indigo-950">
+              <h4 className="text-base font-bold text-[#1A1A1A]">
                 {isHindi ? 'कदम 2: फोटो का अपलोड स्वतः ब्लॉक करें' : 'Step 2: Proactively Block Uploads Online'}
               </h4>
             </div>
 
-            <p className="text-xs sm:text-sm text-indigo-900 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#333] leading-relaxed">
               {ageGroup === 'minor'
                 ? (isHindi 
                     ? 'आप 18 से कम हैं, इसलिए Take It Down (NCMEC) टूल का उपयोग करें। यह आपकी फोटो का डिजिटल फिंगरप्रिंट (हैश) बनाता है। आपकी फोटो आपके फोन से कभी बाहर नहीं जाती।'
@@ -367,7 +367,7 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => hapticAction()}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-black text-xs transition-transform active:scale-95 shadow-md cursor-pointer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#26215C] hover:bg-[#1A1540] text-white rounded-full font-bold text-xs transition-transform active:scale-95 shadow-xs cursor-pointer"
                 >
                   <span>{isHindi ? 'Take It Down पोर्टल खोलें' : 'Open TakeItDown.org'}</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -378,7 +378,7 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => hapticAction()}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-black text-xs transition-transform active:scale-95 shadow-md cursor-pointer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#26215C] hover:bg-[#1A1540] text-white rounded-full font-bold text-xs transition-transform active:scale-95 shadow-xs cursor-pointer"
                 >
                   <span>{isHindi ? 'StopNCII.org पोर्टल खोलें' : 'Open StopNCII.org'}</span>
                   <ExternalLink className="w-3.5 h-3.5" />

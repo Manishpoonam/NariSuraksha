@@ -66,7 +66,7 @@ export const EvidencePreservationTool: React.FC<EvidencePreservationToolProps> =
       <section className="bg-white border border-[#E8E2DC] rounded-3xl p-5 sm:p-8 shadow-sm space-y-4">
         <div className="flex items-center gap-2.5 text-[#1A1A1A] font-bold text-sm sm:text-base">
           <Lock className="w-5 h-5 text-[#8B6D5C]" />
-          <span>{isHindi ? 'StopNCII की कार्यप्रणाली: आपकी फोटो कभी किसी सर्वर पर अपलोड नहीं होती' : 'How StopNCII Protects You: Your Raw Photo is NEVER Uploaded to Any Server'}</span>
+          <span>{isHindi ? 'StopNCII की कार्यप्रणाली: आपकी फोटो कभी किसी सर्वर पर अपलोड नहीं होती' : 'How StopNCII Protects You: Your Raw Photo is Never Uploaded to Any Server'}</span>
         </div>
 
         <p className="text-xs sm:text-sm text-[#444] leading-relaxed">

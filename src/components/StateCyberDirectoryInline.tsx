@@ -24,6 +24,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { STATE_CYBER_CELLS } from '../data/stateCyberCells';
 import { Language } from '../types';
 import { StateLocationDetector } from './StateLocationDetector';
+import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
 
 interface StateCyberDirectoryInlineProps {
   language: Language;
@@ -115,9 +116,7 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
             <div className="flex items-center gap-1.5 min-w-0">
               <Info className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
               <span className="truncate">
-                {isHindi
-                  ? 'स्वतंत्र उपकरण, सरकार से संबद्ध नहीं — संपर्क सार्वजनिक रिकॉर्ड से संकलित।'
-                  : 'Independent tool, not government-affiliated — contacts aggregated from public records.'}
+                {LEGAL_DISCLAIMER.short[language]}
               </span>
             </div>
             <button
@@ -145,9 +144,7 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
                 className="overflow-hidden"
               >
                 <p className="pt-2 mt-2 border-t border-[#F0EBE6] text-[#666] leading-relaxed">
-                  {isHindi
-                    ? 'अस्वीकरण: नारीसुरक्षा एक स्वतंत्र नागरिक सुरक्षा उपकरण है और यह भारत सरकार, राष्ट्रीय महिला आयोग (NCW) या किसी पुलिस प्राधिकरण से संबद्ध नहीं है। हेल्पलाइन विवरण सार्वजनिक आधिकारिक स्रोतों से संकलित हैं। आपातकाल में सीधे 1930 या 112 पर संपर्क करें।'
-                    : 'Disclaimer: NariSuraksha is an independent crisis tool and is not affiliated with the Government of India, the National Commission for Women, or any police department. Directory contacts are aggregated from official public records. In immediate danger, dial 1930 or 112 directly.'}
+                  {LEGAL_DISCLAIMER.full[language]}
                 </p>
               </motion.div>
             )}

@@ -294,7 +294,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
             <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
               {isHindi
                 ? 'यह तकनीक आपके फोन पर ही एक निजी डिजिटल कोड (हैश) बनाती है। आपकी असली फोटो कभी किसी सर्वर पर अपलोड नहीं होती। इंस्टाग्राम, फेसबुक, टिकटॉक, थ्रेड्स और ओनलीफैंस पर कोई भी इसे कभी पोस्ट नहीं कर सकेगा।'
-                : 'Generates an irreversible mathematical fingerprint directly on your device — your raw photo NEVER leaves your phone. Participating networks (Meta, Instagram, Facebook, Threads, TikTok, Reddit, OnlyFans) automatically block matching files permanently.'}
+                : 'Generates an irreversible mathematical fingerprint directly on your device — your raw photo never leaves your phone. Participating networks (Meta, Instagram, Facebook, Threads, TikTok, Reddit, OnlyFans) automatically block matching files permanently.'}
             </p>
           </div>
 

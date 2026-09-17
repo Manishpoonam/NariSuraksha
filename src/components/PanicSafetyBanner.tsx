@@ -48,19 +48,19 @@ export const PanicSafetyBanner: React.FC<PanicSafetyBannerProps> = ({
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500 text-white">
-                  {isHindi ? 'सख्त चेतावनी' : 'FIRST 60 SECONDS CRITICAL RULE'}
+                <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500 text-white">
+                  {isHindi ? 'सख्त चेतावनी' : 'First 60 Seconds: Critical Rule'}
                 </span>
-                <h3 className="text-sm sm:text-base font-extrabold text-[#1A1A1A]">
+                <h3 className="text-sm sm:text-base font-bold text-[#1A1A1A]">
                   {isHindi
                     ? 'घबराहट में चैट या अपना अकाउंट कभी डिलीट न करें!'
-                    : 'DO NOT DELETE THE CHAT OR YOUR ACCOUNT IN PANIC!'}
+                    : 'Do not delete the chat or your account in panic'}
                 </h3>
               </div>
               <p className="text-xs sm:text-sm text-[#444] leading-relaxed">
                 {isHindi
                   ? 'चैट डिलीट करने से अपराधी के फोन से फोटो नहीं हटती — बल्कि आप वह एकमात्र कानूनी सबूत खो देती हैं जिससे पुलिस अपराधी के फोन नंबर, आईपी एड्रेस और बैंक खाते को ट्रेस कर सकती है।'
-                  : 'Deleting the chat does NOT remove media from the blackmailer’s device. It destroys the only court-admissible proof police need to subpoena telecom providers and track the perpetrator.'}
+                  : 'Deleting the chat does not remove media from the blackmailer’s device. It destroys the only court-admissible proof police need to subpoena telecom providers and track the perpetrator.'}
               </p>
             </div>
           </div>

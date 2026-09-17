@@ -72,12 +72,12 @@ I am following the official Cyber Police protocol (1930) and StopNCII takedown p
       {
         id: 'script_stall_time',
         title: {
-          en: '1. "Buy Time / Delay" Neutral Message (Do NOT Panic)',
-          hi: '1. समय हासिल करने का शांत संदेश (बिना घबराए)'
+          en: 'Phase 1: Calm Stalling Script (Buy Breathing Room During Countdown)',
+          hi: 'चरण 1: समय हासिल करने का शांत संदेश (सक्रिय काउंटडाउन के समय)'
         },
         context: {
-          en: 'Send this once if you need a few hours to submit hashes to StopNCII.org and lodge the 1930 cyber complaint without provoking them.',
-          hi: 'अगर आपको 1930 पर कॉल करने और StopNCII पर हैश दर्ज करने के लिए कुछ घंटों का समय चाहिए, तो यह संदेश भेजें।'
+          en: 'Send this once only if facing an active countdown. Neutralizes urgency and buys 2-4 hours to screenshot evidence and compute StopNCII hashes. Withhold all payment.',
+          hi: 'अगर आपको 1930 पर कॉल करने, चैट का पूरा स्क्रीनशॉट लेने और StopNCII पर हैश दर्ज करने के लिए 2-4 घंटे का समय चाहिए, तो यह संदेश भेजें।'
         },
         message: {
           en: `I am currently in an examination / hospital / without mobile banking access right now. I cannot arrange anything immediately. Do not do anything in haste. I will check once I am free later today.`,
@@ -87,23 +87,23 @@ I am following the official Cyber Police protocol (1930) and StopNCII takedown p
       {
         id: 'script_legal_warning',
         title: {
-          en: '2. Statutory Cease & Desist Warning (Final Response Before Blocking)',
-          hi: '2. कानूनी चेतावनी संदेश (ब्लॉक करने से ठीक पहले का संदेश)'
+          en: 'Phase 2: Statutory Freeze Notice (Final Response Once Evidence Is Saved)',
+          hi: 'चरण 2: वैधानिक फ्रीज नोटिस (सबूत सुरक्षित होने के बाद भेजें)'
         },
         context: {
-          en: 'Cites Indian law (BNS 2023 & IT Act). Send this once, take a final screenshot with timestamp, and then block the number immediately.',
+          en: 'Cites Indian law (BNS 2023 & IT Act). Send this once, take an uncropped screenshot with timestamp, turn off read receipts, and block the perpetrator immediately.',
           hi: 'भारतीय न्याय संहिता (BNS) और आईटी एक्ट की धाराओं का हवाला दें। इसे भेजने के बाद स्क्रीनशॉट लें और नंबर को तुरंत ब्लॉक कर दें।'
         },
         message: {
-          en: `NOTICE OF CRIMINAL COMPLAINT:
+          en: `Notice of Criminal Complaint:
 Your contact information, UPI payment identifiers, and chat records have been preserved and submitted to the National Cyber Crime Reporting Portal (1930 / cybercrime.gov.in) and the Cyber Crime Police.
 
 Applicable statutory provisions:
 - Information Technology Act 2000, Section 66E (Violation of privacy) & Section 67A (Transmitting explicit content electronically)
 - Bharatiya Nyaya Sanhita (BNS) 2023, Section 308 (Extortion), Section 351 (Criminal Intimidation), and Section 77 (Voyeurism)
 
-All evidence has been digitally documented for investigation. Intermediary platforms have been notified for immediate blocking. No payment will be made. Cease all contact immediately.`,
-          hi: `आधिकारिक सूचना (CRIMINAL COMPLAINT NOTICE):
+All evidence has been digitally documented for investigation. Intermediary platforms have been notified for immediate blocking. You have the legal right to withhold payment. Cease all contact immediately.`,
+          hi: `आधिकारिक कानूनी सूचना (Notice of Criminal Complaint):
 आपकी संपर्क जानकारी, UPI भुगतान विवरण और चैट स्क्रीनशॉट सुरक्षित करके राष्ट्रीय साइबर अपराध पोर्टल (हेल्पलाइन 1930 / cybercrime.gov.in) एवं साइबर पुलिस को सौंप दिए गए हैं।
 
 लागू कानूनी प्रावधान:

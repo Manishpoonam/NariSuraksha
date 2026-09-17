@@ -231,7 +231,7 @@ export const GuidedEmergencyFlow: React.FC<GuidedEmergencyFlowProps> = ({
               <div className="bg-[#FEF2F2] border border-[#FCA5A5] rounded-2xl p-5 space-y-2">
                 <div className="flex items-center gap-2 text-[#DC2626] font-bold text-sm">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
-                  <span>{isHindi ? 'पहला नियम: कभी पैसे न दें और गिड़गिड़ाएं नहीं' : 'Golden Rule: DO NOT PAY & DO NOT BEG'}</span>
+                  <span>{isHindi ? 'पहला नियम: कभी पैसे न दें और गिड़गिड़ाएं नहीं' : 'Golden Rule: Withhold Payment & Stay Composed'}</span>
                 </div>
                 <p className="text-xs sm:text-sm text-[#444] leading-relaxed">
                   {isHindi

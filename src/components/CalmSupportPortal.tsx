@@ -99,11 +99,11 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-              <PhoneCall className="w-5 h-5 text-indigo-200" />
+              <PhoneCall className="w-5 h-5 text-teal-200" />
             </div>
             <div>
               <div className="font-mono font-extrabold text-base tracking-wider text-white">14416</div>
-              <div className="text-[11px] text-indigo-100 font-medium leading-tight">
+              <div className="text-[11px] text-[#FAF8F3]/90 font-medium leading-tight">
                 {isHindi ? 'मानसिक स्वास्थ्य परामर्श' : 'Tele-MANAS Anxiety Help (24/7)'}
               </div>
             </div>

@@ -194,7 +194,7 @@ export const CloudSyncIndicator: React.FC<CloudSyncIndicatorProps> = ({
 
                       {/* Guarantee 2: Crash Resilience */}
                       <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
-                        <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 shrink-0 mt-0.5">
+                        <div className="p-2 rounded-xl bg-teal-500/20 text-teal-300 shrink-0 mt-0.5">
                           <HardDrive className="w-4 h-4" />
                         </div>
                         <div className="space-y-0.5">

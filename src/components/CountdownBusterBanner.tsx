@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Language } from '../types';
 import { hapticAction, hapticPanic, hapticSuccess } from '../utils/haptics';
+import { EXTORTION_RESPONSE_SCRIPTS } from '../data/extortionResponseScripts';
 
 interface CountdownBusterBannerProps {
   language: Language;
@@ -34,14 +35,10 @@ export const CountdownBusterBanner: React.FC<CountdownBusterBannerProps> = ({
   const [copiedScript, setCopiedScript] = useState<boolean>(false);
   const [showExplanation, setShowExplanation] = useState<boolean>(false);
 
-  // Factually grounded statutory notice citing actual official reporting
+  // Canonical statutory notice citing actual official reporting (BNS 308, IT Act 66E/67A)
   const freezeScript = isHindi
-    ? `मैंने इस बातचीत और आपके मोबाइल नंबर/UPI की आधिकारिक शिकायत राष्ट्रीय साइबर अपराध पोर्टल (cybercrime.gov.in / हेल्पलाइन 1930) पर दर्ज करा दी है। 
-
-सूचना प्रौद्योगिकी अधिनियम (धारा 66E व 67A) एवं भारतीय न्याय संहिता (धारा 308 - जबरन वसूली/ब्लैकमेल) के तहत किसी की निजी तस्वीरें प्रसारित करना या धमकी देना संज्ञेय अपराध है। सभी चैट स्क्रीनशॉट, टाइमस्टैम्प और आपका नंबर पुलिस जांच हेतु सुरक्षित कर लिए गए हैं। तुरंत संपर्क बंद करें और सभी सामग्री नष्ट करें।`
-    : `This incident, your phone number, UPI handle, and chat records have been formally logged with the National Cyber Crime Reporting Portal (Helpline 1930 / cybercrime.gov.in).
-
-Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya Sanhita (Section 308 - Extortion), transmitting or threatening to publish intimate media is a cognizable criminal offence. All evidence has been digitally documented and preserved for law enforcement investigation. Cease all contact and delete all media immediately.`;
+    ? EXTORTION_RESPONSE_SCRIPTS.phase2Freeze.text.hi
+    : EXTORTION_RESPONSE_SCRIPTS.phase2Freeze.text.en;
 
   const handleCopyScript = () => {
     navigator.clipboard.writeText(freezeScript);
@@ -56,10 +53,10 @@ Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya 
       className="relative overflow-hidden rounded-3xl bg-[#18181B] text-white border-2 border-rose-600/80 shadow-xl"
     >
       {/* Top Warning Strip */}
-      <div className="bg-rose-600 px-4 sm:px-6 py-2.5 flex items-center justify-between text-white text-xs sm:text-sm font-black tracking-wide uppercase">
+      <div className="bg-rose-600 px-4 sm:px-6 py-2.5 flex items-center justify-between text-white text-xs sm:text-sm font-bold tracking-wide">
         <div className="flex items-center gap-2">
           <AlertOctagon className="w-4 h-4 shrink-0 animate-pulse" />
-          <span>{isHindi ? '15 मिनट की फर्जी डेडलाइन का सच' : 'CRITICAL TRUTH: THE 15-MINUTE COUNTDOWN TRAP'}</span>
+          <span>{isHindi ? '15 मिनट की फर्जी डेडलाइन का सच' : 'Understanding the 15-Minute Countdown Pressure'}</span>
         </div>
         <div className="flex items-center gap-1.5 font-bold text-[11px] bg-black/30 px-2.5 py-0.5 rounded-full border border-white/20">
           <VolumeX className="w-3 h-3 text-emerald-400" />
@@ -70,15 +67,15 @@ Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya 
       <div className="p-5 sm:p-7 space-y-6">
         {/* Core De-Escalation Reality Check */}
         <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-black uppercase tracking-wider border border-rose-500/40">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-semibold tracking-wide border border-rose-500/40">
             <Clock className="w-3.5 h-3.5 text-rose-400" />
-            <span>{isHindi ? 'वह समय को लेकर ब्लफ (झूठ) बोल रहा है' : 'HE IS BLUFFING ON TIME'}</span>
+            <span>{isHindi ? 'वह समय को लेकर ब्लफ (झूठ) बोल रहा है' : 'Artificial Countdown Bluff'}</span>
           </div>
 
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white leading-snug tracking-tight">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white leading-snug tracking-tight">
             {isHindi 
               ? 'रुकें। 1 रुपया भी न दें। अपराधी नकली 15 मिनट की डेडलाइन केवल इसलिए देता है ताकि आपका दिमाग सोचने न पाए।'
-              : 'STOP. DO NOT PAY ₹1. Blackmailers create fake 15-minute deadlines specifically so your brain panics and stops thinking.'}
+              : 'Pause. You have the legal right to withhold payment. Blackmailers create artificial 15-minute deadlines to force an adrenaline-driven decision.'}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
@@ -90,7 +87,7 @@ Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya 
               <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
                 {isHindi 
                   ? '98% मामलों में अगर आप ₹500 या ₹5,000 देती हैं, तो 24 घंटे के अंदर वह ₹50,000 मांगेगा। पैसे देने से वह कभी फोटो डिलीट नहीं करता।'
-                  : 'In 98% of cases, paying ₹1,000 guarantees demands for ₹50,000 tomorrow. Extortionists NEVER delete photos after payment.'}
+                  : 'In 98% of cases, paying ₹1,000 guarantees demands for ₹50,000 tomorrow. Extortionists do not delete photos after payment.'}
               </p>
             </div>
 
@@ -112,8 +109,8 @@ Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya 
         <div className="rounded-2xl bg-black/60 border border-white/15 p-4 sm:p-5 space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 block">
-                {isHindi ? 'ब्लैकमेलर को ठंडा करने का कानूनी संदेश' : '1-TAP "FREEZE" DEFENSE SCRIPT'}
+              <span className="text-[11px] font-bold text-amber-400 block">
+                {isHindi ? 'ब्लैकमेलर को ठंडा करने का कानूनी संदेश' : 'Statutory Legal Freeze Notice'}
               </span>
               <h3 className="text-sm sm:text-base font-bold text-white">
                 {isHindi ? 'यह संदेश कॉपी करके उसे भेजें और चैट म्यूट कर दें:' : 'Copy this, paste it in his chat, and mute him:'}
@@ -152,7 +149,7 @@ Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya 
             <span>
               {isHindi
                 ? 'यह संदेश भेजने के बाद उसकी किसी भी कॉल या धमकी का जवाब न दें। वह जांच रहा है कि आप डरती हैं या नहीं।'
-                : 'After sending this, DO NOT reply to his follow-ups. Turn off read receipts and do not pick up phone calls.'}
+                : 'After sending this, do not reply to follow-ups. Turn off read receipts and do not pick up phone calls.'}
             </span>
           </div>
         </div>

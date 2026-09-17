@@ -222,7 +222,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className="font-mono font-bold text-sm text-[#1A1A1A] tracking-tight">112 / 1091</span>
-                    <span className="text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded bg-indigo-100 text-indigo-800">Police</span>
+                    <span className="text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded bg-[#E8E6F3] text-[#26215C]">Police</span>
                   </div>
                   <p className="text-[10px] text-[#666] truncate">
                     {isHindi ? 'महिला सुरक्षा आपातकाल' : 'Emergency Police Dispatch'}

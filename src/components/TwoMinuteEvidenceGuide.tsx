@@ -44,7 +44,7 @@ export const TwoMinuteEvidenceGuide: React.FC<TwoMinuteEvidenceGuideProps> = ({ 
       title: isHindi ? 'स्क्रीनशॉट 2: धमकी भरा संदेश व फोन की घड़ी' : 'Screenshot 2: The Threat Message With Phone Clock',
       mustInclude: isHindi 
         ? 'स्क्रीन को क्रॉप न करें! फोन के सबसे ऊपर दिखने वाला समय (घड़ी), बैटरी प्रतिशत और तारीख दिखना जरूरी है।' 
-        : 'DO NOT CROP! The top phone bar (clock, battery level, network, and date) MUST be visible.',
+        : 'Do not crop. The top phone bar (clock, battery level, network, and date) should remain completely visible.',
       whyItMatters: isHindi 
         ? 'क्रॉप किए गए स्क्रीनशॉट को कोर्ट में खारिज किया जा सकता है। स्टेटस बार समय की पुष्टि करता है।' 
         : 'Cropped images risk tampering challenges in court. The top status bar timestamp verifies timeline integrity.'

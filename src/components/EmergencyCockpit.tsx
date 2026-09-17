@@ -46,6 +46,7 @@ import { PocsoMinorShieldModal } from './PocsoMinorShieldModal';
 import { TraumaInformedStepTracker } from './TraumaInformedStepTracker';
 import { smoothScrollTo } from '../utils/scroll';
 import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
+import { EXTORTION_RESPONSE_SCRIPTS, EXTORTION_SEQUENCED_GUIDANCE } from '../data/extortionResponseScripts';
 
 export type CrisisScenarioKey = 
   | 'countdown' 
@@ -142,6 +143,7 @@ export const EmergencyCockpit: React.FC<EmergencyCockpitProps> = ({
 
   // Copy script statuses
   const [copiedScript, setCopiedScript] = useState<boolean>(false);
+  const [copiedStallScript, setCopiedStallScript] = useState<boolean>(false);
   const [copiedDelayScript, setCopiedDelayScript] = useState<boolean>(false);
   const [copiedTakedownScript, setCopiedTakedownScript] = useState<boolean>(false);
   const [copiedDeepfakeScript, setCopiedDeepfakeScript] = useState<boolean>(false);
@@ -205,21 +207,22 @@ export const EmergencyCockpit: React.FC<EmergencyCockpitProps> = ({
     setEvidenceChecks(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // --- STATUTORY SCRIPT TEMPLATES ---
+  // --- STATUTORY SCRIPT TEMPLATES (from canonical extortionResponseScripts) ---
 
-  // Factually grounded, accurate statutory notice citing actual official reporting without fabricating legal counsel
+  // Phase 1 Stall script (buys time to preserve proof & submit StopNCII hashes)
+  const stallScript = isHindi
+    ? EXTORTION_RESPONSE_SCRIPTS.phase1Stall.text.hi
+    : EXTORTION_RESPONSE_SCRIPTS.phase1Stall.text.en;
+
+  // Phase 2 Statutory freeze notice (citing BNS 308 & IT Act 66E/67A)
   const freezeScript = isHindi
-    ? `मैंने इस बातचीत और आपके मोबाइल नंबर/UPI की आधिकारिक शिकायत राष्ट्रीय साइबर अपराध पोर्टल (cybercrime.gov.in / हेल्पलाइन 1930) पर दर्ज करा दी है। 
+    ? EXTORTION_RESPONSE_SCRIPTS.phase2Freeze.text.hi
+    : EXTORTION_RESPONSE_SCRIPTS.phase2Freeze.text.en;
 
-सूचना प्रौद्योगिकी अधिनियम (धारा 66E व 67A) एवं भारतीय न्याय संहिता (धारा 308 - जबरन वसूली/ब्लैकमेल) के तहत किसी की निजी तस्वीरें प्रसारित करना या धमकी देना संज्ञेय अपराध है। सभी चैट स्क्रीनशॉट, टाइमस्टैम्प और आपका नंबर पुलिस जांच हेतु सुरक्षित कर लिए गए हैं। तुरंत संपर्क बंद करें और सभी सामग्री नष्ट करें।`
-    : `This incident, your phone number, UPI handle, and chat records have been formally logged with the National Cyber Crime Reporting Portal (Helpline 1930 / cybercrime.gov.in).
-
-Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya Sanhita (Section 308 - Extortion), transmitting or threatening to publish intimate media is a cognizable criminal offence. All evidence has been digitally documented and preserved for law enforcement investigation. Cease all contact and delete all media immediately.`;
-
-  // Gray-rock / delay script for known contacts
+  // Known contact de-escalation delay script
   const grayRockScript = isHindi
-    ? `मुझे पैसों की व्यवस्था करने के लिए कल सुबह तक का समय चाहिए। अभी मेरे पास पैसे नहीं हैं और बैंक बंद है। कृपया जल्दबाजी में कुछ मत करना। मैं कल सुबह बात करती हूं।`
-    : `I am currently trying to arrange the money and need until tomorrow morning to gather the amount. My banking limit is reached for today. Please do not do anything in haste. I will contact you tomorrow morning once ready.`;
+    ? EXTORTION_RESPONSE_SCRIPTS.knownContactDeescalate.text.hi
+    : EXTORTION_RESPONSE_SCRIPTS.knownContactDeescalate.text.en;
 
   // 24-Hour Intermediary Takedown Notice
   const takedownNoticeScript = isHindi
@@ -652,31 +655,65 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
 
                     {/* Script Display */}
                     {perpetratorType === 'anonymous_scammer' ? (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
-                            <Scale className="w-3.5 h-3.5" />
-                            <span>{isHindi ? 'कठोर कानूनी संदेश (1-क्लिक कॉपी करें व भेजें)' : 'Cold Statutory Freeze Notice (Copy & Send)'}</span>
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => copyToClipboard(freezeScript, setCopiedScript)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
-                          >
-                            {copiedScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                            <span>{copiedScript ? (isHindi ? 'कॉपी हो गया' : 'Copied') : (isHindi ? 'संदेश कॉपी करें' : 'Copy Notice')}</span>
-                          </button>
+                      <div className="space-y-3.5">
+                        {/* Phase 1: Calm Stalling Script (If active timer) */}
+                        <div className="p-3 bg-white/5 rounded-xl border border-amber-300/20 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                              <Clock className="w-3.5 h-3.5" />
+                              <span>{isHindi ? 'कदम 1: समय हासिल करें (यदि टाइमर चल रहा हो)' : 'Step 1: Buy Breathing Room (If Countdown Active)'}</span>
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard(stallScript, setCopiedStallScript)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
+                            >
+                              {copiedStallScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                              <span>{copiedStallScript ? (isHindi ? 'कॉपी हो गया' : 'Copied') : (isHindi ? 'स्टालिंग संदेश कॉपी करें' : 'Copy Stall Line')}</span>
+                            </button>
+                          </div>
+                          <p className="text-[11px] text-[#D2CCE7] leading-relaxed">
+                            {isHindi
+                              ? 'ब्लैकमेलर को उत्तेजित किए बिना 2-4 घंटे का समय लें ताकि आप चैट के स्क्रीनशॉट ले सकें और StopNCII पर हैश बना सकें।'
+                              : 'Send this once only if a deadline is ticking. Neutralizes panic while you screenshot uncropped proof and submit StopNCII hashes. Withhold all payment.'}
+                          </p>
+                          <p className="text-xs text-[#FAF8F3]/90 font-mono bg-black/30 p-2.5 rounded-lg border border-white/10 leading-relaxed whitespace-pre-wrap">
+                            {stallScript}
+                          </p>
                         </div>
-                        <p className="text-xs text-[#FAF8F3]/90 font-mono bg-black/30 p-3 rounded-xl border border-white/10 leading-relaxed whitespace-pre-wrap max-h-36 overflow-y-auto">
-                          {freezeScript}
-                        </p>
+
+                        {/* Phase 2: Statutory Freeze Notice */}
+                        <div className="p-3 bg-white/5 rounded-xl border border-teal-300/20 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-teal-300 flex items-center gap-1.5">
+                              <Scale className="w-3.5 h-3.5" />
+                              <span>{isHindi ? 'कदम 2: वैधानिक फ्रीज नोटिस (सबूत सुरक्षित होने पर भेजें)' : 'Step 2: Statutory Freeze Notice (Send Once, Then Block)'}</span>
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard(freezeScript, setCopiedScript)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
+                            >
+                              {copiedScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                              <span>{copiedScript ? (isHindi ? 'कॉपी हो गया' : 'Copied') : (isHindi ? 'नोटिस कॉपी करें' : 'Copy Notice')}</span>
+                            </button>
+                          </div>
+                          <p className="text-[11px] text-[#D2CCE7] leading-relaxed">
+                            {isHindi
+                              ? 'BNS धारा 308 (जबरन वसूली) व IT Act 67A के तहत आधिकारिक नोटिस। इसे भेजते ही नंबर तुरंत ब्लॉक कर दें।'
+                              : 'Cites BNS Section 308 (Extortion) & IT Act 67A. Send once after screenshots are saved, turn off read receipts, and block immediately.'}
+                          </p>
+                          <p className="text-xs text-[#FAF8F3]/90 font-mono bg-black/30 p-2.5 rounded-lg border border-white/10 leading-relaxed whitespace-pre-wrap max-h-36 overflow-y-auto">
+                            {freezeScript}
+                          </p>
+                        </div>
                       </div>
                     ) : (
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-bold text-teal-300 flex items-center gap-1.5">
                             <Clock className="w-3.5 h-3.5" />
-                            <span>{isHindi ? 'समय बढ़ाने वाला संदेश (ग्रे-रॉक डिले)' : 'Gray-Rock Delay Script (Buys 12 Hours)'}</span>
+                            <span>{isHindi ? 'समय बढ़ाने वाला संदेश (ग्रे-रॉक डिले)' : 'Gray-Rock Delay Script (Buys Until Morning)'}</span>
                           </span>
                           <button
                             type="button"
@@ -981,13 +1018,13 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                     <div className="flex items-center gap-2">
                       <Camera className="w-4 h-4 text-rose-300" />
                       <span className="text-sm font-bold text-white">
-                        {isHindi ? 'स्क्रीनशॉट 2: धमकी भरा संदेश व फोन की पूरी घड़ी (No Crop)' : 'Screenshot 2: Threat Message with Phone Clock (DO NOT CROP)'}
+                        {isHindi ? 'स्क्रीनशॉट 2: धमकी भरा संदेश व फोन की पूरी घड़ी (No Crop)' : 'Screenshot 2: Threat Message with Phone Clock (Do Not Crop)'}
                       </span>
                     </div>
                     <p className="text-xs text-[#D2CCE7] leading-relaxed">
                       {isHindi
                         ? 'स्क्रीन को क्रॉप न करें! फोन के ऊपर दिखने वाला समय (घड़ी), बैटरी प्रतिशत और तारीख दिखना जरूरी है ताकि कोई छेड़छाड़ का आरोप न लगा सके।'
-                        : 'DO NOT CROP! The top phone bar (clock, battery level, network, and date) MUST be visible to prevent tampering challenges in court.'}
+                        : 'Do not crop: The top phone status bar (clock, battery level, network, and date) must remain fully visible to prevent tampering challenges in court.'}
                     </p>
                   </div>
                   <div className={`w-6 h-6 rounded-full border flex items-center justify-center shrink-0 mt-1 ${

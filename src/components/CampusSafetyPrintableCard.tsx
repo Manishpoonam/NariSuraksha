@@ -97,33 +97,33 @@ export const CampusSafetyPrintableCard: React.FC<CampusSafetyPrintableCardProps>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-black text-rose-800">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-rose-800">
                   <Ban className="w-4 h-4 text-rose-600" />
-                  <span>{isHindi ? '1. पैसे कभी न दें' : '1. NEVER PAY MONEY'}</span>
+                  <span>{isHindi ? '1. पैसे कभी न दें' : '1. Withhold All Payment'}</span>
                 </div>
                 <p className="text-[11px] text-rose-950 leading-snug">
                   {isHindi
                     ? 'एक रुपया भी देने पर वे और अधिक मांगते हैं। ब्लैकमेलर पैसे लेकर कभी फोटो डिलीट नहीं करते।'
-                    : 'Extortionists NEVER delete media. Paying ₹1 immediately turns you into a repeating target.'}
+                    : 'Extortionists do not delete media after receiving funds. Paying marks you as a repeating target.'}
                 </p>
               </div>
 
               <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-black text-amber-800">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-800">
                   <Camera className="w-4 h-4 text-amber-600" />
-                  <span>{isHindi ? '2. चैट कभी न हटाएं' : '2. DO NOT DELETE CHAT'}</span>
+                  <span>{isHindi ? '2. चैट कभी न हटाएं' : '2. Preserve Chat Evidence'}</span>
                 </div>
                 <p className="text-[11px] text-amber-950 leading-snug">
                   {isHindi
                     ? 'ब्लॉक करने से पहले पूरे स्क्रीनशॉट लें (फोन नंबर, समय, यूपीआई आईडी सहित)। यही पुलिस का कानूनी सबूत है।'
-                    : 'Keep full uncropped screenshots showing phone numbers and UPI IDs. Without this, police cannot trace the criminal.'}
+                    : 'Keep full uncropped screenshots showing phone numbers and UPI IDs. This empowers police to trace the perpetrator.'}
                 </p>
               </div>
 
               <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-black text-emerald-800">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800">
                   <Scale className="w-4 h-4 text-emerald-600" />
-                  <span>{isHindi ? '3. 24 घंटे में रिमूवल' : '3. 24-HR REMOVAL'}</span>
+                  <span>{isHindi ? '3. 24 घंटे में रिमूवल' : '3. 24-Hour Takedown Right'}</span>
                 </div>
                 <p className="text-[11px] text-emerald-950 leading-snug">
                   {isHindi

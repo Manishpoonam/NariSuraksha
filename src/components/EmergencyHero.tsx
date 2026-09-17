@@ -42,7 +42,7 @@ export const EmergencyHero: React.FC<EmergencyHeroProps> = ({
       subtitle: isHindi ? 'मांग मानने से ब्लैकमेल बढ़ता है' : 'Paying only fuels more demands',
       desc: isHindi
         ? 'अपराधी पैसे मिलने के बाद भी फोटो कभी डिलीट नहीं करते। एक रुपया भी न दें।'
-        : 'Extortionists NEVER delete photos after payment. Paying marks you as a paying target.',
+        : 'Extortionists do not delete photos after payment. Paying marks you as a recurring target.',
       badge: isHindi ? 'नियम 1' : 'Rule 1',
       color: 'bg-rose-50 text-rose-700 border-rose-200'
     },

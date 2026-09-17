@@ -101,7 +101,7 @@ export const LEGAL_SECTIONS: LegalSection[] = [
     },
     bailable: false,
     plainMeaning: {
-      en: 'Within 24 hours of receiving a complaint from the victim or authorized person regarding non-consensual nudity, deepfakes, or sexual content, social media companies MUST remove access to it.',
+      en: 'Within 24 hours of receiving a complaint from the victim or authorized person regarding non-consensual nudity, deepfakes, or sexual content, social media companies are legally required to remove or disable access to it.',
       hi: 'शिकायत मिलने के 24 घंटे के भीतर सोशल मीडिया कंपनियों (व्हाट्सएप, फेसबुक, इंस्टाग्राम आदि) को वह सामग्री हटानी ही होगी।',
     },
   },
@@ -122,7 +122,7 @@ export const LEGAL_FAQS: LegalFAQ[] = [
       hi: 'क्या मेरे माता-पिता, पति या रिश्तेदारों को पता चल जाएगा अगर मैं शिकायत करती हूँ?',
     },
     answer: {
-      en: 'NO. Under Section 73 of the Bharatiya Nyaya Sanhita (BNS) [formerly Section 228A IPC], the law STRICTLY PROHIBITS the disclosure of the name, identity, or any detail that could identify a woman in sexual harassment/cyber intimate cases. Violation of this anonymity is itself a criminal offence punishable by 2 years in prison. Furthermore, on the National Cyber Crime Portal (cybercrime.gov.in), you can file an "Anonymous Report" under Crime Against Women which allows cyber police to take down the link and investigate without contacting your home.',
+      en: 'No. Under Section 73 of the Bharatiya Nyaya Sanhita (BNS) [formerly Section 228A IPC], the law strictly prohibits the disclosure of the name, address, or any detail that could reveal the identity of a woman in sexual harassment or cyber intimate cases. Unlawful disclosure of identity is a criminal offense punishable by up to 2 years in prison. Furthermore, on the National Cyber Crime Reporting Portal (cybercrime.gov.in), you can file under "Crime Against Women/Children" with confidentiality, enabling cyber police to take down offending links and investigate without sending notices to your family.',
       hi: 'बिल्कुल नहीं। कानून (BNS धारा 73) के तहत पीड़िता का नाम, पता या पहचान सार्वजनिक करना सख्त अपराध है (जिसके लिए 2 साल की जेल हो सकती है)। पुलिस गोपनीयता बनाए रखने के लिए बाध्य है। इसके अतिरिक्त आप cybercrime.gov.in पर "गुमनाम शिकायत (Anonymous Report)" भी दर्ज कर सकती हैं जिससे घर पर कोई सूचना नहीं जाती।',
     },
     keyTakeaway: {
@@ -137,11 +137,11 @@ export const LEGAL_FAQS: LegalFAQ[] = [
       hi: 'क्या मुझे पुलिस द्वारा दोषी ठहराया जा सकता है क्योंकि मैंने पहले विश्वास में फोटो भेजी थी?',
     },
     answer: {
-      en: 'ABSOLUTELY NOT. Under Indian law, capturing or sharing private intimate photographs in a consensual relationship or for private personal reasons is NOT an offence. The crime ONLY and EXCLUSIVELY occurs when someone distributes, leaks, blackmails, or shares that content without your explicit consent (IT Act Sec 66E, 67A & BNS 77). You are the VICTIM of a cybercrime, not the perpetrator. The police cannot charge or harass you for this.',
+      en: 'No. Under Indian criminal law, taking or sharing private photographs in personal privacy or a consensual relationship is not an offense. The criminal offense occurs when someone retains, threatens, leaks, blackmails, or circulates that content without your explicit consent (IT Act Sections 66E & 67A, and BNS Section 77). You are recognized in law as the complainant and survivor. Law enforcement authorities cannot charge or penalize you for having private photos.',
       hi: 'कतई नहीं। निजी जीवन या आपसी विश्वास में फोटो खींचना या भेजना कोई अपराध नहीं है। अपराध केवल उस व्यक्ति ने किया है जिसने आपकी सहमति के बिना इसे लीक किया या आपको ब्लैकमेल कर रहा है। कानून की नजर में आप पूरी तरह से पीड़िता (Victim) हैं।',
     },
     keyTakeaway: {
-      en: 'Consensual sharing is NOT a crime. Leaking and blackmailing is a serious crime.',
+      en: 'Consensual private sharing is not an offense. Leaking and blackmailing is a serious crime.',
       hi: 'निजी विश्वास में फोटो होना अपराध नहीं है। लीक करना और ब्लैकमेल करना संगीन जुर्म है।',
     },
   },
@@ -152,11 +152,11 @@ export const LEGAL_FAQS: LegalFAQ[] = [
       hi: 'क्या मैं केवल महिला पुलिस अधिकारी से ही बात करने और बयान देने की मांग कर सकती हूँ?',
     },
     answer: {
-      en: 'YES. Under Section 173 of the Bharatiya Nagarik Suraksha Sanhita (BNSS), 2023 [formerly Section 154 CrPC], any statement relating to offences against women MUST be recorded by a woman police officer. You have the legal right to have the statement recorded at your residence or at a place of your choice in presence of a support person.',
+      en: 'Yes. Under Section 173 of the Bharatiya Nagarik Suraksha Sanhita (BNSS), 2023 [formerly Section 154 CrPC], any statement relating to offenses against women must be recorded by a female police officer. You have the statutory right to have your statement recorded at your residence or at another private location of your choice in the presence of a trusted support person.',
       hi: 'हाँ, यह आपका कानूनी अधिकार है। कानून (BNSS धारा 173) के तहत किसी भी महिला का बयान केवल महिला पुलिस अधिकारी द्वारा ही दर्ज किया जाएगा। आप अपनी पसंद की किसी भी सुरक्षित जगह पर बयान दर्ज कराने का अनुरोध कर सकती हैं।',
     },
     keyTakeaway: {
-      en: 'Mandatory right to a female officer under Section 173 BNSS.',
+      en: 'Mandatory statutory right to a female officer under Section 173 BNSS.',
       hi: 'महिला पुलिस अधिकारी द्वारा ही बयान दर्ज किया जाना अनिवार्य है।',
     },
   },
@@ -167,7 +167,7 @@ export const LEGAL_FAQS: LegalFAQ[] = [
       hi: 'अगर ब्लैकमेलर या आरोपी किसी दूसरे शहर या राज्य में रहता है तब क्या होगा?',
     },
     answer: {
-      en: 'Cyber crimes have Pan-India jurisdiction. You can register a "Zero FIR" at ANY police station nearest to you, or simply file on cybercrime.gov.in. The local police will register it without asking jurisdictional questions and transfer the case to the cyber forensics team where the suspect’s IP/tower is located.',
+      en: 'Cyber crimes operate under Pan-India jurisdiction. You can register a "Zero FIR" at any police station nearest to you, or submit directly on cybercrime.gov.in. The receiving police station is legally required to accept the complaint without jurisdictional objections and transfer the case file to the cyber forensics unit where the suspect’s IP or phone tower is located.',
       hi: 'साइबर अपराध पूरे देश में लागू होते हैं। आप अपने नजदीकी किसी भी थाने में "Zero FIR" दर्ज करा सकती हैं या ऑनलाइन cybercrime.gov.in पर रिपोर्ट कर सकती हैं। पुलिस अधिकार क्षेत्र का बहाना बनाकर मना नहीं कर सकती।',
     },
     keyTakeaway: {
@@ -182,12 +182,12 @@ export const LEGAL_FAQS: LegalFAQ[] = [
       hi: 'ब्लैकमेलर 30 मिनट का समय देकर तुरंत पैसे मांग रहा है। मुझे अभी क्या जवाब देना चाहिए?',
     },
     answer: {
-      en: 'DO NOT PANIC. Extortionists use fake countdown timers to force an adrenaline-driven emotional decision before you can think. Send this exact calm stalling message: "I am trying to arrange the money from my bank. The server is slow, please wait 3-4 hours." This gives you immediate breathing room to take screenshots, call 1930, and hash your image on StopNCII.org. NEVER transfer any amount.',
-      hi: 'घबराएं नहीं। टाइमर केवल आपको डराने की मनोवैज्ञानिक चाल है। उन्हें केवल इतना रिप्लाई करें: "बैंक का सर्वर डाउन है, मैं पैसे का इंतजाम करने की कोशिश कर रही हूँ, मुझे 3-4 घंटे का समय दें।" इससे आपको समय मिल जाएगा ताकि आप सबूत सुरक्षित कर सकें और 1930 पर रिपोर्ट कर सकें। ₹1 भी ट्रांसफर न करें।',
+      en: 'Follow the two-step tactical sequence: Extortionists use artificial countdown timers to trigger adrenaline-driven panic before you can evaluate options. Step 1 (If breathing room is needed): Send the calm stalling message ("I am trying to arrange the money from my bank. The banking server is slow right now. Please give me 3 to 4 hours. Please do not do anything in haste."). This buys immediate time without provoking an impulsive leak. Step 2: During this window, take uncropped screenshots of the chat, phone number, profile URL, and UPI ID, and hash your imagery on StopNCII.org. You have the legal right to withhold payment — paying ₹1 never stops blackmail and leads to repeat demands. Step 3: Send the formal statutory freeze notice citing BNS Section 308 (Extortion) and IT Act 66E/67A, then immediately block the offender.',
+      hi: 'दो-चरणीय रणनीति का पालन करें: ब्लैकमेलर घबराहट पैदा करने के लिए कृत्रिम टाइमर का उपयोग करते हैं। कदम 1: यदि सबूत जुटाने हेतु समय चाहिए, तो शांत स्टालिंग संदेश भेजें ("मैं बैंक से व्यवस्था करने की कोशिश कर रही हूँ, सर्वर धीमा है, कृपया 3-4 घंटे दें। जल्दबाजी न करें।")। इससे बिना तनाव बढ़ाए समय मिलता है। कदम 2: इस दौरान पूरी स्क्रीन के अनक्रॉप्ड स्क्रीनशॉट लें और StopNCII.org पर हैश बनाएं। आपको भुगतान रोकने का पूरा कानूनी अधिकार है — पैसे कभी न दें। कदम 3: BNS धारा 308 व IT Act 67A का वैधानिक फ्रीज नोटिस भेजें और नंबर को तुरंत ब्लॉक करें।',
     },
     keyTakeaway: {
-      en: 'Stall calmly. Never pay. Use the time to preserve proof and take down hashes.',
-      hi: 'शांत रहकर समय लें। पैसे कभी न दें। इस समय में सबूत जुटाएं और रिपोर्ट करें।',
+      en: 'Sequenced strategy: Stall calmly to preserve proof and hash media, then issue legal freeze notice and block. Withhold all payment.',
+      hi: 'क्रमबद्ध रणनीति: सबूत जुटाने के लिए शांत रहकर समय लें, StopNCII हैश बनाएं, फिर कानूनी फ्रीज नोटिस भेजकर ब्लॉक करें। पैसे कभी न दें।',
     },
   },
 ];

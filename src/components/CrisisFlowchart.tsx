@@ -116,10 +116,10 @@ export const CrisisFlowchart: React.FC<CrisisFlowchartProps> = ({
           <div className="flex-1 bg-white/5 rounded-2xl p-4 border border-white/15">
             <div className="flex items-center gap-2 text-[#FAF9F6] font-bold text-xs sm:text-sm mb-1.5">
               <span className="w-6 h-6 rounded-full bg-[#E25822] text-white flex items-center justify-center text-xs font-bold shrink-0">1</span>
-              <span className="tracking-wide">{isHindi ? 'चरण 1: रुकें व पैसे न दें' : 'PHASE 1: STOP & DO NOT PAY'}</span>
+              <span className="tracking-wide">{isHindi ? 'चरण 1: रुकें व पैसे न दें' : 'Phase 1: Pause & Withhold Payment'}</span>
             </div>
             <p className="text-xs sm:text-sm text-[#EAE6E1] leading-relaxed">
-              {isHindi ? 'पैसे देने या भीख मांगने से ब्लैकमेलर की हिम्मत बढ़ती है। शांत रहें।' : 'Never transfer money. Extortionists increase demands once paid.'}
+              {isHindi ? 'पैसे देने या भीख मांगने से ब्लैकमेलर की हिम्मत बढ़ती है। शांत रहें।' : 'Withhold all money. Extortionists increase demands once paid.'}
             </p>
           </div>
 
@@ -127,7 +127,7 @@ export const CrisisFlowchart: React.FC<CrisisFlowchartProps> = ({
           <div className="flex-1 bg-white/5 rounded-2xl p-4 border border-white/15">
             <div className="flex items-center gap-2 text-[#FAF9F6] font-bold text-xs sm:text-sm mb-1.5">
               <span className="w-6 h-6 rounded-full bg-[#8B6D5C] text-white flex items-center justify-center text-xs font-bold shrink-0">2</span>
-              <span className="tracking-wide">{isHindi ? 'चरण 2: सबूत सुरक्षित करें' : 'PHASE 2: PRESERVE EVIDENCE'}</span>
+              <span className="tracking-wide">{isHindi ? 'चरण 2: सबूत सुरक्षित करें' : 'Phase 2: Preserve Evidence'}</span>
             </div>
             <p className="text-xs sm:text-sm text-[#EAE6E1] leading-relaxed">
               {isHindi ? 'तारीख, समय, प्रोफाइल व UPI आईडी के पूरे स्क्रीनशॉट लें।' : 'Capture full-screen proof with timestamp, handles, and UPI IDs.'}
@@ -138,7 +138,7 @@ export const CrisisFlowchart: React.FC<CrisisFlowchartProps> = ({
           <div className="flex-1 bg-white/5 rounded-2xl p-4 border border-white/15">
             <div className="flex items-center gap-2 text-[#FAF9F6] font-bold text-xs sm:text-sm mb-1.5">
               <span className="w-6 h-6 rounded-full bg-[#8B6D5C] text-white flex items-center justify-center text-xs font-bold shrink-0">3</span>
-              <span className="tracking-wide">{isHindi ? 'चरण 3: डिजिटल ब्लॉकिंग व हैश' : 'PHASE 3: STOPNCII & TAKEDOWN'}</span>
+              <span className="tracking-wide">{isHindi ? 'चरण 3: डिजिटल ब्लॉकिंग व हैश' : 'Phase 3: StopNCII & Takedown'}</span>
             </div>
             <p className="text-xs sm:text-sm text-[#EAE6E1] leading-relaxed">
               {isHindi ? 'StopNCII.org व 24-घंटे वाले लीगल नोटिस से कंटेंट ब्लॉक करवाएं।' : 'Hash on StopNCII to preempt uploads; issue 24-hr notices.'}
@@ -149,7 +149,7 @@ export const CrisisFlowchart: React.FC<CrisisFlowchartProps> = ({
           <div className="flex-1 bg-white/5 rounded-2xl p-4 border border-white/15">
             <div className="flex items-center gap-2 text-[#FAF9F6] font-bold text-xs sm:text-sm mb-1.5">
               <span className="w-6 h-6 rounded-full bg-[#E25822] text-white flex items-center justify-center text-xs font-bold shrink-0">4</span>
-              <span className="tracking-wide">{isHindi ? 'चरण 4: 1930 / साइबर रिपोर्ट' : 'PHASE 4: 1930 & POLICE FIR'}</span>
+              <span className="tracking-wide">{isHindi ? 'चरण 4: 1930 / साइबर रिपोर्ट' : 'Phase 4: 1930 & Police FIR'}</span>
             </div>
             <p className="text-xs sm:text-sm text-[#EAE6E1] leading-relaxed">
               {isHindi ? '1930 पर कॉल करें या cybercrime.gov.in पर रिपोर्ट दर्ज करें।' : 'Dial 1930 to freeze fraudster accounts & file formal e-FIR.'}
@@ -176,7 +176,7 @@ export const CrisisFlowchart: React.FC<CrisisFlowchartProps> = ({
         <div className="bg-[#FAF9F6] border-2 border-[#E5DFD9] rounded-2xl p-5 sm:p-6 space-y-3">
           <div className="flex items-center gap-2.5 text-[#1A1A1A] font-bold text-sm sm:text-base">
             <AlertTriangle className="w-5 h-5 text-[#E25822] shrink-0" />
-            <span>{isHindi ? 'अत्यंत महत्वपूर्ण सावधानियां (DO NOT PANIC)' : 'Critical Immediate Do’s & Don’ts'}</span>
+            <span>{isHindi ? 'अत्यंत महत्वपूर्ण सावधानियां' : 'Critical Immediate Steps & Guidance'}</span>
           </div>
           <ul className="space-y-2.5 pl-5 list-disc text-sm sm:text-base text-[#333]">
             {currentNode.immediateWarnings[language].map((warning, idx) => (
