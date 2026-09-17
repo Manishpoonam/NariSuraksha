@@ -1,6 +1,6 @@
 {
-  "short_name": "Polity Notes",
-  "name": "Polity Notes - UPSC & NCERT Revision Module",
+  "short_name": "Study Notes",
+  "name": "Study Notes - Personal Revision Notebook",
   "icons": [
     {
       "src": "./icon-polity.svg",
@@ -8,9 +8,9 @@
       "sizes": "192x192 512x512"
     }
   ],
-  "start_url": "./?mode=disguised",
-  "background_color": "#F8FAFC",
-  "theme_color": "#3B5998",
+  "start_url": "./",
+  "background_color": "#FAF8F3",
+  "theme_color": "#26215C",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "./"

@@ -16,7 +16,8 @@ import {
   BookOpen, 
   Lock,
   Building2,
-  ArrowRight
+  ArrowRight,
+  Smartphone
 } from 'lucide-react';
 import { Language, IncidentCategory } from '../types';
 import { hapticAction } from '../utils/haptics';
@@ -29,6 +30,7 @@ interface RescueFooterSupportProps {
   onNavigateToTab: (tab: string, elementId?: string) => void;
   onOpenPrintCard: () => void;
   onOpenPurgeModal: () => void;
+  onOpenDeviceSafety?: () => void;
   onSelectCategoryForDraft?: (category: IncidentCategory) => void;
   onOpenSOS?: () => void;
   showPlatformGuides?: boolean;
@@ -49,6 +51,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
   onNavigateToTab,
   onOpenPrintCard,
   onOpenPurgeModal,
+  onOpenDeviceSafety,
   onSelectCategoryForDraft,
   onOpenSOS,
   showPlatformGuides: externalShowPlatformGuides,
@@ -371,6 +374,33 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                 </span>
               </button>
             </div>
+
+            {/* Utility 3: Device Safety & Stalkerware Audit */}
+            {onOpenDeviceSafety && (
+              <div className="p-3 rounded-xl bg-amber-50/60 border border-amber-200/80 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-lg bg-white border border-amber-200 flex items-center justify-center text-amber-800 shrink-0">
+                    <Smartphone className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-amber-950 truncate">
+                      {isHindi ? 'डिवाइस सुरक्षा व जासूसी ऐप्स जांच' : 'Check Device Safety & Stalkerware'}
+                    </h4>
+                    <p className="text-[10px] text-amber-800/80 line-clamp-1">
+                      {isHindi ? 'अकाउंट सिंक, हिडन एडमिन ऐप्स और हिस्ट्री हटाने का तरीका' : 'Audit linked Google/Apple accounts, admin apps & clear history'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={onOpenDeviceSafety}
+                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 font-semibold text-xs transition-colors cursor-pointer active:scale-97 min-h-[38px]"
+                >
+                  <Smartphone className="w-3.5 h-3.5 text-amber-800" />
+                  <span className="whitespace-nowrap">{isHindi ? 'जांचें' : 'Audit'}</span>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Privacy Confirmation Strip */}

@@ -72,7 +72,7 @@ export function setDisguisedManifest(disguise: boolean): void {
 
   // Also adjust page title / favicon synchronously
   if (disguise) {
-    document.title = 'Polity & Governance Notes - UPSC/NCERT';
+    document.title = 'Study Notes - Personal Revision Notebook';
     const favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
     if (favicon) {
       favicon.href = '/icon-polity.svg';

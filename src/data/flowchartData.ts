@@ -142,7 +142,7 @@ export const DECISION_NODES: DecisionNode[] = [
           hi: 'गूगल सर्च से लिंक और फोटो हटाने का अनुरोध दर्ज करें',
         },
         description: {
-          en: 'Use Google’s expedited Non-Consensual Explicit Imagery removal form to erase search results, thumbnails, and website cache globally.',
+          en: 'Use Google’s expedited Non-Consensual Explicit Imagery removal form to de-index search results, thumbnails, and web cache from public search discovery.',
           hi: 'गूगल के विशेष फॉर्म द्वारा अपना नाम या फोटो सर्च रिजल्ट्स और इमेजेस से तुरंत हटवाएं।',
         },
         buttonLabel: {

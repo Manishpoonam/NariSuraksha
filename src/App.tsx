@@ -18,10 +18,13 @@ import { CamouflageScreen } from './components/CamouflageScreen';
 import { FloatingPanicBar } from './components/FloatingPanicBar';
 import { EmergencySOSModal } from './components/EmergencySOSModal';
 import { ConfidenceCourageBoard } from './components/ConfidenceCourageBoard';
+import { OptionsOverviewHub } from './components/OptionsOverviewHub';
 import { RescueFooterSupport } from './components/RescueFooterSupport';
 import { CampusSafetyPrintableCard } from './components/CampusSafetyPrintableCard';
 import { PurgeFootprintModal } from './components/PurgeFootprintModal';
 import { LandingGroundingScreen } from './components/LandingGroundingScreen';
+import { ImmediateActionPath } from './components/ImmediateActionPath';
+import { DeviceSafetyChecklist } from './components/DeviceSafetyChecklist';
 import { EmergencyCockpit, CrisisScenarioKey } from './components/EmergencyCockpit';
 import { CountdownBusterBanner } from './components/CountdownBusterBanner';
 import { smoothScrollTo } from './utils/scroll';
@@ -101,6 +104,9 @@ export default function App() {
   const [rescueSituation, setRescueSituation] = useState<CrisisScenarioKey | string>('countdown');
   const [isPrintCardOpen, setIsPrintCardOpen] = useState<boolean>(false);
   const [isPurgeModalOpen, setIsPurgeModalOpen] = useState<boolean>(false);
+  const [isImmediateActionOpen, setIsImmediateActionOpen] = useState<boolean>(false);
+  const [isDeviceSafetyOpen, setIsDeviceSafetyOpen] = useState<boolean>(false);
+  const [navSource, setNavSource] = useState<'landing' | 'rescue' | 'options' | null>(null);
 
   const STEALTH_TITLE_STORAGE_KEY = 'suraksha_stealth_tab_v1';
   const NIGHT_DIMMER_STORAGE_KEY = 'suraksha_night_dimmer_v1';
@@ -199,15 +205,30 @@ export default function App() {
   }, []);
 
   // Push history and navigate
-  const handleNavigateToTab = (tab: string, elementId?: string, pushHistory: boolean = true) => {
+  const handleNavigateToTab = (
+    tab: string, 
+    elementId?: string, 
+    pushHistory: boolean = true,
+    source?: 'landing' | 'rescue' | 'options'
+  ) => {
     let targetTab = 'rescue';
     let targetSubTab: string | undefined = undefined;
+
+    if (source) {
+      setNavSource(source);
+    } else if (activeTab === 'options') {
+      setNavSource('options');
+    } else if (activeTab === 'rescue') {
+      setNavSource('rescue');
+    }
 
     if (tab === 'rescue' || tab === 'girls_rescue' || tab === 'flowchart') {
       targetTab = 'rescue';
       if (tab === 'girls_rescue' && elementId === 'girls-rescue-guide') {
         setShowDeepScenarios(true);
       }
+    } else if (tab === 'options' || tab === 'guidance') {
+      targetTab = 'options';
     } else if (tab === 'takedown' || tab === 'stopncii') {
       targetTab = 'takedown';
       targetSubTab = 'stopncii';
@@ -371,13 +392,35 @@ export default function App() {
       return;
     }
 
-    // 3. If in another hub, go back to Quick Rescue
+    // 3. Contextual back for Confidence Pins
+    if (activeTab === 'confidence') {
+      if (navSource === 'options') {
+        handleNavigateToTab('options');
+      } else {
+        handleNavigateToTab('rescue');
+      }
+      return;
+    }
+
+    // 4. Return from Options Overview Hub to Landing Sanctuary
+    if (activeTab === 'options') {
+      setViewMode('landing');
+      return;
+    }
+
+    // 5. If user navigated from Options Overview to a sub-feature, return to Options
+    if (navSource === 'options' && activeTab !== 'rescue') {
+      handleNavigateToTab('options');
+      return;
+    }
+
+    // 6. If in another hub, go back to Quick Rescue
     if (activeTab !== 'rescue') {
       handleNavigateToTab('rescue');
       return;
     }
 
-    // 4. If at Rescue, return to the Landing Grounding Sanctuary
+    // 7. If at Rescue, return to the Landing Grounding Sanctuary
     if (viewMode === 'app') {
       setViewMode('landing');
       return;
@@ -458,32 +501,60 @@ export default function App() {
     <AnimatePresence mode="wait">
       {isCamouflage ? (
         <CamouflageScreen key="camouflage-view" onRestore={() => handleTriggerCamouflage(false)} />
+      ) : isDeviceSafetyOpen ? (
+        <div key="device-safety-view" className="min-h-screen bg-[#FAF8F3] text-[#26215C] py-4 sm:py-8 selection:bg-[#993556] selection:text-white">
+          <DeviceSafetyChecklist
+            language={language}
+            onBack={() => setIsDeviceSafetyOpen(false)}
+            onProceedToEmergency={() => {
+              setIsDeviceSafetyOpen(false);
+              setViewMode('app');
+              handleNavigateToTab('rescue');
+            }}
+          />
+        </div>
       ) : viewMode === 'landing' ? (
-        <LandingGroundingScreen
-          key="landing-grounding-view"
-          language={language}
-          onToggleLanguage={handleToggleLanguage}
-          onChooseUrgentHelp={() => {
-            setViewMode('app');
-            handleNavigateToTab('rescue');
-          }}
-          onChooseUnderstandOptions={() => {
-            setViewMode('app');
-            handleNavigateToTab('confidence');
-          }}
-          onTriggerCamouflage={() => handleTriggerCamouflage(true)}
-          onOpenBreathing={() => {
-            setViewMode('app');
-            handleNavigateToTab('support', 'somatic-grounding-tool');
-          }}
-          onOpenFullDisclaimer={() => {
-            setViewMode('app');
-            setTimeout(() => {
-              const el = document.getElementById(LEGAL_DISCLAIMER.anchorId);
-              el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
-          }}
-        />
+        <React.Fragment key="landing-fragment">
+          <LandingGroundingScreen
+            key="landing-grounding-view"
+            language={language}
+            onToggleLanguage={handleToggleLanguage}
+            onChooseUrgentHelp={() => {
+              setIsImmediateActionOpen(true);
+            }}
+            onChooseUnderstandOptions={() => {
+              setViewMode('app');
+              setNavSource('landing');
+              handleNavigateToTab('options', undefined, true, 'landing');
+            }}
+            onTriggerCamouflage={() => handleTriggerCamouflage(true)}
+            onOpenBreathing={() => {
+              setViewMode('app');
+              handleNavigateToTab('support', 'somatic-grounding-tool');
+            }}
+            onOpenDeviceSafety={() => setIsDeviceSafetyOpen(true)}
+            onOpenFullDisclaimer={() => {
+              setViewMode('app');
+              setTimeout(() => {
+                const el = document.getElementById(LEGAL_DISCLAIMER.anchorId);
+                el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 100);
+            }}
+          />
+          {isImmediateActionOpen && (
+            <ImmediateActionPath
+              key="immediate-action-path"
+              language={language}
+              onClose={() => setIsImmediateActionOpen(false)}
+              onTriggerCamouflage={() => handleTriggerCamouflage(true)}
+              onOpenFullApp={() => {
+                setIsImmediateActionOpen(false);
+                setViewMode('app');
+                handleNavigateToTab('rescue');
+              }}
+            />
+          )}
+        </React.Fragment>
       ) : (
         <motion.div
           key="main-app-view"
@@ -537,13 +608,21 @@ export default function App() {
             <button
               onClick={handleGoBack}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#2D2D2D] hover:bg-[#1A1A1A] text-white text-xs sm:text-sm font-bold transition-all shadow-xs cursor-pointer active:scale-95 select-none min-h-[40px]"
-              title={isHindi ? 'पिछले पैनल पर वापस जाएं' : 'Back to previous panel'}
+              title={isHindi ? 'वापस जाएं' : 'Back'}
             >
               <ArrowLeft className="w-4 h-4 text-amber-300" />
               <span>
                 {showDeepScenarios
                   ? (isHindi ? 'विस्तृत परिदृश्य बंद करें' : 'Close Scenarios')
-                  : (isHindi ? 'पिछले पैनल पर वापस जाएं' : 'Back to Quick Rescue')}
+                  : activeTab === 'options'
+                  ? (isHindi ? '← मुख्य द्वार पर वापस जाएं' : '← Back to Entry Screen')
+                  : activeTab === 'confidence'
+                  ? (navSource === 'options'
+                    ? (isHindi ? '← विकल्पों पर वापस जाएं' : '← Back to Options Overview')
+                    : (isHindi ? '← त्वरित सहायता पर वापस जाएं' : '← Back to Quick Rescue'))
+                  : (navSource === 'options'
+                    ? (isHindi ? '← विकल्पों पर वापस जाएं' : '← Back to Options Overview')
+                    : (isHindi ? '← त्वरित सहायता पर वापस जाएं' : '← Back to Quick Rescue'))}
               </span>
             </button>
 
@@ -571,6 +650,20 @@ export default function App() {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="space-y-8 scroll-mt-48"
           >
+            {/* HUB 0: CALM OPTIONS & RIGHTS OVERVIEW */}
+            {activeTab === 'options' && (
+              <OptionsOverviewHub
+                language={language}
+                onNavigateToTab={(tab, elemId) => {
+                  setNavSource('options');
+                  handleNavigateToTab(tab, elemId, true, 'options');
+                }}
+                onBackToLanding={() => {
+                  setViewMode('landing');
+                }}
+              />
+            )}
+
             {/* HUB 1: QUICK RESCUE & IMMEDIATE TRIAGE */}
             {activeTab === 'rescue' && (
               <div className="space-y-8">
@@ -591,6 +684,7 @@ export default function App() {
                   onNavigateToTab={handleNavigateToTab}
                   onOpenPrintCard={() => setIsPrintCardOpen(true)}
                   onOpenPurgeModal={() => setIsPurgeModalOpen(true)}
+                  onOpenDeviceSafety={() => setIsDeviceSafetyOpen(true)}
                   onSelectCategoryForDraft={setDraftCategory}
                   onOpenSOS={handleTriggerSOS}
                   showPlatformGuides={showDeepScenarios}
@@ -605,6 +699,12 @@ export default function App() {
                 <ConfidenceCourageBoard
                   language={language}
                   onNavigateToTab={handleNavigateToTab}
+                  onBack={handleGoBack}
+                  backLabel={
+                    navSource === 'options'
+                      ? (isHindi ? '← विकल्पों पर वापस जाएं' : '← Back to Options Overview')
+                      : (isHindi ? '← त्वरित सहायता पर वापस जाएं' : '← Back to Quick Rescue')
+                  }
                 />
               </div>
             )}
@@ -710,6 +810,13 @@ export default function App() {
             >
               {isHindi ? 'हेल्पलाइन डायरेक्टरी' : 'Helplines'}
             </button>
+            <span>•</span>
+            <button
+              onClick={() => setIsDeviceSafetyOpen(true)}
+              className="hover:text-[#2D2D2D] font-medium cursor-pointer"
+            >
+              {isHindi ? '📱 डिवाइस सुरक्षा व हिस्ट्री' : '📱 Device Safety'}
+            </button>
           </div>
         </div>
       </footer>
@@ -797,6 +904,19 @@ export default function App() {
         onClose={() => setIsPurgeModalOpen(false)}
         language={language}
       />
+
+      {/* 2-Minute Emergency Immediate Action Path Modal */}
+      {isImmediateActionOpen && (
+        <ImmediateActionPath
+          language={language}
+          onClose={() => setIsImmediateActionOpen(false)}
+          onTriggerCamouflage={() => handleTriggerCamouflage(true)}
+          onOpenFullApp={() => {
+            setIsImmediateActionOpen(false);
+            handleNavigateToTab('rescue');
+          }}
+        />
+      )}
         </motion.div>
       )}
     </AnimatePresence>

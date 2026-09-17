@@ -12,13 +12,16 @@ import {
   MessageSquareQuote,
   ExternalLink,
   Lock,
-  BookmarkCheck
+  BookmarkCheck,
+  ArrowLeft
 } from 'lucide-react';
 import { Language } from '../types';
 
 interface ConfidenceCourageBoardProps {
   language: Language;
   onNavigateToTab: (tab: string, elementId?: string) => void;
+  onBack?: () => void;
+  backLabel?: string;
 }
 
 interface ConfidencePin {
@@ -105,12 +108,12 @@ const CONFIDENCE_PINS: ConfidencePin[] = [
       hi: 'यह घटना आपके करियर, पढ़ाई या जिंदगी को कभी तय नहीं कर सकती।' 
     },
     affirmation: { 
-      en: '"This temporary storm will pass. Digital hashes erase leaks permanently, and my future remains full of unlimited potential."', 
-      hi: '"यह समय भी बीत जाएगा। डिजिटल टूल्स से फोटो हमेशा के लिए मिट जाते हैं और मेरा भविष्य असीमित संभावनाओं से भरा है।"' 
+      en: '"This temporary storm will pass. Hashing blocks this content from being re-uploaded to major platforms going forward, and my future remains full of unlimited potential."', 
+      hi: '"यह समय भी बीत जाएगा। डिजिटल हैशिंग से प्रमुख प्लेटफॉर्म्स पर दोबारा अपलोड होना रुक जाता है, और मेरा भविष्य असीमित संभावनाओं से भरा है।"' 
     },
     legalFact: { 
-      en: 'StopNCII.org and Google automated mirror purge remove content across global servers so thousands of women successfully move on in peace.', 
-      hi: 'StopNCII और गूगल टूल्स दुनिया भर के सर्वर से फाइलें साफ कर देते हैं। हजारों महिलाएं पूरी शांति से अपने सपनों को जी रही हैं।' 
+      en: 'StopNCII.org creates digital hash fingerprints to proactively detect and block uploads across participating platforms without ever sharing your actual photo.', 
+      hi: 'StopNCII.org आपकी असली फोटो देखे बिना केवल प्राइवेसी हैश बनाकर प्रमुख सोशल मीडिया प्लेटफॉर्म्स पर दोबारा अपलोड होने से रोकता है।' 
     },
     actionLabel: { en: 'Explore Takedowns', hi: 'फोटो हटाने के टूल्स' },
     actionTarget: { tab: 'takedown' },
@@ -133,6 +136,8 @@ const CONFIDENCE_PINS: ConfidencePin[] = [
       en: 'Criminals rely on emotional subservience. Delivering a calm, formal legal statement signals that you know the law and cannot be manipulated.', 
       hi: 'ब्लैकमेलर केवल घबराहट पर पलते हैं। शांत कानूनी जवाब देखते ही वे समझ जाते हैं कि आपको डराया नहीं जा सकता।' 
     },
+    actionLabel: { en: 'View All Safe Scripts & Disclosure Templates', hi: 'सभी सुरक्षित संदेश व परिजनों के लिए ड्राफ्ट्स देखें' },
+    actionTarget: { tab: 'scripts' },
     colorClass: 'border-[#A2E2CD] hover:border-[#0F6E56]',
     badgeBg: 'bg-[#E1F5EE] text-[#0F6E56] border-[#A2E2CD]'
   },
@@ -152,6 +157,8 @@ const CONFIDENCE_PINS: ConfidencePin[] = [
       en: 'Framing the situation factually as cybercrime helps parents focus on protecting you rather than reacting in panic.', 
       hi: 'जब आप इसे साइबर अपराध के रूप में प्रस्तुत करती हैं, तो माता-पिता घबराने के बजाय आपकी सुरक्षा में साथ खड़े होते हैं।' 
     },
+    actionLabel: { en: 'Open Parent Disclosure Letter in Safe Scripts', hi: 'माता-पिता के लिए पूरा पत्र ड्राफ्ट खोलें' },
+    actionTarget: { tab: 'scripts' },
     colorClass: 'border-slate-200 hover:border-slate-300',
     badgeBg: 'bg-slate-100 text-slate-800 border-slate-200'
   }
@@ -160,14 +167,16 @@ const CONFIDENCE_PINS: ConfidencePin[] = [
 export const ConfidenceCourageBoard: React.FC<ConfidenceCourageBoardProps> = ({
   language,
   onNavigateToTab,
+  onBack,
+  backLabel,
 }) => {
   const isHindi = language === 'hi';
-  const STORAGE_KEY = 'suraksha_saved_courage_pins_v1';
+  const STORAGE_KEY = 'suraksha_saved_courage_pins_session_v1';
   
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [pinnedIds, setPinnedIds] = useState<string[]>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = sessionStorage.getItem(STORAGE_KEY);
       return saved ? JSON.parse(saved) : ['pin_zero_shame', 'pin_scared_blackmailer'];
     } catch {
       return ['pin_zero_shame', 'pin_scared_blackmailer'];
@@ -177,7 +186,7 @@ export const ConfidenceCourageBoard: React.FC<ConfidenceCourageBoardProps> = ({
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(pinnedIds));
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(pinnedIds));
     } catch {
       // Safe fallback
     }
@@ -207,6 +216,28 @@ export const ConfidenceCourageBoard: React.FC<ConfidenceCourageBoardProps> = ({
       className="space-y-6 scroll-mt-48"
       aria-label="Women Confidence and Courage Pins"
     >
+      {/* Contextual Dynamic Breadcrumb Navigation */}
+      <div className="flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => {
+            if (onBack) {
+              onBack();
+            } else {
+              onNavigateToTab('options');
+            }
+          }}
+          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#8B6D5C] hover:text-[#1A1A1A] transition-colors cursor-pointer py-1 group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          <span>{backLabel || (isHindi ? '← वापस जाएं' : '← Back')}</span>
+        </button>
+
+        <span className="text-[11px] text-[#777]">
+          {isHindi ? '🔒 पिन केवल वर्तमान सत्र (Session) में सेव रहते हैं' : '🔒 Pins saved in session only (cleared on tab close)'}
+        </span>
+      </div>
+
       {/* Header Banner: Pinterest Aesthetic with Soft Gradients */}
       <div className="pinterest-glass rounded-3xl p-6 sm:p-8 border border-white/80 shadow-xs relative overflow-hidden space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

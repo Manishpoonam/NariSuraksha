@@ -17,11 +17,48 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="./manifest.json" />
+    <link id="app-pwa-manifest" rel="manifest" href="./manifest-disguised.json" />
     <meta name="theme-color" content="#26215C" />
+
+    <!-- Pre-Hydration Quick Exit Safety Net: Arms immediately before JS bundle downloads -->
+    <script>
+      (function() {
+        function triggerPreHydrationEmergencyExit() {
+          try {
+            sessionStorage.setItem('narisuraksha_camouflaged', 'true');
+            sessionStorage.setItem('narisuraksha_disguise_active', 'true');
+          } catch (e) {}
+          if (document.documentElement) {
+            document.documentElement.style.display = 'none';
+          }
+          window.location.replace('https://www.google.com');
+        }
+
+        window.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' || e.keyCode === 27) {
+            triggerPreHydrationEmergencyExit();
+          }
+        }, { capture: true });
+      })();
+    </script>
   </head>
   <body class="bg-[#FAF8F3] text-[#26215C] antialiased selection:bg-[#993556] selection:text-white font-sans">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Pre-hydration Neutral Shell: Appears before JS loads. Zero crisis branding or alarms. -->
+      <div id="pre-hydration-shell" style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #FAF8F3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #5A5672; padding: 24px; text-align: center; box-sizing: border-box;">
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: #E8E2DC; margin-bottom: 16px; display: flex; align-items: center; justify-content: center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <p style="font-size: 15px; font-weight: 600; margin: 0 0 6px 0; color: #374151; letter-spacing: -0.01em;">Loading notes...</p>
+        <span style="font-size: 12px; color: #9CA3AF;">Syncing offline revision space</span>
+      </div>
+    </div>
     <script>
       // Single Page Apps for GitHub Pages redirect restoration
       (function() {

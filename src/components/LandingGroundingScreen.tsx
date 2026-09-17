@@ -14,7 +14,8 @@ import {
   Lock, 
   ArrowRight,
   Heart,
-  Sparkles
+  Sparkles,
+  Smartphone
 } from 'lucide-react';
 import { Language } from '../types';
 import { hapticAction, hapticCamouflage, hapticSOS } from '../utils/haptics';
@@ -27,6 +28,7 @@ interface LandingGroundingScreenProps {
   onChooseUnderstandOptions: () => void;
   onTriggerCamouflage: () => void;
   onOpenBreathing: () => void;
+  onOpenDeviceSafety: () => void;
   onOpenFullDisclaimer?: () => void;
 }
 
@@ -49,6 +51,7 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
   onChooseUnderstandOptions,
   onTriggerCamouflage,
   onOpenBreathing,
+  onOpenDeviceSafety,
   onOpenFullDisclaimer,
 }) => {
   const isHindi = language === 'hi';
@@ -179,15 +182,15 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
             </p>
           </div>
 
-          {/* TWO PRIMARY HIGH-AGENCY CHOICES (Large, Warm, Uncluttered) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 pt-3 text-left max-w-2xl mx-auto w-full">
+          {/* TWO PRIMARY HIGH-AGENCY CHOICES (Large, Warm, Uncluttered — Exactly Two Real Choices) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 pt-2 text-left max-w-2xl mx-auto w-full">
             {/* CHOICE 1: ACTIVE EMERGENCY / NEED HELP RIGHT NOW */}
             <motion.button
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.25 }}
               onClick={() => {
-                hapticAction();
+                hapticSOS();
                 onChooseUrgentHelp();
               }}
               className="p-6 sm:p-7 rounded-[22px] bg-[#26215C] text-[#FAF8F3] hover:bg-[#1E1949] transition-all cursor-pointer shadow-soft border border-[#26215C] flex flex-col justify-between group min-h-[170px]"
@@ -248,17 +251,36 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
             </motion.button>
           </div>
 
-          {/* Quick Somatic Calming Bridge */}
-          <div className="pt-2">
+          {/* Quick Somatic Calming Bridge & Device Integrity Check */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 pt-2">
             <button
+              type="button"
               onClick={onOpenBreathing}
-              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#0F6E56] hover:text-[#0A4E3D] font-medium transition-colors cursor-pointer py-1 px-3 rounded-full hover:bg-[#E1F5EE]/60"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#0F6E56] hover:text-[#0A4E3D] font-medium transition-colors cursor-pointer py-1.5 px-3 rounded-full hover:bg-[#E1F5EE]/60"
             >
               <Heart className="w-4 h-4 text-[#0F6E56]" />
               <span>
                 {isHindi
                   ? 'घबराहट महसूस हो रही है? 2 मिनट की शांत श्वास क्रिया शुरू करें'
                   : 'Feeling overwhelmed? Try the gentle 2-minute breathing pacer'}
+              </span>
+            </button>
+
+            <span className="hidden sm:inline-block text-[#26215C]/20">•</span>
+
+            <button
+              type="button"
+              onClick={() => {
+                hapticAction();
+                onOpenDeviceSafety();
+              }}
+              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#5A5672] hover:text-[#26215C] font-medium transition-colors cursor-pointer py-1.5 px-3 rounded-full hover:bg-black/5"
+            >
+              <Smartphone className="w-4 h-4 text-[#5A5672]" />
+              <span>
+                {isHindi
+                  ? '📱 क्या यह फोन सुरक्षित है? जासूसी ऐप्स व हिस्ट्री जांच'
+                  : '📱 Is this device safe to use right now? (Check for stalkerware & history)'}
               </span>
             </button>
           </div>

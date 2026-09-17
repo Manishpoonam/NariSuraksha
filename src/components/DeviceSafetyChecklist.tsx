@@ -4,7 +4,6 @@
  */
 
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
 import { 
   ShieldAlert, 
   Smartphone, 
@@ -18,7 +17,12 @@ import {
   HelpCircle,
   Laptop,
   Users,
-  Info
+  Info,
+  History,
+  Trash2,
+  Share2,
+  BookOpen,
+  Check
 } from 'lucide-react';
 import { Language } from '../types';
 import { hapticAction } from '../utils/haptics';
@@ -162,8 +166,8 @@ export const DeviceSafetyChecklist: React.FC<DeviceSafetyChecklistProps> = ({
       </div>
 
       {/* Warning Notice: Purely Educational */}
-      <div className="p-4 bg-[#FBEAF0] rounded-2xl border border-[#F3C5D6] flex items-start gap-3 text-xs sm:text-sm text-[#7A2843]">
-        <Info className="w-5 h-5 shrink-0 text-[#993556] mt-0.5" />
+      <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 flex items-start gap-3 text-xs sm:text-sm text-amber-950">
+        <Info className="w-5 h-5 shrink-0 text-amber-700 mt-0.5" />
         <div>
           <span className="font-bold">
             {isHindi ? 'पारदर्शी सुरक्षा सूचना: ' : 'Transparency Notice: '}
@@ -193,7 +197,7 @@ export const DeviceSafetyChecklist: React.FC<DeviceSafetyChecklistProps> = ({
                 onClick={() => toggleCheck(item.id)}
                 className={`p-4 rounded-2xl border transition-all cursor-pointer select-none space-y-2 ${
                   isChecked 
-                    ? 'bg-[#FBEAF0]/40 border-[#F3C5D6] shadow-xs' 
+                    ? 'bg-amber-50/70 border-amber-300 shadow-xs' 
                     : 'bg-[#FAF9F6] border-[#E8E2DC] hover:border-[#CBD5E1]'
                 }`}
               >
@@ -202,7 +206,7 @@ export const DeviceSafetyChecklist: React.FC<DeviceSafetyChecklistProps> = ({
                     {item.title[language]}
                   </span>
                   <div className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
-                    isChecked ? 'bg-[#993556] border-[#993556] text-white' : 'border-[#CBD5E1] bg-white'
+                    isChecked ? 'bg-amber-700 border-amber-700 text-white' : 'border-[#CBD5E1] bg-white'
                   }`}>
                     {isChecked && <CheckCircle2 className="w-3.5 h-3.5" />}
                   </div>
@@ -216,7 +220,123 @@ export const DeviceSafetyChecklist: React.FC<DeviceSafetyChecklistProps> = ({
         </div>
       </div>
 
-      {/* SECTION 2: Immediate Safe Protocol */}
+      {/* SECTION 2: How to Check Installed Apps & Account Sign-ins */}
+      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#E8E2DC] shadow-sm space-y-5">
+        <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center gap-2">
+          <Cloud className="w-5 h-5 text-[#26215C]" />
+          <span>{isHindi ? 'साझा अकाउंट और गुप्त ऐप्स की जांच कैसे करें' : 'How to Check Installed Apps & Linked Accounts'}</span>
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="p-4.5 rounded-2xl bg-[#FAF9F6] border border-[#E8E2DC] space-y-2.5">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded bg-[#26215C] text-white font-bold text-[10px]">Google</span>
+              <h3 className="text-sm font-bold text-[#1A1A1A]">
+                {isHindi ? 'Google अकाउंट डिवाइस सूची' : 'Google Account Devices'}
+              </h3>
+            </div>
+            <p className="text-xs text-[#5A5672] leading-relaxed">
+              {isHindi
+                ? 'अपने ब्राउज़र में myaccount.google.com/device-activity खोलें। देखें कि कोई अज्ञात लैपटॉप, टैबलेट या फोन आपके अकाउंट से जुड़ा तो नहीं है। यदि दिखे, तो तुरंत "Sign out" करें।'
+                : 'Open myaccount.google.com/device-activity in your browser. Review all laptops, tablets, or phones logged into your account. If you spot an unfamiliar device, tap it and select "Sign Out".'}
+            </p>
+          </div>
+
+          <div className="p-4.5 rounded-2xl bg-[#FAF9F6] border border-[#E8E2DC] space-y-2.5">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded bg-[#26215C] text-white font-bold text-[10px]">Apple</span>
+              <h3 className="text-sm font-bold text-[#1A1A1A]">
+                {isHindi ? 'Apple ID और फैमिली शेयरिंग' : 'Apple iCloud & Family Sharing'}
+              </h3>
+            </div>
+            <p className="text-xs text-[#5A5672] leading-relaxed">
+              {isHindi
+                ? 'iPhone की Settings → [आपका नाम] पर जाएं। नीचे स्क्रॉल करके सभी जुड़े हुए डिवाइस देखें। Settings → Family Sharing में जांचें कि आपकी लोकेशन किसी अन्य के साथ शेयर तो नहीं हो रही।'
+                : 'Go to iPhone Settings → [Your Name]. Scroll down to see all devices logged into your Apple ID. Check Settings → Family Sharing to ensure your Location or Screen Time is not being monitored.'}
+            </p>
+          </div>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-[#F0EBE6]/60 border border-[#E8E2DC] text-xs text-[#5A5672] space-y-1.5">
+          <span className="font-bold text-[#1A1A1A]">
+            {isHindi ? 'एंड्रॉयड डिवाइस एडमिन ऐप्स की जांच:' : 'Checking Android Device Administrator Apps:'}
+          </span>
+          <p className="leading-relaxed">
+            {isHindi
+              ? 'फोन की Settings → Apps & Notifications → Special App Access → Device Admin Apps खोलें। यहां केवल "Find My Device" या आधिकारिक सिस्टम ऐप होना चाहिए। किसी भी अनजान ऐप (जैसे "System Update", "Battery Health") का एडमिन अधिकार तुरंत हटा दें।'
+              : 'Go to Settings → Apps → Special App Access → Device Admin Apps. Only verified services like "Find My Device" should be enabled. If an unfamiliar app (e.g. "System Service", "Battery Health") holds admin rights, revoke it immediately.'}
+          </p>
+        </div>
+      </div>
+
+      {/* SECTION 3: BROWSER HISTORY CLEARING & INCOGNITO GUIDANCE (CRITICAL GAP REQUIREMENT) */}
+      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#E8E2DC] shadow-sm space-y-4">
+        <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center gap-2">
+          <History className="w-5 h-5 text-[#DC2626]" />
+          <span>{isHindi ? 'ब्राउज़र हिस्ट्री और इनकॉग्निटो मोड (अति महत्वपूर्ण)' : 'Browser History & Incognito Mode (Crucial Guidance)'}</span>
+        </h2>
+
+        <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs sm:text-sm text-amber-950 space-y-2">
+          <div className="flex items-center gap-2 font-bold text-amber-900">
+            <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0" />
+            <span>{isHindi ? 'यह वेबसाइट कोई डेटा सेव नहीं करती, लेकिन आपका ब्राउज़र URL सेव करता है' : 'This app stores zero data, but your browser logs URLs'}</span>
+          </div>
+          <p className="text-xs leading-relaxed text-amber-900/90">
+            {isHindi
+              ? 'नारीसुरक्षा सर्वर पर कोई जानकारी नहीं भेजती और न ही कुकीज सेव करती है। लेकिन आपका फोन का ब्राउज़र (Chrome, Safari) डिफ़ॉल्ट रूप से आपके द्वारा खोली गई हर वेबसाइट का पता अपनी "History" में दर्ज करता है। यदि कोई आपका फोन देखता है, तो वह हिस्ट्री में यह पता देख सकता है।'
+              : 'NariSuraksha transmits zero telemetry and stores no persistent cookies. However, your device’s browser (Chrome, Safari, Samsung) automatically records every website URL you visit in its local history log. If someone physically inspects your phone, they could see this page in your browsing history.'}
+          </p>
+        </div>
+
+        {/* Step-by-Step History Clearing Instructions */}
+        <div className="space-y-3 pt-1">
+          <h3 className="text-sm font-bold text-[#1A1A1A] flex items-center gap-2">
+            <Trash2 className="w-4 h-4 text-[#5A5672]" />
+            <span>{isHindi ? 'अपनी ब्राउज़िंग हिस्ट्री कैसे हटाएं:' : 'How to View and Clear Your Browsing History:'}</span>
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            {/* Chrome */}
+            <div className="p-4 rounded-2xl bg-[#FAF9F6] border border-[#E8E2DC] space-y-1.5 text-xs">
+              <span className="font-bold text-[#1A1A1A]">
+                {isHindi ? '1. Google Chrome (Android / PC)' : '1. Google Chrome (Android / PC)'}
+              </span>
+              <p className="text-[#5A5672] leading-relaxed">
+                {isHindi
+                  ? 'ऊपर दाएँ कोने में 3 डॉट्स (⋮) दबाएं → "History" चुनें → "Clear browsing data" दबाएं → समय सीमा "Last hour" या "All time" चुनें → "Clear data" दबाएं।'
+                  : 'Tap the 3 dots (⋮) in top right → Select "History" → Tap "Clear browsing data" → Choose time range ("Last hour" or "All time") → Tap "Clear data".'}
+              </p>
+            </div>
+
+            {/* Safari */}
+            <div className="p-4 rounded-2xl bg-[#FAF9F6] border border-[#E8E2DC] space-y-1.5 text-xs">
+              <span className="font-bold text-[#1A1A1A]">
+                {isHindi ? '2. Apple Safari (iPhone / iPad)' : '2. Apple Safari (iPhone / iPad)'}
+              </span>
+              <p className="text-[#5A5672] leading-relaxed">
+                {isHindi
+                  ? 'नीचे बुकमार्क आइकन (खुली किताब 📖) दबाएं → घड़ी आइकन (🕒) चुनें → नीचे दाएँ कोने में "Clear" दबाएं → "All time" या "Today" चुनें।'
+                  : 'Tap the Bookmarks icon (open book 📖) at bottom → Tap the Clock icon (🕒) → Tap "Clear" in bottom right → Choose "All time" or "Today".'}
+              </p>
+            </div>
+          </div>
+
+          {/* Incognito Recommendation */}
+          <div className="p-4 rounded-2xl bg-[#E1F5EE] border border-[#B7E4D7] text-xs text-[#0F6E56] space-y-1.5">
+            <span className="font-bold text-[#0F6E56] flex items-center gap-1.5">
+              <Lock className="w-4 h-4" />
+              <span>{isHindi ? 'अधिक सुरक्षित विकल्प: इनकॉग्निटो / प्राइवेट ब्राउज़िंग' : 'Stronger Option: Switch to Incognito / Private Mode Now'}</span>
+            </span>
+            <p className="leading-relaxed text-[#0F6E56]/90">
+              {isHindi
+                ? 'यदि अभी सुरक्षित हो, तो अपने ब्राउज़र में एक नया "Incognito Tab" (प्राइवेट टैब) खोलें। प्राइवेट मोड में कोई भी हिस्ट्री, सर्च या कैश फोन पर सेव नहीं होता। टैब बंद करते ही सब कुछ अपने आप मिट जाता है।'
+                : 'If it is safe to switch right now, open an "Incognito Tab" (or "Private Browsing") in your browser. Incognito mode completely prevents URLs from being logged in history, and deletes all session memory the moment you close the tab.'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 4: Immediate Safe Protocol */}
       <div className="bg-[#FAF9F6] rounded-3xl p-6 sm:p-7 border border-[#E8E2DC] space-y-4">
         <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center gap-2">
           <Lock className="w-5 h-5 text-[#0F6E56]" />
@@ -240,6 +360,18 @@ export const DeviceSafetyChecklist: React.FC<DeviceSafetyChecklistProps> = ({
             </div>
           ))}
         </div>
+
+        {/* Suggestion to use trusted friend's phone or library */}
+        <div className="p-4 rounded-2xl bg-white border border-[#26215C]/15 space-y-1 text-xs text-[#5A5672]">
+          <span className="font-bold text-[#26215C]">
+            {isHindi ? '💡 संदेह होने पर सबसे सुरक्षित निर्णय:' : '💡 If in doubt, the safest course of action:'}
+          </span>
+          <p className="leading-relaxed">
+            {isHindi
+              ? 'यदि आपको थोड़ा भी संदेह है कि आपका साथी या ब्लैकमेलर आपके फोन की निगरानी कर रहा है, तो इस स्क्रीन को तुरंत बंद करें (ESC दबाएं)। किसी करीबी दोस्त का फोन मांगें, कॉलेज लाइब्रेरी या कार्यस्थल के सुरक्षित कंप्यूटर से प्राइवेट विंडो में शिकायत दर्ज करें।'
+              : 'If there is any doubt that your device is compromised, close this screen now (press ESC). Use a close friend’s phone, a college library terminal, or a trusted workplace computer in an incognito window to draft complaints and seek help.'}
+          </p>
+        </div>
       </div>
 
       {/* Bottom Actions */}
@@ -257,9 +389,9 @@ export const DeviceSafetyChecklist: React.FC<DeviceSafetyChecklistProps> = ({
                 hapticAction();
                 onProceedToEmergency();
               }}
-              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#2D2D2D] hover:bg-black text-white text-xs font-bold transition-all shadow-sm cursor-pointer text-center"
+              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#26215C] hover:bg-[#1E1949] text-white text-xs font-bold transition-all shadow-sm cursor-pointer text-center"
             >
-              {isHindi ? 'डिवाइस सुरक्षित है — संकट कॉकपिट खोलें' : 'Device is Secure — Open Crisis Cockpit'}
+              {isHindi ? 'डिवाइस सुरक्षित है — मुख्य पोर्टल खोलें' : 'Device is Secure — Open Main Sanctuary'}
             </button>
           )}
         </div>

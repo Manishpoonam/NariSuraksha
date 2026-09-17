@@ -1,16 +1,16 @@
 {
-  "short_name": "NariSuraksha",
-  "name": "NariSuraksha - NCII & Cyber Extortion Emergency Response Portal",
+  "short_name": "Study Notes",
+  "name": "Study Notes - Personal Revision Notebook",
   "icons": [
     {
-      "src": "./icon.svg",
+      "src": "./icon-polity.svg",
       "type": "image/svg+xml",
       "sizes": "192x192 512x512"
     }
   ],
   "start_url": "./",
-  "background_color": "#FAF9F6",
-  "theme_color": "#2D2D2D",
+  "background_color": "#FAF8F3",
+  "theme_color": "#26215C",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "./"
