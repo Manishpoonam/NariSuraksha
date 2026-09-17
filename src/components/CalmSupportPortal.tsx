@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   HeartHandshake, 
   PhoneCall, 
@@ -22,6 +22,7 @@ import { hapticAction } from '../utils/haptics';
 import { SomaticGroundingTool } from './SomaticGroundingTool';
 import { HelplineDirectory } from './HelplineDirectory';
 import { CommunicationScripts } from './CommunicationScripts';
+import { AboutTrustSection } from './AboutTrustSection';
 
 interface CalmSupportPortalProps {
   language: Language;
@@ -40,24 +41,39 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
     defaultSection === 'scripts' ? 'scripts' : defaultSection === 'helplines' ? 'helplines' : 'grounding'
   );
 
-  return (
-    <div className="space-y-6 scroll-mt-36 sm:scroll-mt-48" id="calm-support-portal">
-      {/* 1. TOP 1-TAP EMERGENCY HOTLINE TRIAGE BAR */}
+  useEffect(() => {
+    if (defaultSection === 'scripts' || defaultSection === 'helplines' || defaultSection === 'grounding') {
+      setActiveMode(defaultSection);
+    }
+  }, [defaultSection]);
+
+  // Quick-dial triage bar with consistent emergency styling for 1930 and clear labeling for NCW
+  const renderQuickDialBar = () => (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between px-1">
+        <span className="text-xs font-bold text-[#26215C] uppercase tracking-wider flex items-center gap-1.5">
+          <PhoneCall className="w-3.5 h-3.5 text-[#DC2626]" />
+          <span>{isHindi ? 'तत्काल 24/7 फोन हेल्पलाइन' : 'Immediate 24/7 Crisis Helplines'}</span>
+        </span>
+        <span className="text-[11px] text-[#5A5672]">
+          {isHindi ? 'टोल-फ्री व 100% गोपनीय' : 'Toll-free & 100% Confidential'}
+        </span>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-        {/* 1930 Cyber Crime Helpline */}
+        {/* 1930 Cyber Crime Helpline — Established Red Emergency Color */}
         <a
           href="tel:1930"
           onClick={() => hapticAction()}
-          className="flex items-center justify-between p-3.5 rounded-2xl bg-[#0F6E56] hover:bg-[#0A4E3D] text-white transition-all shadow-soft group min-h-[54px] active:scale-98"
-          title="Dial 1930 National Cyber Helpline"
+          className="flex items-center justify-between p-3.5 rounded-2xl bg-[#DC2626] hover:bg-[#B91C1C] text-white transition-all shadow-soft group min-h-[54px] active:scale-98"
+          title="Dial 1930 National Cyber Crime Helpline"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-              <PhoneCall className="w-5 h-5 text-emerald-200" />
+              <PhoneCall className="w-5 h-5 text-red-100" />
             </div>
             <div>
               <div className="font-mono font-extrabold text-base tracking-wider text-white">1930</div>
-              <div className="text-[11px] text-emerald-100 font-medium leading-tight">
+              <div className="text-[11px] text-red-100 font-medium leading-tight">
                 {isHindi ? 'राष्ट्रीय साइबर अपराध' : 'Cyber Crime Helpline (24/7)'}
               </div>
             </div>
@@ -67,25 +83,25 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
           </span>
         </a>
 
-        {/* 14490 NCW Women Safety */}
+        {/* 14490 NCW Helpline (Calls: 14490 • WhatsApp: 7827170170) */}
         <a
           href="tel:14490"
           onClick={() => hapticAction()}
           className="flex items-center justify-between p-3.5 rounded-2xl bg-[#993556] hover:bg-[#7A2843] text-white transition-all shadow-soft group min-h-[54px] active:scale-98"
-          title="Dial 14490 NCW Helpline"
+          title="Dial NCW Helpline 14490 (Calls) or WhatsApp 7827170170"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
               <PhoneCall className="w-5 h-5 text-rose-200" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="font-mono font-extrabold text-base tracking-wider text-white">14490</div>
-              <div className="text-[11px] text-rose-100 font-medium leading-tight">
-                {isHindi ? 'राष्ट्रीय महिला आयोग' : 'NCW Women Helpdesk (24/7)'}
+              <div className="text-[11px] text-rose-100 font-medium leading-tight truncate">
+                {isHindi ? 'महिला आयोग (व्हाट्सएप: 7827170170)' : 'NCW Helpline (WhatsApp: 7827170170)'}
               </div>
             </div>
           </div>
-          <span className="text-xs bg-white/20 px-3 py-1.5 rounded-full font-bold uppercase tracking-wider text-white">
+          <span className="text-xs bg-white/20 px-3 py-1.5 rounded-full font-bold uppercase tracking-wider text-white shrink-0">
             {isHindi ? 'कॉल करें' : 'Dial'}
           </span>
         </a>
@@ -113,29 +129,33 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
           </span>
         </a>
       </div>
+    </div>
+  );
 
-      {/* 2. CALM HERO & 3-MODE SELECTOR */}
-      <div className="p-5 sm:p-7 rounded-3xl bg-white border border-[#26215C]/10 shadow-soft space-y-4">
+  return (
+    <div className="space-y-6 scroll-mt-36 sm:scroll-mt-48" id="calm-support-portal">
+      {/* 1. CALM HERO & WARM GROUNDING INTRO */}
+      <div className="p-5 sm:p-7 rounded-3xl bg-gradient-to-br from-[#FAF8F3] via-white to-[#F6F2EC] border border-[#26215C]/10 shadow-soft space-y-3">
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <span className="px-3 py-1 rounded-full bg-[#E1F5EE] text-[#0F6E56] text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 border border-[#B7E4D7]">
             <HeartHandshake className="w-3.5 h-3.5 text-[#0F6E56]" />
-            <span>{isHindi ? 'मानसिक संबल, श्वास व्यायाम व 24/7 हेल्पलाइन' : 'Calm, Grounding & 24/7 Support'}</span>
+            <span>{isHindi ? 'सुरक्षित, निजी व शांत वातावरण' : 'Private & Trauma-Informed Space'}</span>
           </span>
           <span className="text-xs text-[#5A5672] font-medium">
-            {isHindi ? '100% निःशुल्क, गोपनीय व टोल-फ्री' : '100% Free, Confidential & Toll-Free'}
+            {isHindi ? '100% निःशुल्क, ऑन-डिवाइस व गोपनीय' : '100% Free, On-Device & Confidential'}
           </span>
         </div>
 
-        <h2 className="text-xl sm:text-2xl font-bold text-[#26215C] tracking-tight">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#26215C] tracking-tight leading-snug">
           {isHindi 
-            ? 'गहरी सांस लें — आप सुरक्षित हैं और नियंत्रण में हैं' 
-            : 'Take a Slow Breath — You Are In Control & Supported'}
+            ? 'आप चाहे जिस भी परिस्थिति में यहां पहुंची हों, आपको इससे अकेले नहीं जूझना है।' 
+            : 'Whatever brought you here, you don’t have to handle it alone.'}
         </h2>
         
         <p className="text-xs sm:text-sm text-[#5A5672] max-w-3xl leading-relaxed">
           {isHindi
-            ? 'डिजिटल ब्लैकमेलिंग आपकी गलती नहीं है। ब्लैकमेलर डर पैदा करके जल्दबाजी में गलत कदम उठवाना चाहते हैं। पहले 4-7-8 श्वास व्यायाम से घबराहट शांत करें, फिर बिना किसी झिझक के प्रशिक्षित सलाहकारों या पुलिस डेस्क से संपर्क करें।'
-            : 'Extortion thrives on acute panic and self-isolation. Lower your heart rate with trauma-informed 4-7-8 somatic pacing, access verified crisis helplines, or copy freeze messages to silence perpetrators.'}
+            ? 'एक धीमी, गहरी सांस लें। डिजिटल ब्लैकमेलिंग आपकी गलती नहीं है। ब्लैकमेलर घबराहट और डर पैदा करके जल्दबाजी में गलत कदम उठवाना चाहते हैं। पहले 4-7-8 श्वास क्रिया से अपने नर्वस सिस्टम को शांत करें, फिर बिना किसी हिचकिचाहट के सहायता लें।'
+            : 'Take a slow, deep breath. You are in a safe space. Extortion thrives on panic and isolation. Lower your heart rate with trauma-informed 4-7-8 somatic pacing, access verified crisis helplines, or copy freeze messages to protect yourself.'}
         </p>
 
         {/* 3-Mode Clean Switcher */}
@@ -190,12 +210,16 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
         </div>
       </div>
 
-      {/* 3. PRIMARY CONTENT PANEL */}
+      {/* 2. PRIMARY CONTENT PANEL */}
       {activeMode === 'grounding' && (
         <div className="space-y-6">
+          {/* Somatic 4-7-8 Breathing & Grounding Tool sits first for immediate calm */}
           <SomaticGroundingTool language={language} />
 
-          {/* Quick Helpline Strip below Grounding for fast reassurance */}
+          {/* Quick Helpline Triage Bar positioned after breathing exercise */}
+          {renderQuickDialBar()}
+
+          {/* Quick Helpline Strip below Grounding for fast counselor reassurance */}
           <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#26215C]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-soft">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-[#E1F5EE] text-[#0F6E56] flex items-center justify-center shrink-0">
@@ -207,8 +231,8 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
                 </h4>
                 <p className="text-xs text-[#5A5672]">
                   {isHindi
-                    ? 'राष्ट्रीय महिला हेल्पलाइन 14490 या टेली-मानस 14416 पर मुफ्त व 100% गोपनीय परामर्श लें।'
-                    : 'Dial 14490 (NCW Women Desk) or 14416 (Tele-MANAS) for free, anonymous support.'}
+                    ? 'राष्ट्रीय महिला आयोग (कॉल: 14490 • व्हाट्सएप: 7827170170) या टेली-मानस (14416) पर 100% गोपनीय सहायता लें।'
+                    : 'Call 14490 / WhatsApp +91 7827170170 (NCW) or 14416 (Tele-MANAS) for free, anonymous support.'}
                 </p>
               </div>
             </div>
@@ -230,6 +254,9 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
 
       {activeMode === 'helplines' && (
         <div className="space-y-6">
+          {/* Quick Triage Hotlines at top of Directory */}
+          {renderQuickDialBar()}
+
           <HelplineDirectory 
             language={language} 
             onNavigateToTab={onNavigateToTab}
@@ -242,6 +269,12 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
           <CommunicationScripts language={language} />
         </div>
       )}
+
+      {/* 3. UNIVERSAL ABOUT & PRIVACY GUARANTEE */}
+      {/* Positioned outside/below the tab-switching area so it renders exactly once per page visit regardless of which sub-tab is active */}
+      <div className="pt-4">
+        <AboutTrustSection language={language} />
+      </div>
     </div>
   );
 };

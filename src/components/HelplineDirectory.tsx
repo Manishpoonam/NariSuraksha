@@ -206,6 +206,16 @@ export const HelplineDirectory: React.FC<HelplineDirectoryProps> = ({
                   </span>
                 </div>
 
+                {/* Verification marker: Publicly Listed Government Helpline in calm teal tone */}
+                <div className="pt-0.5 flex items-center gap-1.5 text-[11px] font-semibold text-[#0F6E56]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
+                  <span>
+                    {item.verificationTag 
+                      ? item.verificationTag[language] 
+                      : (isHindi ? 'सार्वजनिक रूप से सूचीबद्ध सरकारी हेल्पलाइन' : 'Publicly Listed Government Helpline')}
+                  </span>
+                </div>
+
                 <div>
                   <h3 className="font-semibold text-[#26215C] text-base leading-snug">
                     {item.name[language]}

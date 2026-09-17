@@ -20,7 +20,9 @@ import {
   KeyRound,
   EyeOff,
   Globe,
-  HeartHandshake
+  HeartHandshake,
+  HelpCircle,
+  Scale
 } from 'lucide-react';
 import { Language } from '../types';
 
@@ -30,22 +32,30 @@ interface GovGuideline {
   agencyFull: { en: string; hi: string };
   badge: { en: string; hi: string };
   ruleOrRef: string;
+  verifiedSource?: {
+    isVerified: boolean;
+    en: string;
+    hi: string;
+  };
   title: { en: string; hi: string };
   summary: { en: string; hi: string };
   actionPoints: { en: string[]; hi: string[] };
   portalLink?: string;
   portalLabel?: { en: string; hi: string };
   helpline?: string;
+  crossReferenceToFaq?: boolean;
 }
 
 interface IndianGovGuidelinesProps {
   language: Language;
   onNavigateToTab?: (tab: string, elementId?: string) => void;
+  onOpenLegalRights?: () => void;
 }
 
 export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
   language,
-  onNavigateToTab
+  onNavigateToTab,
+  onOpenLegalRights
 }) => {
   const isHindi = language === 'hi';
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -56,6 +66,20 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2500);
+  };
+
+  const handleOpenLegalFaq = () => {
+    if (onOpenLegalRights) {
+      onOpenLegalRights();
+    }
+    setTimeout(() => {
+      const el = document.getElementById('legal-rights-faq');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else if (onNavigateToTab) {
+        onNavigateToTab('support', 'legal-rights-faq');
+      }
+    }, 150);
   };
 
   const guidelines: GovGuideline[] = [
@@ -71,6 +95,11 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
         hi: '24 घंटे में अनिवार्य निष्कासन'
       },
       ruleOrRef: 'IT Rules 2021, Rule 3(2)(b)',
+      verifiedSource: {
+        isVerified: true,
+        en: 'MeitY IT Rules 2021, Rule 3(2)(b) (G.S.R. 139(E))',
+        hi: 'MeitY आईटी नियम 2021, नियम 3(2)(b)'
+      },
       title: {
         en: '24-Hour Mandatory Content Removal for Non-Consensual Images & Deepfakes',
         hi: 'बिना सहमति की अश्लील सामग्री व डीपफेक को 24 घंटे में हटाने का अनिवार्य सरकारी नियम'
@@ -106,6 +135,11 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
         hi: 'अंतर्राष्ट्रीय सुरक्षा मानक'
       },
       ruleOrRef: 'UN Women Global TFGBV Strategy',
+      verifiedSource: {
+        isVerified: true,
+        en: 'UN Women TF VAWG Strategy 2026–2029 (unwomen.org)',
+        hi: 'UN Women TF VAWG रणनीति 2026–2029'
+      },
       title: {
         en: 'UN Guidelines on Technology-Facilitated Gender-Based Violence (TFGBV)',
         hi: 'डिजिटल हिंसा व ऑनलाइन उत्पीड़न पर संयुक्त राष्ट्र (UN) के सुरक्षा सिद्धांत'
@@ -140,7 +174,12 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
         en: 'Advisory CIAD-2024-0060',
         hi: 'आधिकारिक सलाह CIAD-2024-0060'
       },
-      ruleOrRef: 'CERT-In Mahila Suraksha Handbook',
+      ruleOrRef: 'CERT-In Deepfakes Advisory & Mahila Suraksha Handbook',
+      verifiedSource: {
+        isVerified: true,
+        en: 'CERT-In Advisory CIAD-2024-0060 (cert-in.org.in)',
+        hi: 'CERT-In एडवाइजरी CIAD-2024-0060'
+      },
       title: {
         en: 'Countermeasures Against Deepfakes, Synthetic Media & Video-Call Traps',
         hi: 'डीपफेक, एआई मॉर्फिंग और वीडियो-कॉल फ्रॉड से बचाव के सरकारी सुरक्षा उपाय'
@@ -176,6 +215,11 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
         hi: 'राष्ट्रीय साइबर हेल्पलाइन 1930'
       },
       ruleOrRef: 'cybercrime.gov.in (I4C)',
+      verifiedSource: {
+        isVerified: true,
+        en: 'MHA I4C SOP & Helpline 1930 (cybercrime.gov.in)',
+        hi: 'गृह मंत्रालय I4C पोर्टल व 1930 SOP'
+      },
       title: {
         en: '100% Anonymous Reporting & Rapid Financial Account Freezing',
         hi: '100% गुप्त शिकायत दर्ज करने की सुविधा व 1930 से ब्लैकमेलर का बैंक खाता फ्रीज कराना'
@@ -204,35 +248,41 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
       id: 'bns_zero_fir',
       agency: 'Ministry of Law & Justice',
       agencyFull: {
-        en: 'Bharatiya Nagarik Suraksha Sanhita (BNSS) & BNS 2023',
-        hi: 'भारतीय नागरिक सुरक्षा संहिता (BNSS) एवं भारतीय न्याय संहिता 2023'
+        en: 'Bharatiya Nagarik Suraksha Sanhita (BNSS) 2023',
+        hi: 'भारतीय नागरिक सुरक्षा संहिता (BNSS) 2023'
       },
       badge: {
-        en: 'Statutory Rights in Police Stations',
-        hi: 'थाने में महिलाओं के कानूनी अधिकार'
+        en: 'Statutory Codification (Zero FIR)',
+        hi: 'जीरो FIR वैधानिक प्रावधान'
       },
-      ruleOrRef: 'Section 173 BNSS & Section 73 BNS',
+      ruleOrRef: 'BNSS 2023 Sec 173(1) & BNS Sec 73',
+      verifiedSource: {
+        isVerified: true,
+        en: 'Section 173(1) BNSS 2023 (Gazette of India Act 46 of 2023)',
+        hi: 'धारा 173(1) BNSS 2023 (भारत का राजपत्र, अधिनियम 46)'
+      },
       title: {
-        en: 'Pan-India Zero FIR & Strict Victim Anonymity Protections',
-        hi: 'देश भर में जीरो एफआईआर (Zero FIR) और पीड़िता की पहचान सीलबंद रखने का कानून'
+        en: 'Pan-India Zero FIR Codification & Statutory Rights (Consolidated Reference)',
+        hi: 'देश भर में जीरो एफआईआर (Zero FIR) का वैधानिक प्रावधान व कानूनी अधिकार'
       },
       summary: {
-        en: 'Police officers cannot refuse to register a complaint citing jurisdictional boundaries. Section 173 BNSS mandates Zero FIR registration at any station, and Section 73 BNS makes disclosing the victim\'s name or identity punishable by 2 years in prison.',
-        hi: 'कोई भी पुलिस स्टेशन यह कहकर शिकायत लेने से मना नहीं कर सकता कि घटना उनके क्षेत्र की नहीं है। किसी भी थाने में जीरो एफआईआर दर्ज कराई जा सकती है और पीड़िता का नाम उजागर करना 2 वर्ष की सजा का अपराध है।'
+        en: 'Section 173(1) BNSS 2023 formally codifies that any police station must register a cognizable complaint irrespective of jurisdictional boundaries. To prevent fragmented guidance, full operational rights (Section 73 anonymity, female officer recording mandates, and free NALSA counsel) are centralized in the Legal Rights FAQ panel.',
+        hi: 'धारा 173(1) BNSS 2023 स्पष्ट रूप से आदेश देती है कि किसी भी थाने में क्षेत्राधिकार की बाध्यता के बिना जीरो एफआईआर दर्ज करना अनिवार्य है। कानूनी जानकारी में दोहराव से बचने के लिए, पहचान सुरक्षा (धारा 73 BNS), महिला अधिकारी द्वारा बयान और मुफ्त कानूनी सहायता का पूर्ण विवरण लीगल राइट्स एफएक्यू में संकलित है।'
       },
       actionPoints: {
         en: [
-          'Statement of a female victim must be recorded exclusively by a woman police officer (Sec 173 BNSS).',
-          'You have the right to give your statement at your home or a safe place of your choice.',
-          'Every woman in India is entitled to 100% free legal aid and a government lawyer under Section 12 NALSA.'
+          'Statutory Mandate: Section 173(1) BNSS legally obligates police officers to register cognizable offenses regardless of where the incident occurred.',
+          'Consolidated Source of Truth: In-depth breakdowns of victim anonymity (Sec 73 BNS), statements before female officers, and police escalation remedies are unified in the Legal Rights FAQ panel below.',
+          'Direct Consultation: Use the "Open Legal Rights & FAQ Panel" button below to access comprehensive statutory protections without conflicting wording.'
         ],
         hi: [
-          'महिला पीड़िता का बयान केवल महिला पुलिस अधिकारी द्वारा ही दर्ज किया जाएगा।',
-          'आप अपने घर या अपनी पसंद की किसी भी सुरक्षित जगह पर बयान देने की मांग कर सकती हैं।',
-          'नालसा (NALSA) के तहत हर महिला को सरकारी वकील और मुफ्त कानूनी सहायता पाने का अधिकार है।'
+          'वैधानिक प्रावधान: धारा 173(1) BNSS स्पष्ट आदेश देती है कि अपराध कहीं भी हुआ हो, जीरो एफआईआर दर्ज करना पुलिस का अनिवार्य कर्तव्य है।',
+          'सत्यापित कानूनी संकलन: धारा 73 पहचान सुरक्षा, महिला अधिकारी द्वारा बयान की अनिवार्यता और कानूनी उपचार लीगल राइट्स एफएक्यू (Legal Rights FAQ) में देखें।',
+          'सीधा लिंक: सभी कानूनी धाराओं, अदालती मिसालों और एफएक्यू के लिए नीचे दिए गए बटन पर क्लिक करें।'
         ]
       },
-      helpline: '112'
+      helpline: '112',
+      crossReferenceToFaq: true
     },
     {
       id: 'uidai_biometrics',
@@ -246,6 +296,11 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
         hi: 'पहचान चोरी से सुरक्षा'
       },
       ruleOrRef: 'UIDAI Biometric Lock Advisory',
+      verifiedSource: {
+        isVerified: true,
+        en: 'UIDAI (uidai.gov.in) & DoT Sanchar Saathi (tafcop.sancharsaathi.gov.in)',
+        hi: 'UIDAI व संचार साथी (DoT TAFCOP)'
+      },
       title: {
         en: 'Lock Aadhaar Biometrics to Prevent Remote Synthetic Identity Fraud',
         hi: 'mAadhaar ऐप से बायोमेट्रिक लॉक करें ताकि कोई आपके नाम पर फर्जी सिम या लोन न ले सके'
@@ -344,15 +399,15 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
             <span className="font-semibold">{isHindi ? '24h निष्कासन नियम' : '24h Content Takedown'}</span>
           </div>
           <div className="bg-white/5 p-3 rounded-2xl flex items-center gap-2">
-            <EyeOff className="w-4 h-4 text-emerald-300 shrink-0" />
+            <EyeOff className="w-4 h-4 text-teal-300 shrink-0" />
             <span className="font-semibold">{isHindi ? '100% गुप्त शिकायत' : 'Anonymous Filing'}</span>
           </div>
           <div className="bg-white/5 p-3 rounded-2xl flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-sky-300 shrink-0" />
+            <ShieldCheck className="w-4 h-4 text-[#D2CCE7] shrink-0" />
             <span className="font-semibold">{isHindi ? 'जीरो FIR पूरे भारत में' : 'Zero FIR Nationwide'}</span>
           </div>
           <div className="bg-white/5 p-3 rounded-2xl flex items-center gap-2">
-            <KeyRound className="w-4 h-4 text-rose-300 shrink-0" />
+            <KeyRound className="w-4 h-4 text-amber-300 shrink-0" />
             <span className="font-semibold">{isHindi ? 'बायोमेट्रिक लॉक' : 'Biometric Lock'}</span>
           </div>
         </div>
@@ -385,19 +440,34 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
               className="bg-white border border-[#E8E2DC] hover:border-[#8B6D5C] rounded-3xl p-5 sm:p-7 shadow-sm transition-all space-y-4"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2.5 flex-wrap">
                   <span className="px-3 py-1 bg-[#F3EFEC] text-[#8B6D5C] text-xs font-bold rounded-full uppercase tracking-wider">
                     {item.agency}
                   </span>
+
+                  {/* Verification Status Badge */}
+                  {item.verifiedSource?.isVerified ? (
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#0F6E56] border border-emerald-200">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
+                      <span>{isHindi ? `सत्यापित: ${item.verifiedSource.hi}` : `Verified: ${item.verifiedSource.en}`}</span>
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-200">
+                      <HelpCircle className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+                      <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before relying'}</span>
+                    </span>
+                  )}
+
                   <span className="text-xs font-bold text-emerald-800 bg-[#ECFDF5] px-3 py-1 rounded-full">
                     {item.badge[language]}
                   </span>
-                  <span className="text-xs font-mono text-[#888]">
+                  <span className="text-xs font-mono text-[#777]">
                     {item.ruleOrRef}
                   </span>
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => setExpandedId(isExpanded ? null : item.id)}
                   className="inline-flex items-center gap-1 text-xs font-bold text-[#8B6D5C] hover:text-[#775c4c] self-start sm:self-auto cursor-pointer"
                 >
@@ -415,25 +485,38 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
                 </p>
               </div>
 
-              {/* Action Steps */}
-              <div className="pt-3 border-t border-[#F0EBE6] space-y-3">
-                <span className="text-xs font-bold text-[#8B6D5C] uppercase tracking-wider block">
-                  {isHindi ? 'आपको तुरंत क्या करना चाहिए (Recommended Action Steps):' : 'Immediate Recommended Action Steps:'}
-                </span>
+              {/* Action Steps (expandable) */}
+              {isExpanded && (
+                <div className="pt-3 border-t border-[#F0EBE6] space-y-3">
+                  <span className="text-xs font-bold text-[#8B6D5C] uppercase tracking-wider block">
+                    {isHindi ? 'आपको तुरंत क्या करना चाहिए (Recommended Action Steps):' : 'Immediate Recommended Action Steps:'}
+                  </span>
 
-                <ul className="space-y-2 text-xs sm:text-sm text-[#333]">
-                  {item.actionPoints[language].map((step, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5">
-                      <CheckCircle2 className="w-4 h-4 text-[#8B6D5C] shrink-0 mt-0.5" />
-                      <span className="leading-relaxed">{step}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                  <ul className="space-y-2 text-xs sm:text-sm text-[#333]">
+                    {item.actionPoints[language].map((step, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-[#8B6D5C] shrink-0 mt-0.5" />
+                        <span className="leading-relaxed">{step}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {/* Bottom Interactive Toolbar */}
               <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#F0EBE6]">
                 <div className="flex items-center gap-2 flex-wrap">
+                  {item.crossReferenceToFaq && (
+                    <button
+                      type="button"
+                      onClick={handleOpenLegalFaq}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FAF8F3] hover:bg-[#F3EFEC] text-[#26215C] border border-[#26215C]/25 rounded-full text-xs font-bold transition-all cursor-pointer shadow-2xs group"
+                    >
+                      <Scale className="w-3.5 h-3.5 text-[#26215C]" />
+                      <span>{isHindi ? 'कानूनी अधिकार व एफएक्यू देखें →' : 'Open Legal Rights & FAQ Panel →'}</span>
+                    </button>
+                  )}
+
                   {item.portalLink && (
                     <a
                       href={item.portalLink}
@@ -458,6 +541,7 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => handleCopy(
                     `${item.title[language]}\n\n${item.summary[language]}\n\nKey Steps:\n${item.actionPoints[language].map((s, i) => `${i + 1}. ${s}`).join('\n')}`,
                     item.id

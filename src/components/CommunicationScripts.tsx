@@ -236,12 +236,12 @@ Contact: [Your Phone / Email]`,
       {/* Script Cards */}
       <div className="space-y-4">
         {activeTab === 'blackmailer' && (
-          <div className="p-4 bg-[#FBEAF0] border border-[#F3C5D6] rounded-2xl text-xs text-[#7A2843] space-y-1">
-            <div className="font-bold flex items-center gap-1.5 text-[#993556]">
-              <AlertTriangle className="w-4 h-4 text-[#993556]" />
+          <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-xs text-amber-950 space-y-1">
+            <div className="font-bold flex items-center gap-1.5 text-amber-800">
+              <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0" />
               <span>{isHindi ? 'सुरक्षा चेतावनी: ब्लैकमेलर के साथ बातचीत का चयन' : 'Safety Warning: Known vs. Anonymous Extortionists'}</span>
             </div>
-            <p className="text-[11px] leading-relaxed">
+            <p className="text-[11px] leading-relaxed text-amber-900/90">
               {isHindi 
                 ? 'कानूनी चेतावनी (Cease & Desist) अज्ञात ऑनलाइन एक्सटॉर्शनिस्ट्स के लिए सबसे उपयुक्त है। यदि ब्लैकमेलर कोई ऐसा व्यक्ति है जिसे आप व्यक्तिगत रूप से जानती हैं (पूर्व-पार्टनर, सहकर्मी, परिचित), तो कानूनी टकराव से वह घबराकर तुरंत लीक कर सकता है। ऐसी स्थिति में पहले समय हासिल करने वाला शांत संदेश (Delay Message) भेजें और चुपचाप 1930 / साइबर पुलिस में शिकायत दर्ज कराएं।'
                 : 'Best for anonymous online extortionists. If the person threatening you is someone you know personally (an ex-partner, colleague, acquaintance), sending an immediate legal confrontation may escalate their behavior. Consider filing quietly first while using the neutral delay message to buy time without provocation.'}

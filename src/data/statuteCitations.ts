@@ -290,6 +290,27 @@ export const STATUTE_REGISTRY: Record<string, StatuteCitation> = {
     bailable: true,
     verificationStatus: 'FLAGGED_FOR_LEGAL_REVIEW',
     uncertaintyFlag: 'FLAGGED FOR CONSOLIDATION: Retained solely as a historical/legacy cross-reference for pending investigations or evidence gathered under pre-July 2024 law. All active generation should point to Section 63 BSA upon legal confirmation.',
+  },
+
+  // UGC Regulations on Sexual Harassment (2015)
+  UGC_REGULATIONS_2015: {
+    id: 'UGC_REGULATIONS_2015',
+    act: 'University Grants Commission (Prevention, Prohibition and Redressal of Sexual Harassment of Women Employees and Students in Higher Educational Institutions) Regulations, 2015',
+    section: 'UGC Regulations, 2015 (Regulations 3, 4, 8 & 9)',
+    shortLabel: { 
+      en: 'UGC Regulations on Sexual Harassment (2015)', 
+      hi: 'यूजीसी यौन उत्पीड़न निवारण विनियम (2015)' 
+    },
+    heading: {
+      en: 'Mandatory ICC Redressal, Zero Victim Victimization & Confidentiality in Higher Educational Institutions',
+      hi: 'उच्च शिक्षण संस्थानों में आंतरिक शिकायत समिति (ICC), शून्य उत्पीड़न व गोपनीयता का वैधानिक अधिकार'
+    },
+    penalSummary: {
+      en: 'Under the UGC Regulations 2015, Higher Educational Institutions are legally bound to maintain an active Internal Complaints Committee (ICC), enforce strict confidentiality regarding student identity, provide immediate interim protection against non-consensual digital dissemination, and conclude inquiries within a 90-day statutory timeline.',
+      hi: 'यूजीसी विनियम 2015 के तहत उच्च शिक्षण संस्थानों के लिए आंतरिक शिकायत समिति (ICC) का संचालन, पीड़िता की पहचान की पूर्ण गोपनीयता, डिजिटल उत्पीड़न के खिलाफ तात्कालिक अंतरिम सुरक्षा और 90 दिनों के भीतर जांच पूर्ण करना कानूनी रूप से अनिवार्य है।'
+    },
+    bailable: true,
+    verificationStatus: 'VERIFIED_GAZETTE',
   }
 };
 

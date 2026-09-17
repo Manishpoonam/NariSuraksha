@@ -51,6 +51,7 @@ export interface HelplineItem {
   directDial: string;
   website?: string;
   isConfidential: boolean;
+  verificationTag?: { en: string; hi: string };
 }
 
 export interface LegalSection {

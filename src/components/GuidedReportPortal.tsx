@@ -220,7 +220,11 @@ export const GuidedReportPortal: React.FC<GuidedReportPortalProps> = ({
 
           {showGovGuidelines && (
             <div className="p-5 sm:p-6 pt-2 border-t border-[#F0EBE6]">
-              <IndianGovGuidelines language={language} onNavigateToTab={onNavigateToTab} />
+              <IndianGovGuidelines 
+                language={language} 
+                onNavigateToTab={onNavigateToTab} 
+                onOpenLegalRights={() => setShowLegalRights(true)}
+              />
             </div>
           )}
         </div>

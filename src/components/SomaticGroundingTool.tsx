@@ -15,7 +15,8 @@ import {
   Sparkles,
   Maximize2,
   Minimize2,
-  Lock
+  Lock,
+  CheckCircle2
 } from 'lucide-react';
 import { Language } from '../types';
 import { hapticAction } from '../utils/haptics';
@@ -247,13 +248,21 @@ export const SomaticGroundingTool: React.FC<SomaticGroundingToolProps> = ({ lang
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
           {/* NIMHANS Tele-MANAS */}
-          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#26215C]/8 space-y-2">
-            <span className="text-[10px] font-medium uppercase tracking-wider text-[#5A5672]">Government of India</span>
-            <h4 className="font-semibold text-[#26215C] text-sm">Tele-MANAS (NIMHANS)</h4>
-            <div className="text-lg sm:text-xl font-semibold font-mono text-[#26215C]">14416 / 1800-891-4416</div>
-            <p className="text-xs text-[#5A5672]">
-              {isHindi ? '24 घंटे बहुभाषी मनोवैज्ञानिक परामर्श।' : '24/7 toll-free psychiatric first-aid in 20+ Indian languages.'}
-            </p>
+          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#26215C]/8 space-y-2 flex flex-col justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <span className="text-[10px] font-medium uppercase tracking-wider text-[#5A5672]">Government of India</span>
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-[#0F6E56] border border-emerald-200">
+                  <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                  <span>{isHindi ? 'सत्यापित: MoHFW / NIMHANS' : 'Verified: MoHFW / NIMHANS'}</span>
+                </span>
+              </div>
+              <h4 className="font-semibold text-[#26215C] text-sm">Tele-MANAS (NIMHANS)</h4>
+              <div className="text-lg sm:text-xl font-semibold font-mono text-[#26215C]">14416 / 1800-891-4416</div>
+              <p className="text-xs text-[#5A5672]">
+                {isHindi ? '24 घंटे बहुभाषी मनोवैज्ञानिक परामर्श।' : '24/7 toll-free psychiatric first-aid in 20+ Indian languages.'}
+              </p>
+            </div>
             <a
               href="tel:14416"
               className="inline-flex items-center gap-1.5 text-xs font-medium text-[#0F6E56] hover:underline pt-1 min-h-[36px]"
@@ -264,13 +273,21 @@ export const SomaticGroundingTool: React.FC<SomaticGroundingToolProps> = ({ lang
           </div>
 
           {/* KIRAN Helpline */}
-          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#26215C]/8 space-y-2">
-            <span className="text-[10px] font-medium uppercase tracking-wider text-[#5A5672]">Ministry of Social Justice</span>
-            <h4 className="font-semibold text-[#26215C] text-sm">KIRAN Helpline</h4>
-            <div className="text-lg sm:text-xl font-semibold font-mono text-[#26215C]">1800-599-0019</div>
-            <p className="text-xs text-[#5A5672]">
-              {isHindi ? 'तनाव, चिंता और संकट निवारण परामर्श।' : 'Specialized psychological support and distress management.'}
-            </p>
+          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#26215C]/8 space-y-2 flex flex-col justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <span className="text-[10px] font-medium uppercase tracking-wider text-[#5A5672]">Ministry of Social Justice</span>
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-[#0F6E56] border border-emerald-200">
+                  <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                  <span>{isHindi ? 'सत्यापित: MSJE (DEPwD)' : 'Verified: MSJE (DEPwD)'}</span>
+                </span>
+              </div>
+              <h4 className="font-semibold text-[#26215C] text-sm">KIRAN Helpline</h4>
+              <div className="text-lg sm:text-xl font-semibold font-mono text-[#26215C]">1800-599-0019</div>
+              <p className="text-xs text-[#5A5672]">
+                {isHindi ? 'तनाव, चिंता और संकट निवारण परामर्श।' : 'Specialized psychological support and distress management.'}
+              </p>
+            </div>
             <a
               href="tel:18005990019"
               className="inline-flex items-center gap-1.5 text-xs font-medium text-[#0F6E56] hover:underline pt-1 min-h-[36px]"
@@ -281,13 +298,21 @@ export const SomaticGroundingTool: React.FC<SomaticGroundingToolProps> = ({ lang
           </div>
 
           {/* Vandrevala Foundation */}
-          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#26215C]/8 space-y-2">
-            <span className="text-[10px] font-medium uppercase tracking-wider text-[#5A5672]">NGO Counselor Network</span>
-            <h4 className="font-semibold text-[#26215C] text-sm">Vandrevala Foundation</h4>
-            <div className="text-lg sm:text-xl font-semibold font-mono text-[#26215C]">9999 666 555</div>
-            <p className="text-xs text-[#5A5672]">
-              {isHindi ? 'व्हाट्सएप चैट व फोन पर निःशुल्क थेरेपी सहायता।' : 'Free 24/7 crisis intervention via phone and WhatsApp.'}
-            </p>
+          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#26215C]/8 space-y-2 flex flex-col justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <span className="text-[10px] font-medium uppercase tracking-wider text-[#5A5672]">Registered Trust Network</span>
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-[#0F6E56] border border-emerald-200">
+                  <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                  <span>{isHindi ? 'सत्यापित: Vandrevala Trust' : 'Verified: Vandrevala Trust'}</span>
+                </span>
+              </div>
+              <h4 className="font-semibold text-[#26215C] text-sm">Vandrevala Foundation</h4>
+              <div className="text-lg sm:text-xl font-semibold font-mono text-[#26215C]">9999 666 555</div>
+              <p className="text-xs text-[#5A5672]">
+                {isHindi ? 'व्हाट्सएप चैट व फोन पर निःशुल्क थेरेपी सहायता।' : 'Free 24/7 crisis intervention via phone and WhatsApp.'}
+              </p>
+            </div>
             <a
               href="tel:9999666555"
               className="inline-flex items-center gap-1.5 text-xs font-medium text-[#0F6E56] hover:underline pt-1 min-h-[36px]"

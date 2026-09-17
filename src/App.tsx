@@ -17,7 +17,6 @@ import { CalmSupportPortal } from './components/CalmSupportPortal';
 import { CamouflageScreen } from './components/CamouflageScreen';
 import { FloatingPanicBar } from './components/FloatingPanicBar';
 import { EmergencySOSModal } from './components/EmergencySOSModal';
-import { AboutTrustSection } from './components/AboutTrustSection';
 import { ConfidenceCourageBoard } from './components/ConfidenceCourageBoard';
 import { RescueFooterSupport } from './components/RescueFooterSupport';
 import { CampusSafetyPrintableCard } from './components/CampusSafetyPrintableCard';
@@ -652,9 +651,6 @@ export default function App() {
                   onNavigateToTab={handleNavigateToTab}
                   defaultSection={supportSubTab === 'scripts' ? 'scripts' : supportSubTab === 'helplines' ? 'helplines' : 'grounding'}
                 />
-                <div id="about-trust-section" className="scroll-mt-48">
-                  <AboutTrustSection language={language} />
-                </div>
               </div>
             )}
           </motion.div>
@@ -675,20 +671,22 @@ export default function App() {
             <p className="text-[11px] text-[#555]">
               An independent, non-commercial safety resource.
             </p>
-            <p className="text-[11px] text-[#777] leading-relaxed">
-              <span>{LEGAL_DISCLAIMER.short[language]} — </span>
-              <a
-                href={`#${LEGAL_DISCLAIMER.anchorId}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const el = document.getElementById(LEGAL_DISCLAIMER.anchorId);
-                  el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }}
-                className="text-[#2D2D2D] hover:underline font-semibold underline-offset-2"
-              >
-                {LEGAL_DISCLAIMER.linkText[language]}
-              </a>
-            </p>
+            {/* Short disclaimer with link to canonical block (omitted on support tab where full canonical block is already present) */}
+            {activeTab !== 'support' && (
+              <p className="text-[11px] text-[#777] leading-relaxed">
+                <span>{LEGAL_DISCLAIMER.short[language]} — </span>
+                <a
+                  href={`#${LEGAL_DISCLAIMER.anchorId}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavigateToTab('support', LEGAL_DISCLAIMER.anchorId);
+                  }}
+                  className="text-[#2D2D2D] hover:underline font-semibold underline-offset-2"
+                >
+                  {LEGAL_DISCLAIMER.linkText[language]}
+                </a>
+              </p>
+            )}
           </div>
 
           <div className="flex items-center gap-3 flex-wrap justify-center text-[#666] text-xs">
