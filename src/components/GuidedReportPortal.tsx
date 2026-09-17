@@ -15,7 +15,9 @@ import {
   BookOpen, 
   ExternalLink,
   Lock,
-  Sparkles
+  Sparkles,
+  ArrowLeft,
+  ArrowRight
 } from 'lucide-react';
 import { Language, IncidentCategory } from '../types';
 import { hapticAction } from '../utils/haptics';
@@ -78,9 +80,10 @@ export const GuidedReportPortal: React.FC<GuidedReportPortalProps> = ({
             <button
               type="button"
               onClick={() => setActiveSubView('drafts')}
-              className="text-xs font-semibold px-3 py-1.5 rounded-full bg-[#FAF8F3] hover:bg-white border border-[#E8E2DC] text-[#8B6D5C] transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-[#FAF8F3] hover:bg-white border border-[#E8E2DC] text-[#8B6D5C] transition-colors cursor-pointer"
             >
-              {isHindi ? '← ई-एफआईआर ड्राफ्ट पर वापस जाएं' : '← Back to Draft Generator'}
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>{isHindi ? 'ई-एफआईआर ड्राफ्ट पर वापस जाएं' : 'Back to Draft Generator'}</span>
             </button>
           </div>
           <NationalCyberPortalHub 
@@ -248,7 +251,7 @@ export const GuidedReportPortal: React.FC<GuidedReportPortalProps> = ({
           </div>
           <span className="text-xs font-bold text-[#993556] group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
             <span>{isHindi ? 'विवरण देखें' : 'Learn more'}</span>
-            <span>→</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </span>
         </button>
       </div>

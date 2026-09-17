@@ -133,7 +133,7 @@ export const OptionsOverviewHub: React.FC<OptionsOverviewHubProps> = ({
             className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#26215C] hover:text-[#993556] transition-colors cursor-pointer py-1 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-            <span>{isHindi ? '← मुख्य द्वार पर वापस जाएं' : '← Back to Entry Screen'}</span>
+            <span>{isHindi ? 'मुख्य द्वार पर वापस जाएं' : 'Back to Entry Screen'}</span>
           </button>
 
           <div className="inline-flex items-center gap-1.5 text-xs text-[#5A5672]">

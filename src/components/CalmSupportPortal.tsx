@@ -173,7 +173,7 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
             }`}
           >
             <Wind className="w-4 h-4 text-teal-300" />
-            <span>{isHindi ? '🌿 1. घबराहट शांत करें (4-7-8 सांस)' : '🌿 1. Somatic Breathing (4-7-8)'}</span>
+            <span>{isHindi ? '1. घबराहट शांत करें (4-7-8 सांस)' : '1. Somatic Breathing (4-7-8)'}</span>
           </button>
 
           <button
@@ -189,7 +189,7 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
             }`}
           >
             <PhoneCall className="w-4 h-4 text-emerald-300" />
-            <span>{isHindi ? '📞 2. सभी हेल्पलाइन डायरेक्टरी' : '📞 2. Helpline Directory'}</span>
+            <span>{isHindi ? '2. सभी हेल्पलाइन डायरेक्टरी' : '2. Helpline Directory'}</span>
           </button>
 
           <button
@@ -205,7 +205,7 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
             }`}
           >
             <MessageSquare className="w-4 h-4 text-amber-300" />
-            <span>{isHindi ? '💬 3. सुरक्षित संदेश व कानूनी जवाब' : '💬 3. Safe Scripts & Disclosure'}</span>
+            <span>{isHindi ? '3. सुरक्षित संदेश व कानूनी जवाब' : '3. Safe Scripts & Disclosure'}</span>
           </button>
         </div>
       </div>

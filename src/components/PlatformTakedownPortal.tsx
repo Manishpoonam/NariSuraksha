@@ -306,7 +306,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-[#111] font-bold text-xs sm:text-sm transition-all shadow-sm active:scale-97 w-full sm:w-auto"
               >
-                <span>👩 {isHindi ? '18+: StopNCII.org खोलें' : '18+: Open StopNCII.org'}</span>
+                <span>{isHindi ? '18+: StopNCII.org खोलें' : '18+: Open StopNCII.org'}</span>
                 <ExternalLink className="w-4 h-4" />
               </a>
               <span className="inline-flex items-center gap-1 text-[10px] text-emerald-300 font-semibold px-2">
@@ -321,7 +321,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white/15 hover:bg-white/25 text-white border border-white/20 font-bold text-xs sm:text-sm transition-all active:scale-97 w-full sm:w-auto"
               >
-                <span>👧 {isHindi ? '18 से कम: Take It Down' : 'Under 18: Take It Down'}</span>
+                <span>{isHindi ? '18 से कम: Take It Down' : 'Under 18: Take It Down'}</span>
                 <ExternalLink className="w-4 h-4" />
               </a>
               <span className="inline-flex items-center gap-1 text-[10px] text-white/80 font-semibold px-2">

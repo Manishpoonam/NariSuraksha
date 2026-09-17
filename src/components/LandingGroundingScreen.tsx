@@ -279,8 +279,8 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
               <Smartphone className="w-4 h-4 text-[#5A5672]" />
               <span>
                 {isHindi
-                  ? '📱 क्या यह फोन सुरक्षित है? जासूसी ऐप्स व हिस्ट्री जांच'
-                  : '📱 Is this device safe to use right now? (Check for stalkerware & history)'}
+                  ? 'क्या यह फोन सुरक्षित है? जासूसी ऐप्स व हिस्ट्री जांच'
+                  : 'Is this device safe to use right now? (Check for stalkerware & history)'}
               </span>
             </button>
           </div>

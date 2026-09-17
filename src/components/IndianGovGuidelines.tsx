@@ -513,7 +513,7 @@ export const IndianGovGuidelines: React.FC<IndianGovGuidelinesProps> = ({
                       className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FAF8F3] hover:bg-[#F3EFEC] text-[#26215C] border border-[#26215C]/25 rounded-full text-xs font-bold transition-all cursor-pointer shadow-2xs group"
                     >
                       <Scale className="w-3.5 h-3.5 text-[#26215C]" />
-                      <span>{isHindi ? 'कानूनी अधिकार व एफएक्यू देखें →' : 'Open Legal Rights & FAQ Panel →'}</span>
+                      <span>{isHindi ? 'कानूनी अधिकार व एफएक्यू देखें' : 'Open Legal Rights & FAQ Panel'}</span>
                     </button>
                   )}
 

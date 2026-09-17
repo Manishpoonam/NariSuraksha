@@ -230,7 +230,7 @@ export const ConfidenceCourageBoard: React.FC<ConfidenceCourageBoardProps> = ({
           className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#8B6D5C] hover:text-[#1A1A1A] transition-colors cursor-pointer py-1 group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-          <span>{backLabel || (isHindi ? '← वापस जाएं' : '← Back')}</span>
+          <span>{backLabel || (isHindi ? 'वापस जाएं' : 'Back')}</span>
         </button>
 
         <span className="text-[11px] text-[#777]">

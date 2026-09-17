@@ -37,7 +37,7 @@ export const EmergencyBanner: React.FC<EmergencyBannerProps> = ({
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#8B6D5C] hover:bg-[#775c4c] text-white rounded-full text-xs font-bold transition-all shadow-xs cursor-pointer select-none"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>{isHindi ? '🌸 सहायता मार्गदर्शिका' : '🌸 Quick Rescue Guide'}</span>
+              <span>{isHindi ? 'सहायता मार्गदर्शिका' : 'Quick Rescue Guide'}</span>
             </button>
           )}
 

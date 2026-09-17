@@ -615,14 +615,14 @@ export default function App() {
                 {showDeepScenarios
                   ? (isHindi ? 'विस्तृत परिदृश्य बंद करें' : 'Close Scenarios')
                   : activeTab === 'options'
-                  ? (isHindi ? '← मुख्य द्वार पर वापस जाएं' : '← Back to Entry Screen')
+                  ? (isHindi ? 'मुख्य द्वार पर वापस जाएं' : 'Back to Entry Screen')
                   : activeTab === 'confidence'
                   ? (navSource === 'options'
-                    ? (isHindi ? '← विकल्पों पर वापस जाएं' : '← Back to Options Overview')
-                    : (isHindi ? '← त्वरित सहायता पर वापस जाएं' : '← Back to Quick Rescue'))
+                    ? (isHindi ? 'विकल्पों पर वापस जाएं' : 'Back to Options Overview')
+                    : (isHindi ? 'त्वरित सहायता पर वापस जाएं' : 'Back to Quick Rescue'))
                   : (navSource === 'options'
-                    ? (isHindi ? '← विकल्पों पर वापस जाएं' : '← Back to Options Overview')
-                    : (isHindi ? '← त्वरित सहायता पर वापस जाएं' : '← Back to Quick Rescue'))}
+                    ? (isHindi ? 'विकल्पों पर वापस जाएं' : 'Back to Options Overview')
+                    : (isHindi ? 'त्वरित सहायता पर वापस जाएं' : 'Back to Quick Rescue'))}
               </span>
             </button>
 
@@ -702,8 +702,8 @@ export default function App() {
                   onBack={handleGoBack}
                   backLabel={
                     navSource === 'options'
-                      ? (isHindi ? '← विकल्पों पर वापस जाएं' : '← Back to Options Overview')
-                      : (isHindi ? '← त्वरित सहायता पर वापस जाएं' : '← Back to Quick Rescue')
+                      ? (isHindi ? 'विकल्पों पर वापस जाएं' : 'Back to Options Overview')
+                      : (isHindi ? 'त्वरित सहायता पर वापस जाएं' : 'Back to Quick Rescue')
                   }
                 />
               </div>
@@ -717,9 +717,10 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => handleSelectTakedownSubTab('stopncii')}
-                      className="inline-flex items-center gap-2 text-xs font-bold text-[#8B6D5C] hover:underline cursor-pointer py-1"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#8B6D5C] hover:text-[#1A1A1A] transition-colors cursor-pointer py-1"
                     >
-                      ← {isHindi ? 'लीक रोकें पोर्टल पर वापस जाएं' : 'Back to Stop Leaks & Takedown Portals'}
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>{isHindi ? 'लीक रोकें पोर्टल पर वापस जाएं' : 'Back to Stop Leaks & Takedown Portals'}</span>
                     </button>
                     <EvidencePreservationTool language={language} onNavigateToTab={handleNavigateToTab} />
                   </div>
