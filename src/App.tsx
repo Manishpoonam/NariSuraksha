@@ -467,6 +467,7 @@ export default function App() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        e.preventDefault();
         setIsCamouflage((prev) => {
           const next = !prev;
           hapticCamouflage(next);

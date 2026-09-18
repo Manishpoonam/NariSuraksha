@@ -119,6 +119,20 @@ export const ComplaintDraftGenerator: React.FC<ComplaintDraftGeneratorProps> = (
   const [neutralFileName, setNeutralFileName] = useState<string>(`notes_${new Date().toISOString().slice(0, 10)}`);
   const [pdfGenerated, setPdfGenerated] = useState<boolean>(false);
 
+  const FIR_COMPLETED_STEPS_KEY = 'nari_fir_completed_steps';
+  const [completedSteps, setCompletedSteps] = useState<number[]>(() => {
+    try {
+      const saved = sessionStorage.getItem(FIR_COMPLETED_STEPS_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {
+      // ignore
+    }
+    return [];
+  });
+
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [activeTemplate, setActiveTemplate] = useState<'fir_police' | 'intermediary_notice' | 'ncw_petition'>('fir_police');
   const [copied, setCopied] = useState<boolean>(false);
@@ -130,9 +144,30 @@ export const ComplaintDraftGenerator: React.FC<ComplaintDraftGeneratorProps> = (
     clearComplaintDraft();
     setFormData(emptyFormData);
     setCurrentStep(1);
+    setCompletedSteps([]);
+    try {
+      sessionStorage.removeItem(FIR_COMPLETED_STEPS_KEY);
+    } catch {
+      // ignore
+    }
     setShowMobilePreview(false);
     setPdfGenerated(false);
     setCopied(false);
+  };
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(FIR_COMPLETED_STEPS_KEY, JSON.stringify(completedSteps));
+    } catch {
+      // ignore
+    }
+  }, [completedSteps]);
+
+  const handleContinueFromStep = (stepNumber: number, nextStepNumber: number) => {
+    hapticSuccess();
+    setCompletedSteps((prev) => (prev.includes(stepNumber) ? prev : [...prev, stepNumber]));
+    setCurrentStep(nextStepNumber);
+    setShowMobilePreview(false);
   };
 
   useEffect(() => {
@@ -359,35 +394,9 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
     { number: 4, title: isHindi ? 'समीक्षा व ड्राफ्ट' : '4. Complaint Draft', desc: isHindi ? 'PDF व सबमिशन' : 'Official PDF & copy' },
   ];
 
-  // Dynamic Genuine Completion Checks:
-  // Step 1: Incident category + threat summary are filled
-  const isStep1Complete = Boolean(
-    formData.incidentType &&
-    formData.threatDetails &&
-    formData.threatDetails.trim().length > 0
-  );
-
-  // Step 2: Suspect/channel info is entered
-  const isStep2Complete = Boolean(
-    (formData.accusedDetails && formData.accusedDetails.trim().length > 0) ||
-    (formData.platformsInvolved && formData.platformsInvolved.length > 0) ||
-    (formData.linksOrUsernames && formData.linksOrUsernames.trim().length > 0)
-  );
-
-  // Step 3: Identity/city fields are set
-  const isStep3Complete = Boolean(
-    formData.victimAlias &&
-    formData.victimAlias.trim().length > 0 &&
-    formData.cityState &&
-    formData.cityState.trim().length > 0
-  );
-
-  // Step 4 has no "next" state, it is the destination
-  const completedStepNumbers = [
-    ...(isStep1Complete ? [1] : []),
-    ...(isStep2Complete ? [2] : []),
-    ...(isStep3Complete ? [3] : []),
-  ];
+  // Steps are marked completed only when the user confirms and advances from that step.
+  // This prevents preset selections in Step 1 from prematurely marking Step 2 as completed.
+  const completedStepNumbers = completedSteps;
 
   return (
     <section 
@@ -707,11 +716,7 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
                   </span>
                   <button
                     type="button"
-                    onClick={() => {
-                      hapticAction();
-                      setCurrentStep(2);
-                      setShowMobilePreview(false);
-                    }}
+                    onClick={() => handleContinueFromStep(1, 2)}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-[#26215C] hover:bg-[#1E1949] text-white transition-all shadow-soft cursor-pointer min-h-[44px] active:scale-98"
                   >
                     <span>{isHindi ? 'तैयार होने पर आगे बढ़ें' : "Continue when you're ready"}</span>
@@ -837,11 +842,7 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      hapticAction();
-                      setCurrentStep(3);
-                      setShowMobilePreview(false);
-                    }}
+                    onClick={() => handleContinueFromStep(2, 3)}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-[#26215C] hover:bg-[#1E1949] text-white transition-all shadow-soft cursor-pointer min-h-[44px] active:scale-98"
                   >
                     <span>{isHindi ? 'तैयार होने पर आगे बढ़ें' : "Continue when you're ready"}</span>
@@ -933,11 +934,7 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      hapticAction();
-                      setCurrentStep(4);
-                      setShowMobilePreview(false);
-                    }}
+                    onClick={() => handleContinueFromStep(3, 4)}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-[#26215C] hover:bg-[#1E1949] text-white transition-all shadow-soft cursor-pointer min-h-[44px] active:scale-98"
                   >
                     <span>{isHindi ? 'तैयार होने पर आगे बढ़ें' : "Continue when you're ready"}</span>

@@ -19,28 +19,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link id="app-pwa-manifest" rel="manifest" href="./manifest-disguised.json" />
     <meta name="theme-color" content="#26215C" />
-
-    <!-- Pre-Hydration Quick Exit Safety Net: Arms immediately before JS bundle downloads -->
-    <script>
-      (function() {
-        function triggerPreHydrationEmergencyExit() {
-          try {
-            sessionStorage.setItem('narisuraksha_camouflaged', 'true');
-            sessionStorage.setItem('narisuraksha_disguise_active', 'true');
-          } catch (e) {}
-          if (document.documentElement) {
-            document.documentElement.style.display = 'none';
-          }
-          window.location.replace('https://www.google.com');
-        }
-
-        window.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape' || e.keyCode === 27) {
-            triggerPreHydrationEmergencyExit();
-          }
-        }, { capture: true });
-      })();
-    </script>
   </head>
   <body class="bg-[#FAF8F3] text-[#26215C] antialiased selection:bg-[#993556] selection:text-white font-sans">
     <div id="root">

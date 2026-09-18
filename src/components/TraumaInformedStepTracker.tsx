@@ -185,7 +185,7 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
         {/* 4-COLUMN STEPPER CONTAINER */}
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 md:gap-3 relative z-10">
           {steps.map((s, idx) => {
-            const isCompleted = completedStepNumbers.includes(s.number);
+            const isCompleted = completedStepNumbers.includes(s.number) && s.number !== currentStep;
             const isCurrent = s.number === currentStep;
 
             // Clean title without numeric prefix for display where step node is shown
