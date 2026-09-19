@@ -199,19 +199,20 @@ Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya 
               </span>
             </motion.button>
 
-            {/* 2. 1-TAP FREEZE SCRIPT COPY: Instant weapon against extortionists */}
+            {/* 2. 1-TAP DELAY SCRIPT COPY: Buys safe time without provocation */}
             <motion.button
               id="floating-copy-freeze-script"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.94 }}
               transition={{ duration: 0.12 }}
               onClick={handleCopyScript}
-              className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-2 rounded-full cursor-pointer shrink-0 font-bold min-h-[40px] border transition-colors shadow-xs ${
+              className={`flex items-center gap-1 sm:gap-1.5 px-3 py-2 rounded-full cursor-pointer shrink-0 font-bold min-h-[44px] border transition-colors shadow-xs focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none ${
                 copiedScript 
                   ? 'bg-emerald-600 border-emerald-400 text-white' 
                   : 'bg-white/10 hover:bg-white/20 border-white/20 text-[#FAF9F6]'
               }`}
-              title={isHindi ? 'ब्लैकमेलर को ठंडा करने का कानूनी संदेश कॉपी करें' : 'Copy Statutory Freeze Script to Clipboard'}
+              title={isHindi ? 'तटस्थ कानूनी चेतावनी संदेश कॉपी करें' : 'Copy Statutory Warning Script to Clipboard'}
+              aria-label={isHindi ? 'तटस्थ कानूनी चेतावनी संदेश कॉपी करें' : 'Copy Statutory Warning Script to Clipboard'}
             >
               {copiedScript ? (
                 <>
@@ -224,7 +225,7 @@ Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya 
                 <>
                   <Copy className="w-3.5 h-3.5 text-amber-300 shrink-0" />
                   <span className="text-[11px] sm:text-xs whitespace-nowrap hidden sm:inline">
-                    {isHindi ? 'कानूनी संदेश' : 'Freeze Script'}
+                    {isHindi ? 'कानूनी संदेश' : 'Warning Script'}
                   </span>
                   <span className="text-[11px] sm:text-xs whitespace-nowrap sm:hidden">
                     {isHindi ? 'मैसेज' : 'Script'}

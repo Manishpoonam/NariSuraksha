@@ -104,12 +104,13 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
               hapticCamouflage(true);
               onTriggerCamouflage();
             }}
-            className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-medium text-[#FAF8F3] bg-[#26215C] hover:bg-[#1E1949] transition-all cursor-pointer shadow-xs min-h-[38px] active:scale-97"
+            className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-full text-xs font-medium text-[#FAF8F3] bg-[#26215C] hover:bg-[#1E1949] transition-all cursor-pointer shadow-xs min-h-[44px] active:scale-97 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F3C5D6] focus-visible:outline-none"
             title={isHindi ? 'तुरंत स्क्रीन छिपाएं (ESC)' : 'Leave page immediately (ESC key)'}
+            aria-label={isHindi ? 'तुरंत स्क्रीन छिपाएं (ESC)' : 'Leave page immediately (ESC key)'}
           >
-            <EyeOff className="w-3.5 h-3.5 text-[#F3C5D6]" />
+            <EyeOff className="w-4 h-4 text-[#F3C5D6] shrink-0" />
             <span className="font-semibold">{isHindi ? 'स्क्रीन छिपाएं' : 'Quick Exit'}</span>
-            <kbd className="hidden md:inline-block px-1.5 py-0.2 bg-white/15 text-[10px] rounded font-mono">ESC</kbd>
+            <kbd className="hidden md:inline-block px-1.5 py-0.5 bg-white/15 text-[10px] rounded font-mono" aria-hidden="true">ESC</kbd>
           </button>
 
           {/* Explicit Two-State Segmented Language Toggle */}
@@ -123,12 +124,13 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
               onClick={() => {
                 if (isHindi) onToggleLanguage();
               }}
-              className={`px-2.5 py-1 rounded-full transition-all cursor-pointer ${
+              className={`px-3 py-2 rounded-full transition-all cursor-pointer min-h-[44px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none ${
                 !isHindi
                   ? 'bg-[#26215C] text-white font-semibold shadow-xs'
                   : 'text-[#5A5672] hover:text-[#26215C]'
               }`}
               aria-pressed={!isHindi}
+              aria-label="Switch language to English"
             >
               EN
             </button>
@@ -137,12 +139,13 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
               onClick={() => {
                 if (!isHindi) onToggleLanguage();
               }}
-              className={`px-2.5 py-1 rounded-full transition-all cursor-pointer ${
+              className={`px-3 py-2 rounded-full transition-all cursor-pointer min-h-[44px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none ${
                 isHindi
                   ? 'bg-[#26215C] text-white font-semibold shadow-xs'
                   : 'text-[#5A5672] hover:text-[#26215C]'
               }`}
               aria-pressed={isHindi}
+              aria-label="भाषा बदलकर हिन्दी करें"
             >
               हिन्दी
             </button>
@@ -177,8 +180,8 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
             </h1>
             <p className="text-base sm:text-lg text-[#5A5672] max-w-2xl mx-auto leading-relaxed font-normal">
               {isHindi
-                ? 'चाहे ब्लैकमेल हो, प्राइवेट फोटो लीक की धमकी, या डीपफेक—कानून पूरी तरह आपके साथ है। अपनी गति से चुनें कि आप कैसे आगे बढ़ना चाहती हैं।'
-                : 'Whether you are facing extortion, photo leak threats, or deepfake harassment—the law protects you, and you are in control. Choose how you would like to begin.'}
+                ? 'यदि कोई आपको धमकी दे रहा है, आपकी निजी फोटो या वीडियो साझा कर रहा है, या आपकी नकली तस्वीर का उपयोग कर रहा है — तो आपके पास विकल्प हैं।'
+                : 'If someone is threatening you, sharing a private photo or video, or using a fake image of you — you have options.'}
             </p>
           </div>
 
@@ -193,7 +196,7 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
                 hapticSOS();
                 onChooseUrgentHelp();
               }}
-              className="p-6 sm:p-7 rounded-[22px] bg-[#26215C] text-[#FAF8F3] hover:bg-[#1E1949] transition-all cursor-pointer shadow-soft border border-[#26215C] flex flex-col justify-between group min-h-[170px]"
+              className="p-6 sm:p-7 rounded-[22px] bg-[#26215C] text-[#FAF8F3] hover:bg-[#1E1949] transition-all cursor-pointer shadow-soft border border-[#26215C] flex flex-col justify-between group min-h-[170px] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F3C5D6] focus-visible:outline-none"
             >
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-[#F3C5D6] group-hover:scale-105 transition-transform">
@@ -206,13 +209,12 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
 
               <div className="mt-4">
                 <h2 className="text-lg sm:text-xl font-semibold text-white tracking-tight flex items-center gap-1.5">
-                  <span>{isHindi ? 'मुझे अभी तुरंत मदद चाहिए' : 'I need help right now'}</span>
-                  <ArrowRight className="w-4 h-4 text-[#F3C5D6] group-hover:translate-x-1 transition-transform" />
+                  <span>{isHindi ? 'मुझे अभी तुरंत मदद चाहिए →' : 'I need help right now →'}</span>
                 </h2>
                 <p className="text-xs sm:text-sm text-[#D2CCE7] mt-1.5 font-normal leading-normal">
                   {isHindi
-                    ? 'उलटी गिनती रोके, सबूत सुरक्षित करें और ब्लैकमेलर को फ्रीज करने का संदेश भेजें।'
-                    : 'Stop the countdown, preserve critical evidence, and freeze the extortionist.'}
+                    ? 'अपने सबूत सुरक्षित करें और अगला सुरक्षित कदम उठाएं।'
+                    : 'Secure your evidence and take the next safe step.'}
                 </p>
               </div>
             </motion.button>
@@ -226,7 +228,7 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
                 hapticAction();
                 onChooseUnderstandOptions();
               }}
-              className="p-6 sm:p-7 rounded-[22px] bg-white text-[#26215C] hover:bg-[#FAF8F3] transition-all cursor-pointer shadow-soft border border-[#26215C]/12 flex flex-col justify-between group min-h-[170px]"
+              className="p-6 sm:p-7 rounded-[22px] bg-white text-[#26215C] hover:bg-[#FAF8F3] transition-all cursor-pointer shadow-soft border border-[#26215C]/12 flex flex-col justify-between group min-h-[170px] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#26215C] focus-visible:outline-none"
             >
               <div className="flex items-start justify-between">
                 <div className="w-10 h-10 rounded-xl bg-[#E1F5EE] flex items-center justify-center text-[#0F6E56] group-hover:scale-105 transition-transform">
@@ -239,13 +241,12 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
 
               <div className="mt-4">
                 <h2 className="text-lg sm:text-xl font-semibold text-[#26215C] tracking-tight flex items-center gap-1.5">
-                  <span>{isHindi ? 'अपने विकल्प समझें' : 'Understand my options'}</span>
-                  <ArrowRight className="w-4 h-4 text-[#993556] group-hover:translate-x-1 transition-transform" />
+                  <span>{isHindi ? 'अपने विकल्प समझें →' : 'Understand my options →'}</span>
                 </h2>
                 <p className="text-xs sm:text-sm text-[#5A5672] mt-1.5 font-normal leading-normal">
                   {isHindi
-                    ? 'बिना किसी डर के जानिए: कानून क्या कहता है, पहचान कैसे गुप्त रहती है और क्या विकल्प हैं।'
-                    : 'Explore your legal rights, anonymous complaint protections, and StopNCII quietly.'}
+                    ? 'जानें कि आप क्या कर सकती हैं, रिपोर्ट कैसे करें, और सहायता कहां से प्राप्त करें।'
+                    : 'Learn what you can do, how to report it, and where to get support.'}
                 </p>
               </div>
             </motion.button>
@@ -256,9 +257,9 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
             <button
               type="button"
               onClick={onOpenBreathing}
-              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#0F6E56] hover:text-[#0A4E3D] font-medium transition-colors cursor-pointer py-1.5 px-3 rounded-full hover:bg-[#E1F5EE]/60"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#0F6E56] hover:text-[#0A4E3D] font-medium transition-colors cursor-pointer py-2 px-3.5 rounded-full hover:bg-[#E1F5EE]/60 min-h-[44px] focus-visible:ring-2 focus-visible:ring-[#0F6E56] focus-visible:outline-none"
             >
-              <Heart className="w-4 h-4 text-[#0F6E56]" />
+              <Heart className="w-4 h-4 text-[#0F6E56] shrink-0" />
               <span>
                 {isHindi
                   ? 'घबराहट महसूस हो रही है? 2 मिनट की शांत श्वास क्रिया शुरू करें'
@@ -266,7 +267,7 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
               </span>
             </button>
 
-            <span className="hidden sm:inline-block text-[#26215C]/20">•</span>
+            <span className="hidden sm:inline-block text-[#26215C]/20" aria-hidden="true">•</span>
 
             <button
               type="button"
@@ -274,13 +275,13 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
                 hapticAction();
                 onOpenDeviceSafety();
               }}
-              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#5A5672] hover:text-[#26215C] font-medium transition-colors cursor-pointer py-1.5 px-3 rounded-full hover:bg-black/5"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#5A5672] hover:text-[#26215C] font-medium transition-colors cursor-pointer py-2 px-3.5 rounded-full hover:bg-black/5 min-h-[44px] focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none"
             >
-              <Smartphone className="w-4 h-4 text-[#5A5672]" />
+              <Smartphone className="w-4 h-4 text-[#5A5672] shrink-0" />
               <span>
                 {isHindi
-                  ? 'क्या यह फोन सुरक्षित है? जासूसी ऐप्स व हिस्ट्री जांच'
-                  : 'Is this device safe to use right now? (Check for stalkerware & history)'}
+                  ? 'क्या कोई और इस फोन या ब्राउज़र की निगरानी कर रहा है?'
+                  : 'Could someone else be monitoring this phone or browser?'}
               </span>
             </button>
           </div>
@@ -309,12 +310,12 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
         </div>
 
         {/* Canonical Short Legal & Non-Affiliation Disclaimer Line */}
-        <p className="text-[10.5px] sm:text-[11px] text-[#85819C] leading-relaxed max-w-3xl mx-auto border-t border-[#26215C]/5 pt-2.5">
+        <p className="text-[11px] sm:text-xs text-[#5A5672] leading-relaxed max-w-3xl mx-auto border-t border-[#26215C]/5 pt-2.5">
           <span>{LEGAL_DISCLAIMER.short[language]} — </span>
           <button
             type="button"
             onClick={handleDisclaimerClick}
-            className="text-[#26215C] hover:underline font-medium cursor-pointer underline-offset-2 inline-flex items-center gap-0.5"
+            className="text-[#26215C] hover:underline font-semibold cursor-pointer underline-offset-2 inline-flex items-center gap-0.5 focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none rounded"
           >
             <span>{LEGAL_DISCLAIMER.linkText[language]}</span>
           </button>
@@ -326,10 +327,11 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
         <a
           href="tel:1930"
           onClick={() => hapticSOS()}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#DC2626] hover:bg-[#B91C1C] text-white font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl active:scale-95 transition-all cursor-pointer border border-white/20 whitespace-nowrap"
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#DC2626] hover:bg-[#B91C1C] text-white font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl active:scale-95 transition-all cursor-pointer border border-white/20 whitespace-nowrap min-h-[44px] min-w-[44px] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-600 focus-visible:outline-none"
           title={isHindi ? 'राष्ट्रीय साइबर अपराध हेल्पलाइन 1930 पर तुरंत कॉल करें' : 'Call National Cyber Helpline 1930'}
+          aria-label={isHindi ? 'राष्ट्रीय साइबर अपराध हेल्पलाइन 1930 पर तुरंत कॉल करें' : 'Call National Cyber Helpline 1930'}
         >
-          <PhoneCall className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
+          <PhoneCall className="w-4 h-4 text-white shrink-0" />
           <span>{isHindi ? '1930 पर कॉल करें' : 'Call 1930'}</span>
         </a>
       </aside>

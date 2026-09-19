@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { Header } from './components/Header';
 import { EmergencyHero } from './components/EmergencyHero';
 import { GirlsRescueGuide } from './components/GirlsRescueGuide';
@@ -297,50 +297,61 @@ export default function App() {
     }
 
     // Scroll handling:
-    // When switching tabs or opening main views (e.g. Stop Leaks, e-FIR, Crisis Rescue),
-    // ensure the page starts smoothly from the top (top: 0) so nothing is hidden under the sticky header/tabs.
-    const isMainViewTarget = !elementId || 
-      elementId === 'active-tab-container' || 
-      elementId === 'platform-takedown-portal' || 
-      elementId === 'complaint-draft-generator' ||
-      elementId === 'girls-rescue-guide' ||
-      elementId === 'guided-emergency-flow';
+    // When elementId is specified (e.g. somatic-breathing-card or somatic-grounding-tool), always prioritize scrolling
+    // to that exact component even when switching tabs or viewModes.
+    const isExplicitElementTarget = Boolean(
+      elementId && 
+      elementId !== 'active-tab-container' && 
+      elementId !== 'platform-takedown-portal' && 
+      elementId !== 'complaint-draft-generator' &&
+      elementId !== 'girls-rescue-guide' &&
+      elementId !== 'guided-emergency-flow'
+    );
 
-    if (isTabSwitching || isMainViewTarget) {
+    if (isExplicitElementTarget && elementId) {
+      // Robust multi-pass scroll to account for tab switch animations and layout rendering
+      const scrollToTargetElement = () => {
+        const el = document.getElementById(elementId) || 
+                   (elementId === 'somatic-breathing-card' ? document.getElementById('somatic-grounding-tool') : null) ||
+                   document.getElementById('somatic-breathing-sphere');
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const headerEl = document.querySelector('header');
+          const headerHeight = headerEl ? headerEl.offsetHeight : 120;
+          const safeMargin = 28; // Optimal breathing room
+          const targetTop = rect.top + scrollTop - (headerHeight + safeMargin);
+
+          window.scrollTo({
+            top: Math.max(0, targetTop),
+            behavior: 'smooth'
+          });
+
+          el.classList.add('ring-2', 'ring-[#0F6E56]', 'ring-offset-4', 'transition-all', 'duration-500');
+          setTimeout(() => {
+            el.classList.remove('ring-2', 'ring-[#0F6E56]', 'ring-offset-4');
+          }, 1400);
+          return true;
+        }
+        return false;
+      };
+
+      // Try across consecutive animation frame/render checkpoints
+      setTimeout(scrollToTargetElement, 60);
+      setTimeout(scrollToTargetElement, 180);
+      setTimeout(scrollToTargetElement, 350);
+    } else {
+      // When opening general main views without a specific deep link, ensure the page starts smoothly from the top
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
-      // Ensure smooth arrival at top after layout shifts
       setTimeout(() => {
         window.scrollTo({
           top: 0,
           behavior: 'smooth'
         });
       }, 50);
-    } else {
-      // For deep-linked sub-sections, calculate dynamic header height + generous 36px safe margin
-      setTimeout(() => {
-        const el = document.getElementById(elementId);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const headerEl = document.querySelector('header');
-          const headerHeight = headerEl ? headerEl.offsetHeight : 160;
-          const safeMargin = 36; // Extra breathing room so target is never hidden
-          const targetTop = rect.top + scrollTop - (headerHeight + safeMargin);
-          
-          window.scrollTo({
-            top: Math.max(0, targetTop),
-            behavior: 'smooth'
-          });
-          
-          el.classList.add('ring-2', 'ring-[#8B6D5C]', 'ring-offset-4', 'transition-all', 'duration-500');
-          setTimeout(() => {
-            el.classList.remove('ring-2', 'ring-[#8B6D5C]', 'ring-offset-4');
-          }, 1400);
-        }
-      }, 70);
     }
   };
 
@@ -499,8 +510,9 @@ export default function App() {
   };
 
   return (
-    <AnimatePresence mode="wait">
-      {isCamouflage ? (
+    <MotionConfig reducedMotion="user">
+      <AnimatePresence mode="wait">
+        {isCamouflage ? (
         <CamouflageScreen key="camouflage-view" onRestore={() => handleTriggerCamouflage(false)} />
       ) : isDeviceSafetyOpen ? (
         <div key="device-safety-view" className="min-h-screen bg-[#FAF8F3] text-[#26215C] py-4 sm:py-8 selection:bg-[#993556] selection:text-white">
@@ -531,7 +543,7 @@ export default function App() {
             onTriggerCamouflage={() => handleTriggerCamouflage(true)}
             onOpenBreathing={() => {
               setViewMode('app');
-              handleNavigateToTab('support', 'somatic-grounding-tool');
+              handleNavigateToTab('support', 'somatic-breathing-card');
             }}
             onOpenDeviceSafety={() => setIsDeviceSafetyOpen(true)}
             onOpenFullDisclaimer={() => {
@@ -921,6 +933,7 @@ export default function App() {
       )}
         </motion.div>
       )}
-    </AnimatePresence>
+      </AnimatePresence>
+    </MotionConfig>
   );
 }

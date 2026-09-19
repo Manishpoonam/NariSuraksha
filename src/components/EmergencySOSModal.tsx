@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Language } from '../types';
 import { hapticSOSDispatch, hapticSuccess, hapticAction } from '../utils/haptics';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 import { 
   AlertTriangle, 
   MapPin, 
@@ -29,6 +30,9 @@ export const EmergencySOSModal: React.FC<EmergencySOSModalProps> = ({
   language
 }) => {
   const isHindi = language === 'hi';
+  const modalRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(isOpen, modalRef, '#close-sos-modal-btn');
+
   const [recipientNumber, setRecipientNumber] = useState('');
   const [recipientRole, setRecipientRole] = useState<'parents' | 'friend' | 'mentor'>('parents');
   const [locationStatus, setLocationStatus] = useState<'idle' | 'fetching' | 'success' | 'error'>('idle');
@@ -127,8 +131,16 @@ I am currently facing online blackmail/harassment and require immediate confiden
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white rounded-3xl border border-[#E8E2DC] shadow-2xl max-w-lg w-full p-6 sm:p-7 space-y-5 max-h-[90vh] overflow-y-auto">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sos-modal-title"
+    >
+      <div 
+        ref={modalRef}
+        className="bg-white rounded-3xl border border-[#E8E2DC] shadow-2xl max-w-lg w-full p-6 sm:p-7 space-y-5 max-h-[90vh] overflow-y-auto"
+      >
         {/* Header */}
         <div className="flex items-start justify-between gap-3 border-b border-[#F0EBE6] pb-4">
           <div className="flex items-center gap-3">
@@ -136,9 +148,9 @@ I am currently facing online blackmail/harassment and require immediate confiden
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-[#1A1A1A]">
+              <h2 id="sos-modal-title" className="text-lg font-bold text-[#1A1A1A]">
                 {isHindi ? 'विश्वसनीय संपर्क को गोपनीय SOS अलर्ट भेजें' : 'Discreet SOS Alert to Trusted Contact'}
-              </h3>
+              </h2>
               <p className="text-xs text-[#666]">
                 {isHindi ? 'लाइव लोकेशन और प्री-रिटन संकट संदेश' : 'Silent distress message with live GPS location'}
               </p>
@@ -146,8 +158,11 @@ I am currently facing online blackmail/harassment and require immediate confiden
           </div>
 
           <button
+            id="close-sos-modal-btn"
+            type="button"
             onClick={onClose}
-            className="p-2 text-[#777] hover:text-[#111] rounded-full hover:bg-[#FAF9F6] transition-colors cursor-pointer"
+            aria-label={isHindi ? 'संवाद बंद करें' : 'Close SOS modal'}
+            className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#777] hover:text-[#111] rounded-full hover:bg-[#FAF9F6] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none"
           >
             <X className="w-5 h-5" />
           </button>
@@ -166,15 +181,17 @@ I am currently facing online blackmail/harassment and require immediate confiden
             ].map((t) => (
               <button
                 key={t.id}
+                type="button"
                 onClick={() => {
                   hapticAction();
                   setRecipientRole(t.id as any);
                 }}
-                className={`py-2 px-2 rounded-2xl text-xs font-bold transition-all cursor-pointer text-center select-none ${
+                className={`min-h-[44px] py-2 px-2 rounded-2xl text-xs font-bold transition-all cursor-pointer text-center select-none focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none ${
                   recipientRole === t.id
                     ? 'bg-[#2D2D2D] text-white shadow-xs'
                     : 'bg-[#FAF9F6] text-[#555] border border-[#E8E2DC] hover:bg-[#F3EFEC]'
                 }`}
+                aria-pressed={recipientRole === t.id}
               >
                 {t.label}
               </button>

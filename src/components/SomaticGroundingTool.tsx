@@ -40,7 +40,9 @@ type BreathPhase = 'Inhale' | 'Hold' | 'Exhale';
  *    full-screen sanctuary mode for deep concentration in a private setting.
  * 4. Affirmation Rhythm: Cycles gentle, non-judgmental facts that dismantle self-blame.
  */
-export const SomaticGroundingTool: React.FC<SomaticGroundingToolProps> = ({ language }) => {
+export const SomaticGroundingTool: React.FC<SomaticGroundingToolProps> = ({ 
+  language
+}) => {
   const isHindi = language === 'hi';
   const [isActive, setIsActive] = useState<boolean>(false);
   const [phase, setPhase] = useState<BreathPhase>('Inhale');
@@ -94,6 +96,17 @@ export const SomaticGroundingTool: React.FC<SomaticGroundingToolProps> = ({ lang
     return () => clearInterval(timer);
   }, [isActive, phase, affirmations.length]);
 
+  const toggleBreathing = () => {
+    hapticAction();
+    if (!isActive) {
+      setIsActive(true);
+      setPhase('Inhale');
+      setCountdown(4);
+    } else {
+      setIsActive(false);
+    }
+  };
+
   const resetBreathing = () => {
     setIsActive(false);
     setPhase('Inhale');
@@ -101,12 +114,20 @@ export const SomaticGroundingTool: React.FC<SomaticGroundingToolProps> = ({ lang
   };
 
   const getPhaseTitle = () => {
+    if (!isActive) {
+      return isHindi ? '4-7-8 सोमैटिक श्वास क्रिया' : '4-7-8 Somatic Breathing';
+    }
     if (phase === 'Inhale') return isHindi ? 'धीमे से सांस अंदर लें' : 'Inhale gently';
     if (phase === 'Hold') return isHindi ? 'सांस को आराम से रोकें' : 'Hold your breath gently';
     return isHindi ? 'मुलायमियत से सांस बाहर छोड़ें' : 'Exhale slowly and let go';
   };
 
   const getPhaseSubtitle = () => {
+    if (!isActive) {
+      return isHindi
+        ? 'शुरू करने के लिए वृत्त पर टैप करें या नीचे बटन दबाएं'
+        : 'Tap the circle or press Start to begin your 2-minute calming rhythm';
+    }
     if (phase === 'Inhale') return isHindi ? '4 सेकंड: नाक से शांति से सांस भरें' : '4 seconds: Breathe in calmly through your nose';
     if (phase === 'Hold') return isHindi ? '7 सेकंड: कंधों को ढीला छोड़ें और स्थिर रहें' : '7 seconds: Soften your shoulders and stay still';
     return isHindi ? '8 सेकंड: मुंह से सारी चिंता बाहर निकालें' : '8 seconds: Release tension smoothly through your mouth';
@@ -149,45 +170,130 @@ export const SomaticGroundingTool: React.FC<SomaticGroundingToolProps> = ({ lang
       </div>
 
       {/* Main Grounding Card with Calming Soft Teal Aesthetic */}
-      <div className="bg-white border border-[#26215C]/10 rounded-[24px] p-6 sm:p-12 shadow-soft flex flex-col items-center justify-center text-center space-y-8 relative overflow-hidden">
+      <div 
+        id="somatic-breathing-card" 
+        className="bg-white border border-[#26215C]/10 rounded-[24px] p-6 sm:p-12 shadow-soft flex flex-col items-center justify-center text-center space-y-8 relative overflow-hidden scroll-mt-36 sm:scroll-mt-44"
+      >
         {/* Soft background glow circles */}
         <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[#E1F5EE]/40 blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-[#FBEAF0]/40 blur-3xl pointer-events-none" />
 
-        {/* Animated Visual Breathing Pacer */}
-        <div className="relative flex items-center justify-center p-6 sm:p-10">
+        {/* Animated Visual Breathing Pacer - Tap on circle to Start/Pause */}
+        <div 
+          id="somatic-breathing-sphere" 
+          className="relative flex items-center justify-center p-6 sm:p-10 scroll-mt-36"
+        >
           {/* Outer gentle wave aura */}
           <motion.div
             animate={{
-              scale: isActive ? (phase === 'Inhale' ? 1.35 : phase === 'Hold' ? 1.35 : 1.0) : 1.0,
-              opacity: isActive ? (phase === 'Hold' ? 0.45 : 0.25) : 0.15,
+              scale: isActive 
+                ? (phase === 'Inhale' ? 1.45 : phase === 'Hold' ? 1.45 : 1.02) 
+                : [1, 1.14, 1],
+              opacity: isActive 
+                ? (phase === 'Hold' ? 0.52 : phase === 'Inhale' ? 0.38 : 0.16) 
+                : [0.12, 0.26, 0.12],
             }}
             transition={{
-              duration: phase === 'Inhale' ? 4 : phase === 'Hold' ? 0.5 : 8,
-              ease: [0.25, 1, 0.5, 1],
+              duration: isActive 
+                ? (phase === 'Inhale' ? 4 : phase === 'Hold' ? 0.5 : 8) 
+                : 3.5,
+              ease: isActive ? [0.25, 1, 0.5, 1] : 'easeInOut',
+              repeat: isActive ? 0 : Infinity,
             }}
-            className="absolute w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-[#0F6E56] pointer-events-none"
+            className="absolute w-56 h-56 sm:w-68 sm:h-68 rounded-full bg-[#0F6E56] pointer-events-none"
           />
 
-          {/* Primary Breath Sphere */}
+          {/* Secondary harmonic ripple ring */}
           <motion.div
             animate={{
-              scale: isActive ? (phase === 'Inhale' ? 1.18 : phase === 'Hold' ? 1.18 : 0.95) : 1,
-              backgroundColor: phase === 'Inhale' ? '#E1F5EE' : phase === 'Hold' ? '#D5EFE7' : '#FAF8F3',
-              borderColor: phase === 'Inhale' ? '#0F6E56' : phase === 'Hold' ? '#26215C' : '#B7E4D7',
+              scale: isActive 
+                ? (phase === 'Inhale' ? 1.28 : phase === 'Hold' ? 1.28 : 0.98) 
+                : [1, 1.07, 1],
+              opacity: isActive 
+                ? (phase === 'Hold' ? 0.6 : phase === 'Inhale' ? 0.45 : 0.2) 
+                : [0.18, 0.35, 0.18],
             }}
             transition={{
-              duration: phase === 'Inhale' ? 4 : phase === 'Hold' ? 0.35 : 8,
-              ease: [0.25, 1, 0.5, 1],
+              duration: isActive 
+                ? (phase === 'Inhale' ? 4 : phase === 'Hold' ? 0.35 : 8) 
+                : 3.5,
+              ease: isActive ? [0.25, 1, 0.5, 1] : 'easeInOut',
+              repeat: isActive ? 0 : Infinity,
+              delay: isActive ? 0 : 0.25,
             }}
-            className="w-44 h-44 sm:w-56 sm:h-56 rounded-full border-2 border-[#0F6E56]/40 flex flex-col items-center justify-center shadow-soft relative z-10"
+            className="absolute w-50 h-50 sm:w-62 sm:h-62 rounded-full border border-[#0F6E56]/30 pointer-events-none"
+          />
+
+          {/* Primary Interactive Breath Sphere - Tapping circle toggles start/pause */}
+          <motion.div
+            role="button"
+            tabIndex={0}
+            aria-label={
+              isActive 
+                ? (isHindi ? 'श्वास क्रिया रोकें' : 'Pause 4-7-8 breathing exercise') 
+                : (isHindi ? '4-7-8 श्वास क्रिया शुरू करने के लिए वृत्त पर टैप करें' : 'Tap circle to start 4-7-8 breathing exercise')
+            }
+            onClick={toggleBreathing}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleBreathing();
+              }
+            }}
+            whileHover={{ scale: isActive ? 1.02 : 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            animate={{
+              scale: isActive ? (phase === 'Inhale' ? 1.18 : phase === 'Hold' ? 1.18 : 0.94) : [1, 1.02, 1],
+              backgroundColor: isActive 
+                ? (phase === 'Inhale' ? '#E1F5EE' : phase === 'Hold' ? '#D5EFE7' : '#FAF8F3')
+                : '#F3FAF7',
+              borderColor: isActive 
+                ? (phase === 'Inhale' ? '#0F6E56' : phase === 'Hold' ? '#26215C' : '#8ED6C3')
+                : '#0F6E56',
+              boxShadow: isActive
+                ? (phase === 'Hold' 
+                    ? '0 12px 36px -6px rgba(15, 110, 86, 0.32)' 
+                    : '0 8px 24px -4px rgba(15, 110, 86, 0.16)')
+                : '0 8px 24px -4px rgba(15, 110, 86, 0.18)',
+            }}
+            transition={{
+              duration: isActive 
+                ? (phase === 'Inhale' ? 4 : phase === 'Hold' ? 0.35 : 8) 
+                : 3.5,
+              ease: isActive ? [0.25, 1, 0.5, 1] : 'easeInOut',
+              repeat: isActive ? 0 : Infinity,
+            }}
+            className="w-48 h-48 sm:w-60 sm:h-60 rounded-full border-2 flex flex-col items-center justify-center relative z-10 cursor-pointer select-none group focus-visible:ring-4 focus-visible:ring-[#0F6E56]/30 focus-visible:outline-none transition-colors"
           >
-            <span className="text-3xl sm:text-5xl font-semibold font-mono text-[#26215C]">
-              {countdown}s
-            </span>
-            <span className="text-xs sm:text-sm font-medium text-[#0F6E56] uppercase tracking-wider mt-1">
-              {phase === 'Inhale' ? (isHindi ? 'अंदर लें' : 'Inhale') : phase === 'Hold' ? (isHindi ? 'रोकें' : 'Hold') : (isHindi ? 'छोड़ें' : 'Exhale')}
-            </span>
+            {isActive ? (
+              <div className="flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-3xl sm:text-5xl font-semibold font-mono text-[#26215C] tracking-tight">
+                  {countdown}s
+                </span>
+                <span className="text-xs sm:text-sm font-medium text-[#0F6E56] uppercase tracking-wider mt-1 px-3 py-0.5 rounded-full bg-white/70 border border-[#0F6E56]/20">
+                  {phase === 'Inhale' 
+                    ? (isHindi ? 'अंदर लें' : 'Inhale') 
+                    : phase === 'Hold' 
+                    ? (isHindi ? 'रोकें' : 'Hold') 
+                    : (isHindi ? 'छोड़ें' : 'Exhale')}
+                </span>
+                <span className="text-[10px] text-[#5A5672] mt-1.5 opacity-70 group-hover:opacity-100 transition-opacity">
+                  {isHindi ? 'रोकने के लिए टैप करें' : 'Tap to pause'}
+                </span>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center space-y-1.5 px-3 pointer-events-none">
+                <div className="w-12 h-12 rounded-full bg-[#0F6E56] text-white flex items-center justify-center shadow-soft group-hover:scale-110 transition-transform">
+                  <Play className="w-5 h-5 ml-0.5" />
+                </div>
+                <span className="text-sm sm:text-base font-semibold text-[#26215C]">
+                  {isHindi ? 'टैप करके शुरू करें' : 'Tap to Start'}
+                </span>
+                <span className="text-[11px] font-medium text-[#0F6E56] bg-[#E1F5EE] px-2.5 py-0.5 rounded-full border border-[#B7E4D7]/60">
+                  4s Inhale • 7s Hold • 8s Exhale
+                </span>
+              </div>
+            )}
           </motion.div>
         </div>
 
@@ -207,13 +313,11 @@ export const SomaticGroundingTool: React.FC<SomaticGroundingToolProps> = ({ lang
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-3 relative z-10 pt-2">
+        <div id="somatic-breathing-controls" className="flex items-center gap-3 relative z-10 pt-2 scroll-mt-36">
           <motion.button
+            id="start-breathing-exercise-btn"
             whileTap={{ scale: 0.97 }}
-            onClick={() => {
-              hapticAction();
-              setIsActive(!isActive);
-            }}
+            onClick={toggleBreathing}
             className={`inline-flex items-center gap-2 px-7 py-3 rounded-full text-xs sm:text-sm font-medium transition-all shadow-soft cursor-pointer min-h-[44px] ${
               isActive
                 ? 'bg-[#26215C] text-white hover:bg-[#1E1949]'

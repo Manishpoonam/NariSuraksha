@@ -682,12 +682,12 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                           </p>
                         </div>
 
-                        {/* Phase 2: Statutory Freeze Notice */}
+                        {/* Phase 2: Statutory Legal Warning Notice */}
                         <div className="p-3 bg-white/5 rounded-xl border border-teal-300/20 space-y-2">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-bold text-teal-300 flex items-center gap-1.5">
                               <Scale className="w-3.5 h-3.5" />
-                              <span>{isHindi ? 'कदम 2: वैधानिक फ्रीज नोटिस (सबूत सुरक्षित होने पर भेजें)' : 'Step 2: Statutory Freeze Notice (Send Once, Then Block)'}</span>
+                              <span>{isHindi ? 'कदम 2: वैधानिक कानूनी नोटिस (सबूत सुरक्षित होने पर भेजें)' : 'Step 2: Statutory Legal Warning Notice (Send Once, Then Block)'}</span>
                             </span>
                             <button
                               type="button"

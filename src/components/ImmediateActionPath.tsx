@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { 
   PhoneCall, 
@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Language } from '../types';
 import { hapticAction, hapticSOS, hapticCamouflage } from '../utils/haptics';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface ImmediateActionPathProps {
   language: Language;
@@ -40,7 +41,7 @@ interface ImmediateActionPathProps {
  * 1. DO NOT PAY A SINGLE RUPEE (Extortion demands often increase after payment)
  * 2. PRESERVE EVIDENCE (Screenshots of threats, URLs, handles before deletion)
  * 3. CALL 1930 IMMEDIATELY (National Cyber Helpline with 1-tap dial)
- * Plus a 1-tap copy of the neutral delay freeze message to buy 24 hours.
+ * Plus a 1-tap copy of the neutral delay script to buy 24 hours.
  */
 export const ImmediateActionPath: React.FC<ImmediateActionPathProps> = ({
   language,
@@ -49,6 +50,8 @@ export const ImmediateActionPath: React.FC<ImmediateActionPathProps> = ({
   onOpenFullApp,
 }) => {
   const isHindi = language === 'hi';
+  const modalRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(true, modalRef, '#close-immediate-path-btn');
   const [copiedDelayScript, setCopiedDelayScript] = useState(false);
 
   // CRITICAL: ESC keypress must ALWAYS trigger the full stealth disguise,
@@ -93,7 +96,8 @@ export const ImmediateActionPath: React.FC<ImmediateActionPathProps> = ({
         className="w-full max-w-2xl bg-[#FAF8F3] text-[#1A1829] rounded-[28px] shadow-2xl border border-[#26215C]/15 overflow-hidden flex flex-col my-auto"
         role="dialog"
         aria-modal="true"
-        aria-label="2-Minute Immediate Emergency Protocol"
+        aria-labelledby="immediate-action-title"
+        ref={modalRef}
       >
         {/* Top Emergency Action Header */}
         <header className="px-5 sm:px-7 py-4 bg-[#26215C] text-white flex items-center justify-between border-b border-white/10">
@@ -103,7 +107,7 @@ export const ImmediateActionPath: React.FC<ImmediateActionPathProps> = ({
               <span className="relative inline-flex rounded-full h-3 w-3 bg-[#DC2626]"></span>
             </span>
             <div>
-              <h2 className="text-sm sm:text-base font-bold text-white tracking-tight">
+              <h2 id="immediate-action-title" className="text-sm sm:text-base font-bold text-white tracking-tight">
                 {isHindi ? '⚡ तुरंत सहायता: 3 सबसे जरूरी कदम' : '⚡ Immediate Action: 3 Critical Steps'}
               </h2>
               <p className="text-[11px] text-[#D2CCE7]">
@@ -120,23 +124,25 @@ export const ImmediateActionPath: React.FC<ImmediateActionPathProps> = ({
                 hapticCamouflage(true);
                 onTriggerCamouflage();
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold cursor-pointer transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold cursor-pointer transition-all active:scale-95 min-h-[44px] focus-visible:ring-2 focus-visible:ring-[#F3C5D6] focus-visible:outline-none"
               title={isHindi ? 'तुरंत स्क्रीन छिपाएं (ESC)' : 'Leave immediately (ESC)'}
+              aria-label={isHindi ? 'तुरंत स्क्रीन छिपाएं (ESC)' : 'Leave immediately (ESC)'}
             >
-              <EyeOff className="w-3.5 h-3.5 text-[#F3C5D6]" />
+              <EyeOff className="w-4 h-4 text-[#F3C5D6] shrink-0" />
               <span className="hidden sm:inline">{isHindi ? 'स्क्रीन छिपाएं' : 'Quick Exit'}</span>
-              <kbd className="text-[10px] bg-white/20 px-1 py-0.2 rounded font-mono">ESC</kbd>
+              <kbd className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded font-mono" aria-hidden="true">ESC</kbd>
             </button>
 
             {/* Close Modal */}
             <button
+              id="close-immediate-path-btn"
               type="button"
               onClick={() => {
                 hapticAction();
                 onClose();
               }}
-              className="p-1.5 rounded-full hover:bg-white/10 text-[#D2CCE7] hover:text-white transition-colors cursor-pointer"
-              aria-label="Close"
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full hover:bg-white/10 text-[#D2CCE7] hover:text-white transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+              aria-label={isHindi ? 'संवाद बंद करें' : 'Close immediate action modal'}
             >
               <X className="w-5 h-5" />
             </button>
@@ -288,7 +294,7 @@ export const ImmediateActionPath: React.FC<ImmediateActionPathProps> = ({
                 hapticAction();
                 onClose();
               }}
-              className="flex-1 sm:flex-initial px-4 py-2.5 rounded-full bg-white hover:bg-neutral-100 text-[#26215C] text-xs font-bold border border-[#26215C]/15 transition-all cursor-pointer text-center"
+              className="flex-1 sm:flex-initial px-5 py-2.5 rounded-full bg-white hover:bg-neutral-100 text-[#26215C] text-xs font-bold border border-[#26215C]/15 transition-all cursor-pointer text-center min-h-[44px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none"
             >
               {isHindi ? 'वापस जाएं' : 'Back'}
             </button>
@@ -299,7 +305,7 @@ export const ImmediateActionPath: React.FC<ImmediateActionPathProps> = ({
                 hapticAction();
                 onOpenFullApp();
               }}
-              className="flex-1 sm:flex-initial px-5 py-2.5 rounded-full bg-[#26215C] hover:bg-[#1E1949] text-white text-xs font-bold transition-all shadow-sm cursor-pointer inline-flex items-center justify-center gap-1.5 text-center"
+              className="flex-1 sm:flex-initial px-5 py-2.5 rounded-full bg-[#26215C] hover:bg-[#1E1949] text-white text-xs font-bold transition-all shadow-sm cursor-pointer inline-flex items-center justify-center gap-1.5 text-center min-h-[44px] focus-visible:ring-2 focus-visible:ring-[#F3C5D6] focus-visible:outline-none"
             >
               <span>{isHindi ? 'पूरा क्राइसिस कॉकपिट' : 'Full Crisis Cockpit'}</span>
               <ArrowRight className="w-3.5 h-3.5 text-[#F3C5D6]" />

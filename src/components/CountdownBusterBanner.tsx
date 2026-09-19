@@ -163,7 +163,7 @@ export const CountdownBusterBanner: React.FC<CountdownBusterBannerProps> = ({
             }}
             className="inline-flex items-center gap-2 text-xs font-bold text-gray-300 hover:text-white transition-colors cursor-pointer py-1"
           >
-            <span>{isHindi ? 'यह स्क्रिप्ट काम क्यों करती है? (मनोवैज्ञानिक सच)' : 'Why this script freezes blackmailers (The Psychology)'}</span>
+            <span>{isHindi ? 'यह स्क्रिप्ट समय कैसे दिलाती है? (मनोवैज्ञानिक सच)' : 'Why this script buys critical time (The Psychology)'}</span>
             {showExplanation ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
           </button>
 

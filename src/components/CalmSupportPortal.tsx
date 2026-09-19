@@ -154,8 +154,8 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
         
         <p className="text-xs sm:text-sm text-[#5A5672] max-w-3xl leading-relaxed">
           {isHindi
-            ? 'एक धीमी, गहरी सांस लें। डिजिटल ब्लैकमेलिंग आपकी गलती नहीं है। ब्लैकमेलर घबराहट और डर पैदा करके जल्दबाजी में गलत कदम उठवाना चाहते हैं। पहले 4-7-8 श्वास क्रिया से अपने नर्वस सिस्टम को शांत करें, फिर बिना किसी हिचकिचाहट के सहायता लें।'
-            : 'Take a slow, deep breath. You are in a safe space. Extortion thrives on panic and isolation. Lower your heart rate with trauma-informed 4-7-8 somatic pacing, access verified crisis helplines, or copy freeze messages to protect yourself.'}
+            ? 'एक धीमी, गहरी सांस लें। डिजिटल ब्लैकमेलिंग आपकी गलती नहीं है। ब्लैकमेलर घबराहट और डर पैदा करके जल्दबाजी में गलत कदम उठवाना चाहते हैं। पहले 4-7-8 श्वास क्रिया से अपने नर्वस सिस्टम को शांत करें, फिर सुरक्षित कदम उठाएं।'
+            : 'Take a slow, deep breath. You are in a safe space. Extortion thrives on panic and isolation. Lower your heart rate with trauma-informed 4-7-8 somatic pacing, access verified crisis helplines, or copy neutral delay scripts to buy safe time.'}
         </p>
 
         {/* 3-Mode Clean Switcher */}

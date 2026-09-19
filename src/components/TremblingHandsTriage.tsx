@@ -154,7 +154,7 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
                   {isHindi ? 'हां — मैं पैसे दे चुकी हूं' : 'YES — I already sent some money'}
                 </span>
                 <span className="text-xs text-rose-800 font-medium mt-1 block">
-                  {isHindi ? 'घबराएं नहीं। अभी बैंक खाता फ्रीज कराने का उपाय है।' : 'Do not panic. We will freeze his account before he withdraws it.'}
+                  {isHindi ? 'घबराएं नहीं। हेल्पलाइन 1930 के माध्यम से नोडल बैंक खाता फ्रीज कराने का उपाय है।' : 'Do not panic. Helpline 1930 can help request an emergency nodal freeze.'}
                 </span>
               </div>
             </button>

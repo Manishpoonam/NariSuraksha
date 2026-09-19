@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'motion/react';
 import { 
   Printer, 
@@ -13,6 +13,7 @@ import {
   QrCode
 } from 'lucide-react';
 import { Language } from '../types';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface CampusSafetyPrintableCardProps {
   isOpen: boolean;
@@ -26,6 +27,8 @@ export const CampusSafetyPrintableCard: React.FC<CampusSafetyPrintableCardProps>
   language,
 }) => {
   const isHindi = language === 'hi';
+  const modalRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(isOpen, modalRef, '#close-printable-modal-btn');
 
   if (!isOpen) return null;
 
@@ -34,27 +37,39 @@ export const CampusSafetyPrintableCard: React.FC<CampusSafetyPrintableCardProps>
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-sm overflow-y-auto">
-      <div className="w-full max-w-3xl bg-white rounded-3xl p-6 sm:p-10 shadow-2xl border border-[#E8E2DC] space-y-6 my-auto text-[#2D2D2D] relative">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-sm overflow-y-auto"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="campus-card-modal-title"
+    >
+      <div 
+        ref={modalRef}
+        className="w-full max-w-3xl bg-white rounded-3xl p-6 sm:p-10 shadow-2xl border border-[#E8E2DC] space-y-6 my-auto text-[#2D2D2D] relative"
+      >
         {/* Top bar controls (hidden during print) */}
         <div className="flex items-center justify-between gap-3 border-b border-[#F0EBE6] pb-4 print:hidden">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#8B6D5C]"></span>
-            <h3 className="text-sm sm:text-base font-bold text-[#1A1A1A]">
+            <h2 id="campus-card-modal-title" className="text-sm sm:text-base font-bold text-[#1A1A1A]">
               {isHindi ? 'हॉस्टल व कॉलेज आपातकालीन गाइड (प्रिंट तैयार)' : 'Hostel & Campus Emergency Safety Card (Print Ready)'}
-            </h3>
+            </h2>
           </div>
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={handlePrint}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2D2D2D] hover:bg-[#111] text-white rounded-full font-bold text-xs transition-transform active:scale-95 cursor-pointer shadow-xs"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#2D2D2D] hover:bg-[#111] text-white rounded-full font-bold text-xs transition-transform active:scale-95 cursor-pointer shadow-xs min-h-[44px] focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none"
             >
               <Printer className="w-4 h-4" />
               <span>{isHindi ? 'प्रिंट करें / PDF सेव करें' : 'Print / Save PDF'}</span>
             </button>
             <button
+              id="close-printable-modal-btn"
+              type="button"
               onClick={onClose}
-              className="p-2 rounded-full hover:bg-[#F3EFEC] text-[#666] hover:text-[#111] transition-colors"
+              aria-label={isHindi ? 'संवाद बंद करें' : 'Close modal'}
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full hover:bg-[#F3EFEC] text-[#666] hover:text-[#111] transition-colors focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none"
             >
               <X className="w-5 h-5" />
             </button>

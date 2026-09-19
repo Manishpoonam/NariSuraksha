@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ShieldAlert, 
@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { Language } from '../types';
 import { hapticAction } from '../utils/haptics';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface PocsoMinorShieldModalProps {
   isOpen: boolean;
@@ -35,13 +36,21 @@ export const PocsoMinorShieldModal: React.FC<PocsoMinorShieldModalProps> = ({
   onSelectTakeItDown
 }) => {
   const isHindi = language === 'hi';
+  const modalRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(isOpen, modalRef, '#close-pocso-modal-btn');
 
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in">
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="pocso-modal-title"
+      >
         <motion.div
+          ref={modalRef}
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -54,9 +63,9 @@ export const PocsoMinorShieldModal: React.FC<PocsoMinorShieldModalProps> = ({
                 <ShieldAlert className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-[#1A1A1A]">
+                <h2 id="pocso-modal-title" className="text-lg font-bold text-[#1A1A1A]">
                   {isHindi ? 'नाबालिग संरक्षण मार्गदर्शिका (POCSO Act & 67B IT Act)' : 'Minor (<18) Protection Protocol & POCSO Shield'}
-                </h3>
+                </h2>
                 <p className="text-xs text-[#666]">
                   {isHindi ? '18 वर्ष से कम उम्र के मामलों के लिए विशेष कानूनी सुरक्षा' : 'Dedicated legal framework and platform removal for minors'}
                 </p>
@@ -64,8 +73,11 @@ export const PocsoMinorShieldModal: React.FC<PocsoMinorShieldModalProps> = ({
             </div>
 
             <button
+              id="close-pocso-modal-btn"
+              type="button"
               onClick={onClose}
-              className="p-2 text-[#777] hover:text-[#111] rounded-full hover:bg-[#FAF9F6] transition-colors cursor-pointer"
+              aria-label={isHindi ? 'संवाद बंद करें' : 'Close modal'}
+              className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[#777] hover:text-[#111] rounded-full hover:bg-[#FAF9F6] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none"
             >
               <X className="w-5 h-5" />
             </button>
@@ -172,8 +184,9 @@ export const PocsoMinorShieldModal: React.FC<PocsoMinorShieldModalProps> = ({
 
           <div className="pt-2 flex items-center justify-end">
             <button
+              type="button"
               onClick={onClose}
-              className="px-6 py-2.5 rounded-full bg-[#2D2D2D] hover:bg-black text-white text-xs font-bold transition-all cursor-pointer"
+              className="px-6 py-2.5 rounded-full bg-[#2D2D2D] hover:bg-black text-white text-xs font-bold transition-all cursor-pointer min-h-[44px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none"
             >
               {isHindi ? 'समझ गई / ठीक है' : 'Understood • Close Guidance'}
             </button>
