@@ -57,8 +57,8 @@ export const AboutTrustSection: React.FC<AboutTrustSectionProps> = ({ language }
           </h4>
           <p className="text-[#666] leading-relaxed">
             {isHindi
-              ? 'यह पोर्टल आधिकारिक सरकारी नंबरों (112, 1930, 1091), कानूनी e-FIR ड्राफ्ट, StopNCII लिंक्स और तत्काल सुरक्षा चेकलिस्ट प्रदान करता है।'
-              : 'Directly routes to verified official hotlines (112, 1930, 1091) while generating Section 63 BSA certified complaints and StopNCII takedowns.'}
+              ? 'यह पोर्टल आधिकारिक सरकारी नंबरों (112, 1930, 181), कानूनी e-FIR ड्राफ्ट, StopNCII लिंक्स और तत्काल सुरक्षा चेकलिस्ट प्रदान करता है।'
+              : 'Directly routes to verified official hotlines (112, 1930, 181) while generating Section 63 BSA certified complaints and StopNCII takedowns.'}
           </p>
         </div>
 

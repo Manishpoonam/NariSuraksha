@@ -123,16 +123,16 @@ Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya 
       hi: 'तटस्थ समय-वृद्धि संदेश (अगली सुबह तक का समय)'
     },
     purpose: {
-      en: 'Low-confrontation delay line for known persons to allow survivor time to confide in family, consult Women Helpline (1091), or hash media.',
-      hi: 'परिचित व्यक्ति के साथ टकराव टालने वाला संदेश ताकि आपको महिला हेल्पलाइन 1091 या भरोसेमंद व्यक्ति से मदद लेने का समय मिल सके।'
+      en: 'Low-confrontation delay line for known persons to allow survivor time to confide in family, consult Women Helpline (181), or hash media.',
+      hi: 'परिचित व्यक्ति के साथ टकराव टालने वाला संदेश ताकि आपको महिला हेल्पलाइन 181 या भरोसेमंद व्यक्ति से मदद लेने का समय मिल सके।'
     },
     text: {
       en: 'I am currently trying to arrange the matter and need until tomorrow morning. My banking access is not available right now. Please do not do anything in haste. I will message you tomorrow morning once ready.',
       hi: 'मुझे व्यवस्था करने के लिए कल सुबह तक का समय चाहिए। अभी मेरे पास बैंकिंग का एक्सेस नहीं है। कृपया जल्दबाजी में कुछ मत करना। मैं कल सुबह बात करती हूं।'
     },
     tacticalNote: {
-      en: 'Prevents immediate escalation while you contact Women Helpline 1091 or lodge a confidential complaint on cybercrime.gov.in.',
-      hi: 'यह तात्कालिक तनाव को कम करता है ताकि आप महिला हेल्पलाइन 1091 या 1930 पर संपर्क कर सकें।'
+      en: 'Prevents immediate escalation while you contact Cyber Helpline 1930 or lodge a confidential complaint on cybercrime.gov.in.',
+      hi: 'यह तात्कालिक तनाव को कम करता है ताकि आप साइबर हेल्पलाइन 1930 पर संपर्क कर सकें या cybercrime.gov.in पर गोपनीय शिकायत दर्ज कर सकें।'
     }
   }
 };

@@ -78,8 +78,8 @@ export const DECISION_NODES: DecisionNode[] = [
       {
         stepNumber: 4,
         title: {
-          en: 'Call 1930 / Women Helpline 1091',
-          hi: '1930 या 1091 पर तुरंत कॉल करें',
+          en: 'Call Cyber Helpline 1930',
+          hi: 'साइबर अपराध हेल्पलाइन 1930 पर कॉल करें',
         },
         description: {
           en: 'National Cyber Crime Helpline (1930) operates 24/7. They can trigger immediate cyber cell tracking and freeze fraudulent bank accounts.',

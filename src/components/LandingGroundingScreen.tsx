@@ -74,8 +74,8 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
       <aside aria-label="Disclaimer" className="w-full bg-[#1E1A48] text-amber-200 text-xs px-3 sm:px-4 py-1.5 border-b border-amber-300/20 text-center flex items-center justify-center z-20">
         <span className="text-amber-100/90 text-[11px] leading-tight max-w-2xl mx-auto font-medium">
           {isHindi 
-            ? 'स्वतंत्र डिजिटल सुरक्षा पोर्टल • कोई लॉगिन नहीं। कोई डेटा सेव नहीं। कभी नहीं।'
-            : 'Independent Digital Safety Portal • No Login. No Data Stored. Ever.'}
+            ? 'स्वतंत्र डिजिटल सुरक्षा पोर्टल • कोई लॉगिन नहीं • कोई डेटा सेव नहीं, कभी नहीं।'
+            : 'Independent Digital Safety Portal • No Login • No Data Stored, Ever.'}
         </span>
       </aside>
 
@@ -253,11 +253,11 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
           </div>
 
           {/* Quick Somatic Calming Bridge & Device Integrity Check */}
-          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 pt-2">
+          <div className="flex flex-col items-center justify-center gap-1 sm:gap-1.5 pt-2">
             <button
               type="button"
               onClick={onOpenBreathing}
-              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#0F6E56] hover:text-[#0A4E3D] font-medium transition-colors cursor-pointer py-2 px-3.5 rounded-full hover:bg-[#E1F5EE]/60 min-h-[44px] focus-visible:ring-2 focus-visible:ring-[#0F6E56] focus-visible:outline-none"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#0F6E56] hover:text-[#0A4E3D] font-medium transition-colors cursor-pointer py-2 px-3.5 rounded-full hover:bg-[#E1F5EE]/60 min-h-[44px] focus-visible:ring-2 focus-visible:ring-[#0F6E56] focus-visible:outline-none text-center"
             >
               <Heart className="w-4 h-4 text-[#0F6E56] shrink-0" />
               <span>
@@ -267,15 +267,13 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
               </span>
             </button>
 
-            <span className="hidden sm:inline-block text-[#26215C]/20" aria-hidden="true">•</span>
-
             <button
               type="button"
               onClick={() => {
                 hapticAction();
                 onOpenDeviceSafety();
               }}
-              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#5A5672] hover:text-[#26215C] font-medium transition-colors cursor-pointer py-2 px-3.5 rounded-full hover:bg-black/5 min-h-[44px] focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#5A5672] hover:text-[#26215C] font-medium transition-colors cursor-pointer py-2 px-3.5 rounded-full hover:bg-black/5 min-h-[44px] focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none text-center"
             >
               <Smartphone className="w-4 h-4 text-[#5A5672] shrink-0" />
               <span>

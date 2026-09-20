@@ -615,8 +615,8 @@ export default function App() {
         </span>
         <span className="text-amber-100/90 text-[11px] font-medium">
           {isHindi 
-            ? 'स्वतंत्र डिजिटल सुरक्षा पोर्टल • कोई लॉगिन नहीं। कोई डेटा सेव नहीं। कभी नहीं।'
-            : 'Independent Digital Safety Portal • No Login. No Data Stored. Ever.'}
+            ? 'स्वतंत्र डिजिटल सुरक्षा पोर्टल • कोई लॉगिन नहीं • कोई डेटा सेव नहीं, कभी नहीं।'
+            : 'Independent Digital Safety Portal • No Login • No Data Stored, Ever.'}
         </span>
       </aside>
 

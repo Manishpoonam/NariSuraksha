@@ -273,8 +273,8 @@ export const ImmediateActionPath: React.FC<ImmediateActionPathProps> = ({
               <Info className="w-3.5 h-3.5 text-amber-700 shrink-0 mt-0.5" />
               <span>
                 {isHindi
-                  ? 'सुझाव: यह संदेश अज्ञात ऑनलाइन ब्लैकमेलरों के लिए सबसे प्रभावी है। यदि आरोपी कोई परिचित या पूर्व-साथी है, तो संदेश भेजने के बजाय पहले 1930 या 1091 पर चुपचाप रिपोर्ट करना अधिक सुरक्षित हो सकता है।'
-                  : 'Note: This stalling line is best for anonymous extortionists. If the perpetrator is someone you know personally (e.g. an acquaintance or ex-partner), consider reporting quietly via 1930/1091 first without engaging.'}
+                  ? 'सुझाव: यह संदेश अज्ञात ऑनलाइन ब्लैकमेलरों के लिए सबसे प्रभावी है। यदि आरोपी कोई परिचित या पूर्व-साथी है, तो संदेश भेजने के बजाय पहले 1930 पर चुपचाप रिपोर्ट करना अधिक सुरक्षित हो सकता है।'
+                  : 'Note: This stalling line is best for anonymous extortionists. If the perpetrator is someone you know personally (e.g. an acquaintance or ex-partner), consider reporting quietly via 1930 first without engaging.'}
               </span>
             </div>
           </div>
