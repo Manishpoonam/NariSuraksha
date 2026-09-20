@@ -24,6 +24,8 @@ import { hapticAction } from '../utils/haptics';
 import { ZeroShameLegalShield } from './ZeroShameLegalShield';
 import { GirlsRescueGuide } from './GirlsRescueGuide';
 import { StateCyberDirectoryInline } from './StateCyberDirectoryInline';
+import { RecommendedSituationCard } from './RecommendedSituationCard';
+import { CrisisScenarioKey } from './EmergencyCockpit';
 
 interface RescueFooterSupportProps {
   language: Language;
@@ -35,6 +37,8 @@ interface RescueFooterSupportProps {
   onOpenSOS?: () => void;
   showPlatformGuides?: boolean;
   onTogglePlatformGuides?: () => void;
+  rescueSituation?: CrisisScenarioKey | string;
+  draftCategory?: IncidentCategory;
 }
 
 /**
@@ -56,6 +60,8 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
   onOpenSOS,
   showPlatformGuides: externalShowPlatformGuides,
   onTogglePlatformGuides: externalTogglePlatformGuides,
+  rescueSituation = 'countdown',
+  draftCategory,
 }) => {
   const isHindi = language === 'hi';
 
@@ -109,6 +115,17 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
     }
   };
 
+  const handleBrowseStateServices = (targetState?: string) => {
+    hapticAction();
+    setShowStateCyberDirectory(true);
+    setTimeout(() => {
+      const el = document.getElementById('inline-state-directory-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 150);
+  };
+
   return (
     <div className="space-y-4 sm:space-y-5 pt-4">
       {/* SECTION TITLE & CONTEXT */}
@@ -127,6 +144,15 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
           </p>
         </div>
       </div>
+
+      {/* 1. RECOMMENDED FOR YOUR SITUATION (HIGH PRIORITY: COMBINES CRISIS SCENARIO + LOCATION) */}
+      <RecommendedSituationCard
+        language={language}
+        selectedScenario={rescueSituation}
+        selectedCategory={draftCategory}
+        onNavigateToTab={onNavigateToTab}
+        onBrowseStateServices={handleBrowseStateServices}
+      />
 
       {/* BALANCED 2-COLUMN GRID (MOBILE: 1 COLUMN, TABLET & DESKTOP: 2 EQUAL COLUMNS) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 items-stretch">
@@ -154,93 +180,146 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
               </span>
             </div>
 
-            {/* Quick Dial Matrix (2x2 on tablet/mobile) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-              {/* Helpline 1: 1930 */}
-              <a
-                href="tel:1930"
-                className="group p-3 rounded-xl bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] transition-all flex items-center justify-between gap-2 min-h-[50px] active:scale-98"
-                title="Dial National Cyber Crime Reporting Helpline 1930"
-              >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono font-bold text-sm text-[#0F6E56] tracking-tight">1930</span>
-                    <span className="text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded bg-[#0F6E56]/15 text-[#0F6E56]">MHA</span>
-                  </div>
-                  <p className="text-[10px] text-[#666] truncate">
-                    {isHindi ? 'राष्ट्रीय साइबर अपराध' : 'National Cyber Helpline'}
-                  </p>
+            {/* Purpose-Grouped Helpline Directory (Physical danger, Cyber financial, Women's support, Child support, Mental health) */}
+            <div className="space-y-3 pt-1">
+              {/* Group 1: Immediate Physical & Police Protection */}
+              <div className="p-3 rounded-xl bg-rose-50/50 border border-rose-200/70 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-rose-800">
+                    {isHindi ? '1. शारीरिक सुरक्षा व पुलिस आपातकाल' : '1. Physical Danger & Emergency Police'}
+                  </span>
+                  <span className="text-[10px] font-mono text-rose-700">24x7</span>
                 </div>
-                <div className="w-7 h-7 rounded-lg bg-white border border-[#E8E2DC] text-[#0F6E56] group-hover:bg-[#0F6E56] group-hover:text-white transition-colors flex items-center justify-center shrink-0">
-                  <PhoneCall className="w-3.5 h-3.5" />
-                </div>
-              </a>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <a
+                    href="tel:112"
+                    className="p-2.5 rounded-lg bg-white border border-rose-200 hover:border-rose-400 transition-all flex items-center justify-between gap-2"
+                  >
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono font-bold text-sm text-rose-700">112</span>
+                        <span className="text-[9px] font-semibold bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded">ERSS</span>
+                      </div>
+                      <p className="text-[10px] text-[#666]">{isHindi ? 'राष्ट्रीय आपातकालीन सेवा (PCR)' : 'All-India Police Emergency'}</p>
+                    </div>
+                    <PhoneCall className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                  </a>
 
-              {/* Helpline 2: NCW 14490 (Calls) / 7827170170 (WhatsApp) */}
-              <a
-                href="tel:14490"
-                className="group p-3 rounded-xl bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] transition-all flex items-center justify-between gap-2 min-h-[50px] active:scale-98"
-                title="Dial NCW 24x7 Helpline 14490 (Calls) or message 7827170170 (WhatsApp) — Women safety, domestic abuse & harassment support"
-              >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="font-mono font-bold text-xs text-[#26215C] tracking-tight">14490</span>
-                    <span className="text-[9px] text-[#777] font-mono">/ 7827170170</span>
-                    <span className="text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded bg-[#E1F5EE] text-[#0F6E56]">NCW</span>
-                  </div>
-                  <p className="text-[10px] text-[#666] truncate">
-                    {isHindi ? 'NCW 24×7 हेल्पलाइन (महिला सुरक्षा, उत्पीड़न, हिंसा निवारण)' : 'NCW 24×7 Helpline (Women Safety, Abuse & Harassment)'}
-                  </p>
+                  <a
+                    href="tel:1091"
+                    className="p-2.5 rounded-lg bg-white border border-rose-200 hover:border-rose-400 transition-all flex items-center justify-between gap-2"
+                  >
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono font-bold text-sm text-[#26215C]">1091</span>
+                        <span className="text-[9px] font-semibold bg-[#E8E6F3] text-[#26215C] px-1.5 py-0.5 rounded">Police</span>
+                      </div>
+                      <p className="text-[10px] text-[#666]">{isHindi ? 'महिला पुलिस हेल्पलाइन' : 'Women Police Cell'}</p>
+                    </div>
+                    <PhoneCall className="w-3.5 h-3.5 text-[#26215C] shrink-0" />
+                  </a>
                 </div>
-                <div className="w-7 h-7 rounded-lg bg-white border border-[#E8E2DC] text-[#26215C] group-hover:bg-[#26215C] group-hover:text-white transition-colors flex items-center justify-center shrink-0">
-                  <PhoneCall className="w-3.5 h-3.5" />
-                </div>
-              </a>
+              </div>
 
-              {/* Helpline 3: Tele-MANAS 14416 */}
-              <a
-                href="tel:14416"
-                className="group p-3 rounded-xl bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] transition-all flex items-center justify-between gap-2 min-h-[50px] active:scale-98"
-                title="Dial Tele-MANAS 14416 for mental health and panic support"
-              >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono font-bold text-sm text-[#0F6E56] tracking-tight">14416</span>
-                    <span className="text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded bg-teal-100 text-teal-800">Tele-MANAS</span>
+              {/* Group 2: Cyber Financial & Online Extortion */}
+              <div className="p-3 rounded-xl bg-teal-50/50 border border-teal-200/70 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#0F6E56]">
+                    {isHindi ? '2. साइबर वित्तीय व जबरन वसूली' : '2. Cyber Financial & Online Extortion'}
+                  </span>
+                  <span className="text-[10px] font-mono text-[#0F6E56]">MHA I4C</span>
+                </div>
+                <a
+                  href="tel:1930"
+                  className="p-2.5 rounded-lg bg-white border border-teal-200 hover:border-teal-400 transition-all flex items-center justify-between gap-2"
+                >
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-mono font-bold text-sm text-[#0F6E56]">1930</span>
+                      <span className="text-[9px] font-semibold bg-[#0F6E56]/15 text-[#0F6E56] px-1.5 py-0.5 rounded">Govt of India</span>
+                    </div>
+                    <p className="text-[10px] text-[#666]">
+                      {isHindi ? 'साइबर वित्तीय धोखाधड़ी व ब्लैकमेल रिपोर्टिंग' : 'National Cyber Crime Reporting Helpline & State Dispatch'}
+                    </p>
                   </div>
-                  <p className="text-[10px] text-[#666] truncate">
-                    {isHindi ? 'घबराहट व आघात सहायता' : 'Trauma & Panic First-Aid'}
-                  </p>
-                </div>
-                <div className="w-7 h-7 rounded-lg bg-white border border-[#E8E2DC] text-[#0F6E56] group-hover:bg-[#0F6E56] group-hover:text-white transition-colors flex items-center justify-center shrink-0">
-                  <PhoneCall className="w-3.5 h-3.5" />
-                </div>
-              </a>
+                  <PhoneCall className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
+                </a>
+              </div>
 
-              {/* Helpline 4: 112 / 1091 Police */}
-              <a
-                href="tel:112"
-                className="group p-3 rounded-xl bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] transition-all flex items-center justify-between gap-2 min-h-[50px] active:scale-98"
-                title="Dial Emergency Response Support System 112"
-              >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono font-bold text-sm text-[#1A1A1A] tracking-tight">112 / 1091</span>
-                    <span className="text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded bg-[#E8E6F3] text-[#26215C]">Police</span>
+              {/* Group 3: Women's Safety, Legal & Violence Support */}
+              <div className="p-3 rounded-xl bg-purple-50/50 border border-purple-200/70 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#26215C]">
+                    {isHindi ? '3. महिला सुरक्षा व कानूनी अधिकार' : "3. Women's Support & Legal Aid"}
+                  </span>
+                  <span className="text-[10px] font-mono text-purple-800">NCW & NALSA</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <a
+                    href="tel:14490"
+                    className="p-2.5 rounded-lg bg-white border border-purple-200 hover:border-purple-400 transition-all flex items-center justify-between gap-2"
+                  >
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono font-bold text-xs text-[#26215C]">14490</span>
+                        <span className="text-[9px] font-semibold bg-[#E1F5EE] text-[#0F6E56] px-1.5 py-0.5 rounded">NCW</span>
+                      </div>
+                      <p className="text-[10px] text-[#666]">{isHindi ? 'NCW 24×7 (कॉल / व्हाट्सएप)' : 'NCW 24x7 Helpline'}</p>
+                    </div>
+                    <PhoneCall className="w-3.5 h-3.5 text-[#26215C] shrink-0" />
+                  </a>
+
+                  <a
+                    href="tel:15100"
+                    className="p-2.5 rounded-lg bg-white border border-purple-200 hover:border-purple-400 transition-all flex items-center justify-between gap-2"
+                  >
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono font-bold text-xs text-[#26215C]">15100</span>
+                        <span className="text-[9px] font-semibold bg-purple-100 text-purple-900 px-1.5 py-0.5 rounded">NALSA</span>
+                      </div>
+                      <p className="text-[10px] text-[#666]">{isHindi ? 'मुफ्त सरकारी वकील (Sec 12)' : 'Free Legal Aid for Women'}</p>
+                    </div>
+                    <PhoneCall className="w-3.5 h-3.5 text-[#26215C] shrink-0" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Group 4: Child & Minor Protection (POCSO) & Mental Health */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="p-2.5 rounded-xl bg-amber-50/60 border border-amber-200/80 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase text-amber-900">{isHindi ? 'नाबालिग / POCSO' : 'Minors / Under 18'}</span>
+                    <span className="text-[9px] font-mono text-amber-800">1098</span>
                   </div>
-                  <p className="text-[10px] text-[#666] truncate">
-                    {isHindi ? 'महिला सुरक्षा आपातकाल' : 'Emergency Police Dispatch'}
-                  </p>
+                  <a
+                    href="tel:1098"
+                    className="p-2 rounded-lg bg-white border border-amber-200 flex items-center justify-between gap-1.5"
+                  >
+                    <span className="font-mono font-bold text-xs text-amber-950">CHILDLINE 1098</span>
+                    <PhoneCall className="w-3 h-3 text-amber-800 shrink-0" />
+                  </a>
                 </div>
-                <div className="w-7 h-7 rounded-lg bg-white border border-[#E8E2DC] text-[#1A1A1A] group-hover:bg-[#1A1A1A] group-hover:text-white transition-colors flex items-center justify-center shrink-0">
-                  <PhoneCall className="w-3.5 h-3.5" />
+
+                <div className="p-2.5 rounded-xl bg-teal-50/60 border border-teal-200/80 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase text-teal-900">{isHindi ? 'मानसिक स्वास्थ्य' : 'Mental Health'}</span>
+                    <span className="text-[9px] font-mono text-teal-800">14416</span>
+                  </div>
+                  <a
+                    href="tel:14416"
+                    className="p-2 rounded-lg bg-white border border-teal-200 flex items-center justify-between gap-1.5"
+                  >
+                    <span className="font-mono font-bold text-xs text-[#0F6E56]">Tele-MANAS 14416</span>
+                    <PhoneCall className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                  </a>
                 </div>
-              </a>
+              </div>
             </div>
           </div>
 
           {/* Directory Navigation Buttons */}
-          <div className="pt-2 border-t border-[#F0EBE6] flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <div id="inline-state-directory-section" className="pt-2 border-t border-[#F0EBE6] flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <button
               type="button"
               onClick={toggleStateCyberDirectory}
@@ -254,8 +333,8 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
               <Building2 className={`w-3.5 h-3.5 shrink-0 ${showStateCyberDirectory ? 'text-white' : 'text-[#0F6E56]'}`} />
               <span className="truncate">
                 {showStateCyberDirectory 
-                  ? (isHindi ? 'साइबर सेल सूची छिपाएं' : 'Hide State & UT Cells')
-                  : (isHindi ? 'राज्य व UT साइबर सेल (36)' : 'State & UT Cyber Cells (36)')}
+                  ? (isHindi ? 'सुरक्षा निर्देशिका छिपाएं' : 'Hide State & UT Directory')
+                  : (isHindi ? 'राज्य व UT सुरक्षा डायरेक्टरी (36)' : 'State & UT Safety & Support (36)')}
               </span>
               {showStateCyberDirectory ? (
                 <ChevronUp className="w-3.5 h-3.5 ml-auto sm:ml-0 text-white/80 shrink-0" />

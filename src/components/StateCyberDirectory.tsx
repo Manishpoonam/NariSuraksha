@@ -232,7 +232,7 @@ export const StateCyberDirectory: React.FC<StateCyberDirectoryProps> = ({ langua
                         {isUT ? (isHindi ? 'केंद्रशासित प्रदेश (UT)' : 'Union Territory (UT)') : cell.region}
                       </span>
 
-                      {/* Verification status label on every card: consistent amber unverified pill */}
+                      {/* Verification status label on every card: consistent pill */}
                       <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border ${
                         cell.verifiedDate 
                           ? 'text-[#0F6E56] bg-emerald-50 border-emerald-200 font-semibold' 
@@ -246,7 +246,7 @@ export const StateCyberDirectory: React.FC<StateCyberDirectoryProps> = ({ langua
                         ) : (
                           <>
                             <HelpCircle className="w-3 h-3 text-amber-700 shrink-0" />
-                            <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before relying'}</span>
+                            <span>{isHindi ? 'अभी सत्यापित नहीं — उपयोग से पहले पुष्टि करें' : 'Not yet verified — confirm before relying'}</span>
                           </>
                         )}
                       </span>

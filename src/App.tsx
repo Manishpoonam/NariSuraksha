@@ -728,6 +728,8 @@ export default function App() {
                   onOpenSOS={handleTriggerSOS}
                   showPlatformGuides={showDeepScenarios}
                   onTogglePlatformGuides={() => setShowDeepScenarios((prev) => !prev)}
+                  rescueSituation={rescueSituation}
+                  draftCategory={draftCategory}
                 />
               </div>
             )}
@@ -917,11 +919,12 @@ export default function App() {
         </button>
       </nav>
 
-      {/* Always-visible Floating Panic & Fast-Dial Bar */}
+      {/* Always-visible Floating Panic & Fast-Dial Bar (Adaptive to crisis scenario) */}
       <FloatingPanicBar
         language={language}
         onTriggerCamouflage={() => handleTriggerCamouflage(true)}
         onTriggerSOS={handleTriggerSOS}
+        rescueSituation={rescueSituation}
       />
 
       {/* Emergency GPS SOS Modal */}

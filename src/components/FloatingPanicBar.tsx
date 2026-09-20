@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { EyeOff, PhoneCall, X, AlertTriangle, Copy, Check, Heart } from 'lucide-react';
+import { EyeOff, PhoneCall, X, AlertTriangle, Copy, Check, Heart, ShieldAlert } from 'lucide-react';
 import { Language } from '../types';
+import { CrisisScenarioKey } from './EmergencyCockpit';
 import { hapticCamouflage, hapticSOS, hapticPanic, hapticAction, hapticSuccess } from '../utils/haptics';
 
 interface FloatingPanicBarProps {
   language: Language;
   onTriggerCamouflage: () => void;
   onTriggerSOS?: () => void;
+  rescueSituation?: CrisisScenarioKey | string;
 }
 
 export const FloatingPanicBar: React.FC<FloatingPanicBarProps> = ({
   language,
   onTriggerCamouflage,
   onTriggerSOS,
+  rescueSituation = 'countdown',
 }) => {
   const isHindi = language === 'hi';
+  const isPhysicalDanger = rescueSituation === 'danger_stalking';
+  const isPaidMoney = rescueSituation === 'paid';
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
   const [copiedScript, setCopiedScript] = useState<boolean>(false);
   const [isScreenActive, setIsScreenActive] = useState<boolean>(() => {
@@ -260,20 +265,44 @@ Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya 
               </motion.button>
             )}
 
-            {/* 4. Fast 1930 Speed Dial */}
-            <motion.a
-              id="floating-call-1930"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.94 }}
-              transition={{ duration: 0.12 }}
-              href="tel:1930"
-              onClick={() => hapticAction()}
-              className="flex items-center gap-1 px-2.5 sm:px-3 py-2 bg-white/10 hover:bg-white/20 text-[#FAF9F6] font-bold rounded-full shrink-0 min-h-[40px]"
-              title="Direct dial 1930"
-            >
-              <PhoneCall className="w-3.5 h-3.5 text-[#E25822] shrink-0" />
-              <span className="font-mono text-[11px] sm:text-xs">1930</span>
-            </motion.a>
+            {/* 4. Adaptive Speed Dial: Highlights 112 for physical danger, 1930 for cyber fraud/extortion */}
+            {isPhysicalDanger ? (
+              <motion.a
+                id="floating-call-112"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.94 }}
+                transition={{ duration: 0.12 }}
+                href="tel:112"
+                onClick={() => hapticAction()}
+                className="flex items-center gap-1.5 px-3 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-full shrink-0 min-h-[40px] shadow-sm ring-2 ring-rose-400/50"
+                title="Direct dial 112 Police Emergency (Physical Danger)"
+              >
+                <PhoneCall className="w-3.5 h-3.5 text-white shrink-0 animate-pulse" />
+                <span className="font-mono text-[11px] sm:text-xs">112</span>
+                <span className="text-[10px] font-medium hidden sm:inline">{isHindi ? 'पुलिस' : 'Police'}</span>
+              </motion.a>
+            ) : (
+              <motion.a
+                id="floating-call-1930"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.94 }}
+                transition={{ duration: 0.12 }}
+                href="tel:1930"
+                onClick={() => hapticAction()}
+                className={`flex items-center gap-1 px-2.5 sm:px-3 py-2 font-bold rounded-full shrink-0 min-h-[40px] transition-colors ${
+                  isPaidMoney
+                    ? 'bg-[#0F6E56] hover:bg-[#0B5441] text-white ring-2 ring-emerald-400/40 shadow-xs'
+                    : 'bg-white/10 hover:bg-white/20 text-[#FAF9F6]'
+                }`}
+                title="Direct dial 1930 Cyber Extortion Helpline"
+              >
+                <PhoneCall className={`w-3.5 h-3.5 shrink-0 ${isPaidMoney ? 'text-white' : 'text-[#E25822]'}`} />
+                <span className="font-mono text-[11px] sm:text-xs">1930</span>
+                {isPaidMoney && (
+                  <span className="text-[10px] font-medium hidden sm:inline">{isHindi ? 'फ्रीज' : 'Freeze'}</span>
+                )}
+              </motion.a>
+            )}
 
             {/* Minimize button */}
             <motion.button

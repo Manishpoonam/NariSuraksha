@@ -88,12 +88,12 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
             </div>
             <div>
               <h4 className="text-xs sm:text-sm font-bold text-[#1A1A1A]">
-                {isHindi ? 'राज्य व केंद्रशासित प्रदेश साइबर सेल डायरेक्टरी (36)' : 'State & UT Cyber Crime Directory (36)'}
+                {isHindi ? 'राज्य व केंद्रशासित प्रदेश सुरक्षा एवं सहायता निर्देशिका (36)' : 'State & UT Safety & Support Directory (36)'}
               </h4>
               <p className="text-[11px] text-[#666]">
                 {isHindi 
-                  ? 'सभी 28 राज्यों और 8 केंद्रशासित प्रदेशों के आधिकारिक संपर्क नंबर व पोर्टल' 
-                  : 'Official contacts & portals for all 28 States and 8 Union Territories'}
+                  ? 'सभी 28 राज्यों और 8 केंद्रशासित प्रदेशों के संपर्क नंबर व सहायता पोर्टल' 
+                  : 'Public safety contacts & portals for all 28 States and 8 Union Territories'}
               </p>
             </div>
           </div>
@@ -298,7 +298,7 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
                   </span>
                 </div>
 
-                {/* Verification status label on every card: "Verified: [date]" or "Unverified — confirm before relying" */}
+                {/* Verification status label on every card: "Verified: [date]" or "Not yet verified — confirm before relying" */}
                 <div className="pt-0.5 flex items-center gap-1 text-[10px]">
                   {cell.verifiedDate ? (
                     <div className="flex items-center gap-1 font-semibold text-[#0F6E56]">
@@ -308,7 +308,7 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
                   ) : (
                     <div className="flex items-center gap-1 font-medium text-[#8B6D5C]">
                       <HelpCircle className="w-3 h-3 text-[#8B6D5C] shrink-0" />
-                      <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before relying'}</span>
+                      <span>{isHindi ? 'अभी सत्यापित नहीं — उपयोग से पहले पुष्टि करें' : 'Not yet verified — confirm before relying'}</span>
                     </div>
                   )}
                 </div>
