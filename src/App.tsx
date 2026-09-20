@@ -4,7 +4,7 @@
  * NariSuraksha - NCII & Cyber Extortion Emergency Response Portal
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { Header } from './components/Header';
 import { EmergencyHero } from './components/EmergencyHero';
@@ -126,6 +126,54 @@ export default function App() {
     } catch {}
     return false;
   });
+
+  const pendingScrollTargetRef = useRef<string | null>(null);
+
+  const performSmoothScrollTo = (elementId: string) => {
+    let attempts = 0;
+    const maxAttempts = 25; // Try over ~1.8 seconds to accommodate viewMode exit/entry transitions
+
+    const timer = setInterval(() => {
+      attempts++;
+      const el =
+        document.getElementById(elementId) ||
+        (elementId === 'somatic-breathing-card' ? document.getElementById('somatic-grounding-tool') : null) ||
+        document.getElementById('somatic-breathing-sphere') ||
+        document.getElementById('somatic-grounding-tool');
+
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.height > 0 || attempts > 2) {
+          clearInterval(timer);
+          pendingScrollTargetRef.current = null;
+
+          const headerEl = document.querySelector('header');
+          const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 90;
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const safeMargin = 16;
+          const targetTop = Math.max(0, rect.top + scrollTop - (headerHeight + safeMargin));
+
+          window.scrollTo({
+            top: targetTop,
+            behavior: 'smooth',
+          });
+
+          try {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } catch {}
+
+          el.classList.add('ring-2', 'ring-[#0F6E56]', 'ring-offset-4', 'transition-all', 'duration-500');
+          setTimeout(() => {
+            el.classList.remove('ring-2', 'ring-[#0F6E56]', 'ring-offset-4');
+          }, 1600);
+        }
+      }
+
+      if (attempts >= maxAttempts) {
+        clearInterval(timer);
+      }
+    }, 70);
+  };
 
   // Sync active states to localStorage
   useEffect(() => {
@@ -309,37 +357,8 @@ export default function App() {
     );
 
     if (isExplicitElementTarget && elementId) {
-      // Robust multi-pass scroll to account for tab switch animations and layout rendering
-      const scrollToTargetElement = () => {
-        const el = document.getElementById(elementId) || 
-                   (elementId === 'somatic-breathing-card' ? document.getElementById('somatic-grounding-tool') : null) ||
-                   document.getElementById('somatic-breathing-sphere');
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const headerEl = document.querySelector('header');
-          const headerHeight = headerEl ? headerEl.offsetHeight : 120;
-          const safeMargin = 28; // Optimal breathing room
-          const targetTop = rect.top + scrollTop - (headerHeight + safeMargin);
-
-          window.scrollTo({
-            top: Math.max(0, targetTop),
-            behavior: 'smooth'
-          });
-
-          el.classList.add('ring-2', 'ring-[#0F6E56]', 'ring-offset-4', 'transition-all', 'duration-500');
-          setTimeout(() => {
-            el.classList.remove('ring-2', 'ring-[#0F6E56]', 'ring-offset-4');
-          }, 1400);
-          return true;
-        }
-        return false;
-      };
-
-      // Try across consecutive animation frame/render checkpoints
-      setTimeout(scrollToTargetElement, 60);
-      setTimeout(scrollToTargetElement, 180);
-      setTimeout(scrollToTargetElement, 350);
+      pendingScrollTargetRef.current = elementId;
+      performSmoothScrollTo(elementId);
     } else {
       // When opening general main views without a specific deep link, ensure the page starts smoothly from the top
       window.scrollTo({
@@ -354,6 +373,13 @@ export default function App() {
       }, 50);
     }
   };
+
+  // Re-check pending scroll target whenever viewMode or tab changes
+  useEffect(() => {
+    if (viewMode === 'app' && pendingScrollTargetRef.current) {
+      performSmoothScrollTo(pendingScrollTargetRef.current);
+    }
+  }, [viewMode, activeTab, supportSubTab]);
 
   const handleSelectTakedownSubTab = (sub: 'stopncii' | 'evidence' | 'lockdown') => {
     setTakedownSubTab(sub);

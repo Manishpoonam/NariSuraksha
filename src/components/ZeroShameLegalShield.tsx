@@ -88,8 +88,8 @@ export const ZeroShameLegalShield: React.FC<ZeroShameLegalShieldProps> = ({
         ? 'भारतीय नागरिक सुरक्षा संहिता (BNSS धारा 173, पूर्ववर्ती CrPC 154) के तहत महिलाओं के खिलाफ डिजिटल या यौन उत्पीड़न के मामलों में बयान महिला पुलिस अधिकारी द्वारा ही दर्ज किए जाने का कानूनी अधिकार है। आप अनुरोध कर सकती हैं कि यह बयान आपके आवास, हॉस्टल या सुरक्षित स्थान पर सादे कपड़ों में दर्ज किया जाए।' 
         : 'Under Section 173 of Bharatiya Nagarik Suraksha Sanhita (BNSS 2023, superseding CrPC 154), any statement regarding digital or sexual harassment must be recorded by a woman police officer. You have the statutory right to request it be taken at your residence, hostel, or in plain clothes.',
       escalationNote: isHindi
-        ? 'यदि इस अधिकार का सम्मान नहीं किया जाता है, तो यह एक प्रक्रियात्मक उल्लंघन है जिसकी शिकायत आप दर्ज करा सकती हैं — राष्ट्रीय महिला आयोग (NCW: 7827170170) या राज्य साइबर सेल नोडल अधिकारी को तत्काल सूचित करें।'
-        : 'If this right isn\'t honored, that\'s a violation you can report — escalate immediately via the National Commission for Women (NCW Helpline: 7827170170) or your State Cyber Cell nodal officer.',
+        ? 'यदि इस अधिकार का सम्मान नहीं किया जाता है, तो यह एक प्रक्रियात्मक उल्लंघन है जिसकी शिकायत आप दर्ज करा सकती हैं — राष्ट्रीय महिला आयोग 24×7 हेल्पलाइन (14490 / व्हाट्सएप: 7827170170) या राज्य साइबर सेल नोडल अधिकारी को सूचित करें।'
+        : 'If this right isn\'t honored, that is a procedural violation you can report — escalate immediately via the National Commission for Women 24×7 Helpline (14490 / WhatsApp: 7827170170) or your State Cyber Cell nodal officer.',
       hasMinorCrossLink: false
     }
   ];

@@ -195,8 +195,17 @@ export const EmergencyCockpit: React.FC<EmergencyCockpitProps> = ({
   };
 
   const handleSelectScenario = (key: CrisisScenarioKey) => {
+    if (key === selectedScenario) return;
     hapticAction();
     setSelectedScenario(key);
+    // CRITICAL: Invalidate stale Step 3 evidence checkpoints and downstream completion
+    // whenever scenario changes, so stale checks or claims from a previous scenario never persist.
+    setEvidenceChecks({
+      item1: false,
+      item2: false,
+      item3: false,
+    });
+    setCompletedSteps(prev => prev.filter(step => step < 3));
     if (onSelectSituation) {
       onSelectSituation(key);
     }
@@ -392,14 +401,23 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
       <div className="bg-[#1E1949] px-4 sm:px-7 py-3 flex items-center justify-between text-xs text-[#FAF8F3] border-b border-white/10">
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-[#0F6E56] animate-pulse" />
-          <span className="font-semibold tracking-wide text-[11px] sm:text-xs text-[#FAF8F3]">
-            {isHindi ? 'रेस्क्यू पाथ: चरणबद्ध संकट समाधान • 100% गोपनीय' : 'Rescue Path: Linear Crisis Response • 100% Private & Local'}
+          <span 
+            className="font-semibold tracking-wide text-[11px] sm:text-xs text-[#FAF8F3]"
+            title={isHindi ? '100% निजी व स्थानीय: आपका डेटा डिवाइस से बाहर कभी नहीं जाता, कोई ट्रैकिंग या नेटवर्क कॉल नहीं।' : '100% Private & Local: All data stays entirely in your browser session; zero telemetry, analytics, or external logging.'}
+          >
+            {isHindi ? 'रेस्क्यू पाथ: अनुशंसित संकट समाधान • 100% गोपनीय व स्थानीय' : 'Rescue Path: Recommended Crisis Response • 100% Private & Local'}
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 text-[11px] text-[#D2CCE7]">
-            <VolumeX className="w-3.5 h-3.5 text-[#E1F5EE]" />
-            <span>{isHindi ? 'ध्वनिरहित मोड' : 'Silent Mode Active'}</span>
+          <span 
+            className="inline-flex items-center gap-1.5 text-[11px] text-[#D2CCE7]"
+            title={isHindi ? 'वेबसाइट पूर्णतः मूक है — कोई ध्वनि या ऑडियो अलर्ट नहीं बजाती (फोन की सामान्य रिंगटोन प्रभावित नहीं)' : 'Silent Mode: App generates zero sounds or audio alerts (device phone ringers unaffected)'}
+          >
+            <VolumeX className="w-3.5 h-3.5 text-[#E1F5EE]" aria-hidden="true" />
+            <span>{isHindi ? 'ध्वनिरहित मोड (वेबसाइट मूक)' : 'Silent Mode (Site Muted)'}</span>
+            <span className="sr-only">
+              {isHindi ? 'वेबसाइट से कोई ध्वनि नहीं बजाई जाएगी, फोन की अपनी रिंगटोन प्रभावित नहीं होगी।' : 'No audio will play from this website. Device hardware ringers and system notifications are unaffected.'}
+            </span>
           </span>
         </div>
       </div>
@@ -419,6 +437,72 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
         theme="dark"
         className="rounded-none border-x-0 border-t-0 border-b border-white/10 px-3 sm:px-6 md:px-8 py-3.5 sm:py-4 bg-[#201B52]"
       />
+
+      {/* Emergency Override for Physical Danger / Stalking Scenario:
+          When active physical danger or stalking is selected, safety overrides everything else.
+          Immediate 112/1090 emergency help is surfaced prominently BEFORE evidence preservation.
+      */}
+      {selectedScenario === 'danger_stalking' && (
+        <div 
+          role="alert"
+          aria-live="assertive"
+          className="mx-5 sm:mx-8 mt-5 p-4 sm:p-5 rounded-2xl bg-rose-950/80 border-2 border-rose-500 text-white space-y-3 shadow-lg"
+        >
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-xl bg-rose-600 text-white shrink-0 mt-0.5">
+              <AlertTriangle className="w-5 h-5" aria-hidden="true" />
+            </div>
+            <div className="space-y-1">
+              <div className="text-xs font-bold uppercase tracking-wider text-rose-300">
+                {isHindi ? 'आपातकालीन सुरक्षा प्राथमिकता • शारीरिक खतरा या पीछा करना' : 'Immediate Safety Priority • Physical Danger / Stalking'}
+              </div>
+              <p className="text-sm sm:text-base font-bold text-white leading-snug">
+                {isHindi
+                  ? 'यदि आप तत्काल शारीरिक खतरे में हैं, तो अभी 112 पर कॉल करें। साक्ष्य और रिपोर्टिंग आपकी सुरक्षा के बाद भी हो सकती है।'
+                  : 'If you are in immediate physical danger, call 112 now. Evidence and reporting can wait until you are safe.'}
+              </p>
+              <p className="text-xs text-rose-200 leading-relaxed">
+                {isHindi
+                  ? 'किसी सुरक्षित, भीड़भाड़ वाली जगह पर जाएं। किसी परिचित को अपनी लाइव लोकेशन भेजें। सबूत इकट्ठा करने के चक्कर में अपनी शारीरिक सुरक्षा को खतरे में न डालें।'
+                  : 'Move to a well-lit public space or secure location immediately. Share your live location with a trusted contact. Do not delay reaching safety to collect digital screenshots.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5 pt-1">
+            <a
+              href="tel:112"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-bold transition-all shadow-soft min-h-[44px]"
+            >
+              <PhoneCall className="w-4 h-4" />
+              <span>{isHindi ? 'पुलिस 112 डायल करें' : 'Call Police 112 Now'}</span>
+            </a>
+            <a
+              href="tel:1090"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs sm:text-sm font-bold transition-all shadow-soft min-h-[44px]"
+            >
+              <PhoneCall className="w-4 h-4" />
+              <span>{isHindi ? 'महिला हेल्पलाइन 1090 / 1091' : 'Women Helpline 1090 / 1091'}</span>
+            </a>
+            <a
+              href="tel:14490"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-all border border-white/20 min-h-[44px]"
+            >
+              <PhoneCall className="w-3.5 h-3.5" />
+              <span>{isHindi ? 'NCW हेल्पलाइन 14490' : 'NCW Helpline 14490'}</span>
+            </a>
+            {currentStep !== 4 && (
+              <button
+                type="button"
+                onClick={() => goToStep(4)}
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-all border border-white/20 min-h-[44px]"
+              >
+                <span>{isHindi ? 'सीधे सुरक्षा उपायों पर जाएं (चरण 4) →' : 'Jump to Safety Remedies (Step 4) →'}</span>
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* 3. STEPPER BODY (STEP-BY-STEP CONTENT) */}
       <div className="p-5 sm:p-8 space-y-6">
@@ -955,300 +1039,684 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
           {/* ========================================================================= */}
           {/* STEP 3: 2-MINUTE COURT-VALID EVIDENCE PRESERVATION                        */}
           {/* ========================================================================= */}
-          {currentStep === 3 && (
-            <motion.div
-              key="step-3"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.25 }}
-              className="space-y-6"
-            >
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-[#F3C5D6] uppercase tracking-wider">
-                  {isHindi ? 'चरण 3: न्यायालय-मान्य साक्ष्य सुरक्षा' : 'Step 3: 2-Minute Court Proof Preservation'}
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white">
-                  {isHindi ? 'ब्लॉक करने से पहले 3 बिना-क्रॉप किए स्क्रीनशॉट लें' : 'Take 3 Uncropped Screenshots Before Blocking'}
-                </h2>
-                <p className="text-xs sm:text-sm text-[#D2CCE7]">
-                  {isHindi 
-                    ? 'अपराधी को म्यूट या ब्लॉक करने से पहले ये 3 साक्ष्य सुरक्षित करना आवश्यक है। भारतीय साक्ष्य अधिनियम (BSA 63) के तहत पूर्ण स्क्रीन की घड़ी व तारीख कोर्ट में मान्य होती है।'
-                    : 'Do not block yet. Preserve these 3 full uncropped screenshots. Under Section 63 of Bharatiya Sakshya Adhiniyam, top phone status bar timestamps ensure court admissibility.'}
-                </p>
-              </div>
+          {currentStep === 3 && (() => {
+            // SCENARIO-TAILORED EVIDENCE CHECKPOINTS
+            const scenarioEvidenceMap: Record<CrisisScenarioKey, {
+              title: { en: string; hi: string };
+              subtitle: { en: string; hi: string };
+              items: Array<{
+                key: string;
+                title: { en: string; hi: string };
+                detail: { en: string; hi: string };
+                iconColor: string;
+              }>;
+            }> = {
+              danger_stalking: {
+                title: {
+                  en: 'Preserve Stalking Evidence (Only When Physically Safe)',
+                  hi: 'पीछा करने व धमकी के साक्ष्य सुरक्षित करें (सुरक्षित होने पर ही)'
+                },
+                subtitle: {
+                  en: 'If in physical danger, safety comes first. Once in a secure location, preserve these 3 records before blocking.',
+                  hi: 'शारीरिक खतरे में सुरक्षा सबसे पहले है। सुरक्षित स्थान पर पहुंचने के बाद ही ब्लॉक करने से पहले ये 3 साक्ष्य सहेजें।'
+                },
+                items: [
+                  {
+                    key: 'profile',
+                    title: {
+                      en: 'Screenshot 1: Stalker Handles, Phone Numbers & Profiles',
+                      hi: 'स्क्रीनशॉट 1: पीछा करने वाले के फोन नंबर, प्रोफाइल हैंडल व बायो'
+                    },
+                    detail: {
+                      en: 'Top of chats showing mobile numbers (+91...), social media handles, or caller IDs for police telecom CDR tracing.',
+                      hi: 'चैट या कॉल लॉग का ऊपरी हिस्सा जहां पूरा नंबर या प्रोफाइल लिंक दिखे ताकि पुलिस कॉल रिकॉर्ड (CDR) निकाल सके।'
+                    },
+                    iconColor: 'text-amber-300'
+                  },
+                  {
+                    key: 'threatMessage',
+                    title: {
+                      en: 'Screenshot 2: Repeated Unsolicited Messages & Call Logs (No Crop)',
+                      hi: 'स्क्रीनशॉट 2: बार-बार भेजे गए धमकी/पीछा करने वाले संदेश व कॉल लॉग (बिना क्रॉप)'
+                    },
+                    detail: {
+                      en: 'Do not crop: Keep the phone clock and top status bar fully visible to prove timestamp frequency under BSA Sec 63.',
+                      hi: 'फोन की घड़ी व स्टेटस बार को न काटें ताकि BSA धारा 63 के तहत बार-बार संपर्क करने का समय कोर्ट में साबित हो सके।'
+                    },
+                    iconColor: 'text-rose-300'
+                  },
+                  {
+                    key: 'paymentHandle',
+                    title: {
+                      en: 'Screenshot 3: Location Tracking / Threatening Remarks',
+                      hi: 'स्क्रीनशॉट 3: स्थान/लोकेशन का जिक्र करने वाले संदेश व धमकियां'
+                    },
+                    detail: {
+                      en: 'Any messages where they mention your routine, workplace, home, or photos sent to intimidate you.',
+                      hi: 'संदेश जहां उसने आपके आने-जाने, घर, कॉलेज या कार्यस्थल का जिक्र किया हो। यह BNS धारा 78 के लिए ठोस साक्ष्य है।'
+                    },
+                    iconColor: 'text-teal-300'
+                  }
+                ]
+              },
+              paid: {
+                title: {
+                  en: 'Preserve Financial Extortion Evidence for Immediate Lien',
+                  hi: 'पैसे फ्रीज कराने हेतु वित्तीय जबरन वसूली के साक्ष्य सुरक्षित करें'
+                },
+                subtitle: {
+                  en: 'Preserve these 3 transaction proofs before calling 1930 so nodal officers can freeze the recipient account.',
+                  hi: '1930 पर कॉल करने से पहले ये 3 लेन-देन प्रमाण सुरक्षित करें ताकि नोडल अधिकारी पैसा फ्रीज कर सके।'
+                },
+                items: [
+                  {
+                    key: 'profile',
+                    title: {
+                      en: 'Screenshot 1: Bank Transaction SMS / UPI Debit Receipt',
+                      hi: 'स्क्रीनशॉट 1: बैंक ट्रांसफर SMS / UPI डेबिट रसीद (UTR नंबर सहित)'
+                    },
+                    detail: {
+                      en: 'Must clearly show 12-digit UTR / UPI Ref ID, recipient UPI VPA, date, time, and debited amount.',
+                      hi: '12 अंकों का UTR / UPI संदर्भ नंबर, लाभार्थी की UPI ID, समय व राशि स्पष्ट दिखनी चाहिए।'
+                    },
+                    iconColor: 'text-amber-300'
+                  },
+                  {
+                    key: 'threatMessage',
+                    title: {
+                      en: 'Screenshot 2: Demanding Chat with Top Phone Clock (No Crop)',
+                      hi: 'स्क्रीनशॉट 2: पैसे मांगने की चैट व फोन की पूरी घड़ी (बिना क्रॉप)'
+                    },
+                    detail: {
+                      en: 'Do not crop: Keep the top phone status bar (clock and battery) visible linking the payment demand to the threat.',
+                      hi: 'फोन की पूरी घड़ी व तारीख दिखनी चाहिए जो पैसे मांगने की धमकी और लेन-देन के समय का संबंध सिद्ध करे।'
+                    },
+                    iconColor: 'text-rose-300'
+                  },
+                  {
+                    key: 'paymentHandle',
+                    title: {
+                      en: 'Screenshot 3: Extorter UPI Handle, QR Code, or Bank Account Provided',
+                      hi: 'स्क्रीनशॉट 3: अपराधी द्वारा दिया गया UPI ID, QR कोड या बैंक खाता'
+                    },
+                    detail: {
+                      en: 'The exact payment QR image or UPI VPA he sent in chat. Helpline 1930 uses this to halt outbound fund transfers.',
+                      hi: 'चैट में भेजा गया मूल QR कोड या बैंक खाता। साइबर सेल 1930 इसी खाते के खिलाफ अंतरिम रोक लगाती है।'
+                    },
+                    iconColor: 'text-teal-300'
+                  }
+                ]
+              },
+              leaked: {
+                title: {
+                  en: 'Capture Electronic Proof for 24-Hour Intermediary Takedown',
+                  hi: '24-घंटे में सामग्री हटवाने हेतु इलेक्ट्रॉनिक साक्ष्य सुरक्षित करें'
+                },
+                subtitle: {
+                  en: 'Save direct platform URLs and uncropped screenshots before sending formal takedown notices under IT Rules 2021.',
+                  hi: 'IT नियम 2021 के तहत नोटिस भेजने से पहले प्लेटफॉर्म का सीधा लिंक व स्क्रीनशॉट सुरक्षित रखें।'
+                },
+                items: [
+                  {
+                    key: 'profile',
+                    title: {
+                      en: 'Screenshot 1: Platform Channel, Group, or Account URL',
+                      hi: 'स्क्रीनशॉट 1: चैनल, ग्रुप या अकाउंट का पूरा वेब लिंक (URL) व नाम'
+                    },
+                    detail: {
+                      en: 'Web link (URL) or channel handle where media was disseminated, plus creator or admin profile link.',
+                      hi: 'जिस टेलीग्राम चैनल, इंस्टाग्राम पेज या साइट पर सामग्री डाली गई है उसका पूरा वेब लिंक व एडमिन का हैंडल।'
+                    },
+                    iconColor: 'text-amber-300'
+                  },
+                  {
+                    key: 'threatMessage',
+                    title: {
+                      en: 'Screenshot 2: Disseminated Post with Full Timestamp (No Crop)',
+                      hi: 'स्क्रीनशॉट 2: पोस्ट की गई सामग्री का स्क्रीनशॉट व फोन की घड़ी (बिना क्रॉप)'
+                    },
+                    detail: {
+                      en: 'Do not crop: Keep the top status bar visible to establish publication time under IT Act Section 67A.',
+                      hi: 'फोन के ऊपर का समय व तारीख दिखना आवश्यक है ताकि IT Act धारा 67A के तहत पोस्ट का समय साबित हो सके।'
+                    },
+                    iconColor: 'text-rose-300'
+                  },
+                  {
+                    key: 'paymentHandle',
+                    title: {
+                      en: 'Screenshot 3: Blackmail or Extortion Messages Prior to Leak',
+                      hi: 'स्क्रीनशॉट 3: लीक करने से पहले ब्लैकमेल व धमकी भरे संदेश'
+                    },
+                    detail: {
+                      en: 'Chats linking the posting individual or showing premeditated intent to disseminate non-consensual media.',
+                      hi: 'चैट जो साबित करे कि यह गैर-सहमति से जानबूझकर चरित्र हनन व ब्लैकमेल के उद्देश्य से प्रसारित किया गया।'
+                    },
+                    iconColor: 'text-teal-300'
+                  }
+                ]
+              },
+              deepfake: {
+                title: {
+                  en: 'Preserve Forensic Proof of Synthetic / Morphed Media',
+                  hi: 'AI डीपफेक / मॉर्फ्ड फोटो के फॉरेंसिक साक्ष्य सुरक्षित करें'
+                },
+                subtitle: {
+                  en: 'Secure the fabricated post and distribution origin before issuing criminal notices under IT Act 66D/66E/67A.',
+                  hi: 'IT Act की धारा 66D, 66E व 67A के तहत नोटिस भेजने से पहले मनगढ़ंत पोस्ट व स्रोत का साक्ष्य सुरक्षित करें।'
+                },
+                items: [
+                  {
+                    key: 'profile',
+                    title: {
+                      en: 'Screenshot 1: Originating Profile, AI Bot, or Channel Handle',
+                      hi: 'स्क्रीनशॉट 1: AI बॉट, चैनल या अपलोड करने वाले का प्रोफाइल हैंडल'
+                    },
+                    detail: {
+                      en: 'Direct profile handle, Telegram bot username, or URL hosting the synthetically generated content.',
+                      hi: 'प्रोफाइल का पूरा हैंडल, टेलीग्राम बॉट यूजरनेम या वेबसाइट लिंक जहां यह नकली सामग्री तैयार या शेयर की गई।'
+                    },
+                    iconColor: 'text-amber-300'
+                  },
+                  {
+                    key: 'threatMessage',
+                    title: {
+                      en: 'Screenshot 2: The Fabricated Image / Video Post with Full Clock (No Crop)',
+                      hi: 'स्क्रीनशॉट 2: बनाई गई फर्जी पोस्ट व फोन की पूरी घड़ी (बिना क्रॉप)'
+                    },
+                    detail: {
+                      en: 'Full screen showing top clock, comments, views, and upload timestamp for cyber forensics validation.',
+                      hi: 'पूरा स्क्रीन जिसमें फोन की घड़ी, पोस्ट की तारीख और व्यूज दिखें ताकि फॉरेंसिक जांच में छेड़छाड़ न मानी जाए।'
+                    },
+                    iconColor: 'text-rose-300'
+                  },
+                  {
+                    key: 'paymentHandle',
+                    title: {
+                      en: 'Screenshot 3: Threatening Messages / Demands Linking the Synthesized Media',
+                      hi: 'स्क्रीनशॉट 3: डीपफेक फोटो का इस्तेमाल करके दी गई धमकी या वसूली की चैट'
+                    },
+                    detail: {
+                      en: 'Any messages where the perpetrator claimed responsibility or threatened viral dissemination for money.',
+                      hi: 'चैट जिसमें आरोपी ने फर्जी फोटो वायरल करने की धमकी दी हो या पैसे की मांग की हो।'
+                    },
+                    iconColor: 'text-teal-300'
+                  }
+                ]
+              },
+              police: {
+                title: {
+                  en: 'Dossier Preparation: 3 Core Admissible Electronic Records',
+                  hi: 'FIR डोजियर तैयारी: 3 मुख्य न्यायालय-मान्य इलेक्ट्रॉनिक साक्ष्य'
+                },
+                subtitle: {
+                  en: 'Prepare these 3 verified electronic exhibits under Section 63 of Bharatiya Sakshya Adhiniyam for formal filing.',
+                  hi: 'औपचारिक शिकायत के लिए भारतीय साक्ष्य अधिनियम की धारा 63 के तहत ये 3 प्रमाणित इलेक्ट्रॉनिक साक्ष्य तैयार करें।'
+                },
+                items: [
+                  {
+                    key: 'profile',
+                    title: {
+                      en: 'Exhibits 1: Accused Profiles, Mobile Numbers & Communicated Handles',
+                      hi: 'साक्ष्य 1: आरोपी के मोबाइल नंबर, सोशल मीडिया हैंडल व संचार माध्यम'
+                    },
+                    detail: {
+                      en: 'Complete telephone numbers (+91...), Instagram/WhatsApp/Telegram profile URLs and metadata for FIR inclusion.',
+                      hi: 'पूरा फोन नंबर, प्रोफाइल लिंक व व्हाट्सएप/इंस्टाग्राम यूजरनेम ताकि पुलिस प्राथमिक जांच तुरंत शुरू कर सके।'
+                    },
+                    iconColor: 'text-amber-300'
+                  },
+                  {
+                    key: 'threatMessage',
+                    title: {
+                      en: 'Exhibits 2: Uncropped Screenshots of Offenses (Phone Clock Intact)',
+                      hi: 'साक्ष्य 2: अपराध के बिना-क्रॉप किए स्क्रीनशॉट (फोन की घड़ी व तारीख सहित)'
+                    },
+                    detail: {
+                      en: 'Full status bar timestamps ensuring electronic certificate admissibility under BSA Sec 63.',
+                      hi: 'फोन की घड़ी व स्टेटस बार सहित स्क्रीनशॉट ताकि धारा 63 BSA इलेक्ट्रॉनिक प्रमाण पत्र के साथ कोर्ट में मान्य हो।'
+                    },
+                    iconColor: 'text-rose-300'
+                  },
+                  {
+                    key: 'paymentHandle',
+                    title: {
+                      en: 'Exhibits 3: Demand Records / Extortion Artifacts / Platform Links',
+                      hi: 'साक्ष्य 3: फिरौती की मांग, UPI रसीदें या विवादित सामग्री का वेब लिंक'
+                    },
+                    detail: {
+                      en: 'UPI VPAs, payment demands, or specific web links to be annexed with the formal complaint dossier.',
+                      hi: 'UPI ID, लेन-देन रिकॉर्ड या सामग्री के वेब लिंक जिन्हें FIR के संलग्नक (Annexures) में लगाया जा सके।'
+                    },
+                    iconColor: 'text-teal-300'
+                  }
+                ]
+              },
+              countdown: {
+                title: {
+                  en: 'Take 3 Uncropped Screenshots Before Blocking',
+                  hi: 'ब्लॉक करने से पहले 3 बिना-क्रॉप किए स्क्रीनशॉट लें'
+                },
+                subtitle: {
+                  en: 'Do not block yet. Preserve these 3 full uncropped screenshots. Under Section 63 of Bharatiya Sakshya Adhiniyam, top phone status bar timestamps ensure court admissibility.',
+                  hi: 'अपराधी को म्यूट या ब्लॉक करने से पहले ये 3 साक्ष्य सुरक्षित करना आवश्यक है। भारतीय साक्ष्य अधिनियम (BSA 63) के तहत पूर्ण स्क्रीन की घड़ी व तारीख कोर्ट में मान्य होती है।'
+                },
+                items: [
+                  {
+                    key: 'profile',
+                    title: {
+                      en: 'Screenshot 1: Attacker Phone Number or Profile Bio',
+                      hi: 'स्क्रीनशॉट 1: अपराधी का मोबाइल नंबर, हैंडल व बायो'
+                    },
+                    detail: {
+                      en: 'Top of the chat showing full phone number (+91...) or Instagram/Telegram handle and profile link for telecom subpoenas.',
+                      hi: 'चैट का सबसे ऊपरी हिस्सा जहां उसका पूरा मोबाइल नंबर (+91...) या इंस्टाग्राम/टेलीग्राम प्रोफाइल बायो दिखे। इसी से पुलिस कॉल रिकॉर्ड (CDR) निकलवाती है।'
+                    },
+                    iconColor: 'text-amber-300'
+                  },
+                  {
+                    key: 'threatMessage',
+                    title: {
+                      en: 'Screenshot 2: Threat Message with Phone Clock (Do Not Crop)',
+                      hi: 'स्क्रीनशॉट 2: धमकी भरा संदेश व फोन की पूरी घड़ी (No Crop)'
+                    },
+                    detail: {
+                      en: 'Do not crop: The top phone status bar (clock, battery level, network, and date) must remain fully visible to prevent tampering challenges in court.',
+                      hi: 'स्क्रीन को क्रॉप न करें! फोन के ऊपर दिखने वाला समय (घड़ी), बैटरी प्रतिशत और तारीख दिखना जरूरी है ताकि कोई छेड़छाड़ का आरोप न लगा सके।'
+                    },
+                    iconColor: 'text-rose-300'
+                  },
+                  {
+                    key: 'paymentHandle',
+                    title: {
+                      en: 'Screenshot 3: The Payment Demand / UPI / QR Code',
+                      hi: 'स्क्रीनशॉट 3: पैसे मांगने का UPI ID या QR कोड'
+                    },
+                    detail: {
+                      en: 'The exact UPI ID (e.g. name@bank), QR code, or phone number he provided. Helpline 1930 freezes this account.',
+                      hi: 'जिस UPI ID, फोन नंबर, बारकोड या बैंक खाते में उसने पैसे ट्रांसफर करने को कहा है। 1930 पर कॉल करते ही पुलिस इसी UPI को तुरंत फ्रीज करती है।'
+                    },
+                    iconColor: 'text-teal-300'
+                  }
+                ]
+              }
+            };
 
-              {/* 3 Interactive Evidence Checkpoints */}
-              <div className="space-y-3">
-                {/* Shot 1 */}
-                <div 
-                  onClick={() => toggleEvidenceCheck('profile')}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start justify-between gap-3 ${
-                    evidenceChecks.profile ? 'bg-emerald-950/30 border-emerald-500/50' : 'bg-white/6 border-white/12 hover:bg-white/10'
-                  }`}
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <Camera className="w-4 h-4 text-amber-300" />
-                      <span className="text-sm font-bold text-white">
-                        {isHindi ? 'स्क्रीनशॉट 1: अपराधी का मोबाइल नंबर, हैंडल व बायो' : 'Screenshot 1: Attacker Phone Number or Profile Bio'}
+            const activeEvidence = scenarioEvidenceMap[selectedScenario] || scenarioEvidenceMap.countdown;
+
+            return (
+              <motion.div
+                key="step-3"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.25 }}
+                className="space-y-6"
+              >
+                <div className="space-y-1">
+                  <div className="text-xs font-bold text-[#F3C5D6] uppercase tracking-wider">
+                    {isHindi ? 'चरण 3: न्यायालय-मान्य साक्ष्य सुरक्षा' : 'Step 3: 2-Minute Court Proof Preservation'}
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">
+                    {activeEvidence.title[language]}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[#D2CCE7]">
+                    {activeEvidence.subtitle[language]}
+                  </p>
+                </div>
+
+                {/* Scenario Warning: If Physical Danger / Stalking is selected */}
+                {selectedScenario === 'danger_stalking' && (
+                  <div className="p-4 rounded-2xl bg-rose-950/60 border border-rose-500/50 flex items-start gap-3 text-xs text-rose-100 leading-relaxed">
+                    <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold text-rose-200 block mb-0.5">
+                        {isHindi ? 'सुरक्षा नियम: जीवन व शारीरिक सुरक्षा पहले' : 'Safety Priority: Physical Security Precedes Proof'}
                       </span>
-                    </div>
-                    <p className="text-xs text-[#D2CCE7] leading-relaxed">
                       {isHindi
-                        ? 'चैट का सबसे ऊपरी हिस्सा जहां उसका पूरा मोबाइल नंबर (+91...) या इंस्टाग्राम/टेलीग्राम प्रोफाइल बायो दिखे। इसी से पुलिस कॉल रिकॉर्ड (CDR) निकलवाती है।'
-                        : 'Top of the chat showing full phone number (+91...) or Instagram/Telegram handle and profile link for telecom subpoenas.'}
-                    </p>
+                        ? 'यदि कोई आपका पीछा कर रहा है या आपके आसपास मौजूद है, तो स्क्रीनशॉट लेने के लिए न रुकें। तुरंत सुरक्षित भीड़भाड़ वाली जगह पहुंचें या 112 डायल करें। सबूत आपकी सुरक्षा के बाद भी रिकॉर्ड हो सकते हैं।'
+                        : 'If someone is actively approaching you, following you in person, or outside your premises, do not stop to capture screenshots. Reach a populated safe haven or call 112 immediately. Digital evidence can wait.'}
+                    </div>
                   </div>
-                  <div className={`w-6 h-6 rounded-full border flex items-center justify-center shrink-0 mt-1 ${
-                    evidenceChecks.profile ? 'border-emerald-400 bg-emerald-600 text-white' : 'border-white/30'
-                  }`}>
-                    {evidenceChecks.profile && <Check className="w-3.5 h-3.5" />}
-                  </div>
+                )}
+
+                {/* 3 Interactive Evidence Checkpoints (Dynamically Tailored to Scenario) */}
+                <div className="space-y-3">
+                  {activeEvidence.items.map((item) => {
+                    const isChecked = !!evidenceChecks[item.key];
+                    return (
+                      <div 
+                        key={item.key}
+                        onClick={() => toggleEvidenceCheck(item.key)}
+                        className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start justify-between gap-3 ${
+                          isChecked ? 'bg-emerald-950/30 border-emerald-500/50' : 'bg-white/6 border-white/12 hover:bg-white/10'
+                        }`}
+                      >
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <Camera className={`w-4 h-4 ${item.iconColor}`} />
+                            <span className="text-sm font-bold text-white">
+                              {item.title[language]}
+                            </span>
+                          </div>
+                          <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                            {item.detail[language]}
+                          </p>
+                        </div>
+                        <div className={`w-6 h-6 rounded-full border flex items-center justify-center shrink-0 mt-1 ${
+                          isChecked ? 'border-emerald-400 bg-emerald-600 text-white' : 'border-white/30'
+                        }`}>
+                          {isChecked && <Check className="w-3.5 h-3.5" />}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
-                {/* Shot 2 */}
-                <div 
-                  onClick={() => toggleEvidenceCheck('threatMessage')}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start justify-between gap-3 ${
-                    evidenceChecks.threatMessage ? 'bg-emerald-950/30 border-emerald-500/50' : 'bg-white/6 border-white/12 hover:bg-white/10'
-                  }`}
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <Camera className="w-4 h-4 text-rose-300" />
-                      <span className="text-sm font-bold text-white">
-                        {isHindi ? 'स्क्रीनशॉट 2: धमकी भरा संदेश व फोन की पूरी घड़ी (No Crop)' : 'Screenshot 2: Threat Message with Phone Clock (Do Not Crop)'}
-                      </span>
-                    </div>
-                    <p className="text-xs text-[#D2CCE7] leading-relaxed">
-                      {isHindi
-                        ? 'स्क्रीन को क्रॉप न करें! फोन के ऊपर दिखने वाला समय (घड़ी), बैटरी प्रतिशत और तारीख दिखना जरूरी है ताकि कोई छेड़छाड़ का आरोप न लगा सके।'
-                        : 'Do not crop: The top phone status bar (clock, battery level, network, and date) must remain fully visible to prevent tampering challenges in court.'}
-                    </p>
-                  </div>
-                  <div className={`w-6 h-6 rounded-full border flex items-center justify-center shrink-0 mt-1 ${
-                    evidenceChecks.threatMessage ? 'border-emerald-400 bg-emerald-600 text-white' : 'border-white/30'
-                  }`}>
-                    {evidenceChecks.threatMessage && <Check className="w-3.5 h-3.5" />}
-                  </div>
+                {/* Tip on safe storage */}
+                <div className="p-3.5 rounded-2xl bg-white/6 border border-white/12 flex items-center gap-3 text-xs text-[#D2CCE7]">
+                  <ShieldCheck className="w-5 h-5 text-emerald-300 shrink-0" />
+                  <span>
+                    {isHindi
+                      ? 'सुरक्षा सुझाव: इन स्क्रीनशॉट को अपने फोन के हिडन एल्बम में रखें या किसी निजी गुप्त ईमेल पर सुरक्षित रख लें।'
+                      : 'Safety Tip: Keep these 3 uncropped screenshots in a hidden secure folder or email them to a private secure account.'}
+                  </span>
                 </div>
 
-                {/* Shot 3 */}
-                <div 
-                  onClick={() => toggleEvidenceCheck('paymentHandle')}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start justify-between gap-3 ${
-                    evidenceChecks.paymentHandle ? 'bg-emerald-950/30 border-emerald-500/50' : 'bg-white/6 border-white/12 hover:bg-white/10'
-                  }`}
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <Camera className="w-4 h-4 text-teal-300" />
-                      <span className="text-sm font-bold text-white">
-                        {isHindi ? 'स्क्रीनशॉट 3: पैसे मांगने का UPI ID या QR कोड' : 'Screenshot 3: The Payment Demand / UPI / QR Code'}
-                      </span>
-                    </div>
-                    <p className="text-xs text-[#D2CCE7] leading-relaxed">
-                      {isHindi
-                        ? 'जिस UPI ID, फोन नंबर, बारकोड या बैंक खाते में उसने पैसे ट्रांसफर करने को कहा है। 1930 पर कॉल करते ही पुलिस इसी UPI को तुरंत फ्रीज करती है।'
-                        : 'The exact UPI ID (e.g. name@bank), QR code, or phone number he provided. Helpline 1930 freezes this account.'}
-                    </p>
-                  </div>
-                  <div className={`w-6 h-6 rounded-full border flex items-center justify-center shrink-0 mt-1 ${
-                    evidenceChecks.paymentHandle ? 'border-emerald-400 bg-emerald-600 text-white' : 'border-white/30'
-                  }`}>
-                    {evidenceChecks.paymentHandle && <Check className="w-3.5 h-3.5" />}
-                  </div>
+                {/* Bottom Navigation for Step 3 */}
+                <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => goToStep(2)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium text-xs sm:text-sm transition-colors border border-white/20 min-h-[44px]"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>{isHindi ? 'चरण 2 पर वापस' : 'Back to Step 2'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => markStepCompleteAndAdvance(3, 4)}
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
+                  >
+                    <span>{isHindi ? 'आगे बढ़ें: सीधी कार्रवाई (चरण 4) →' : 'Proceed to Step 4: Take Action →'}</span>
+                  </button>
                 </div>
-              </div>
-
-              {/* Tip on safe storage */}
-              <div className="p-3.5 rounded-2xl bg-white/6 border border-white/12 flex items-center gap-3 text-xs text-[#D2CCE7]">
-                <ShieldCheck className="w-5 h-5 text-emerald-300 shrink-0" />
-                <span>
-                  {isHindi
-                    ? 'सुरक्षा सुझाव: इन स्क्रीनशॉट को अपने फोन के हिडन एल्बम में रखें या किसी निजी गुप्त ईमेल पर सुरक्षित रख लें।'
-                    : 'Safety Tip: Keep these 3 uncropped screenshots in a hidden secure folder or email them to a private secure account.'}
-                </span>
-              </div>
-
-              {/* Bottom Navigation for Step 3 */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-3">
-                <button
-                  type="button"
-                  onClick={() => goToStep(2)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium text-xs sm:text-sm transition-colors border border-white/20 min-h-[44px]"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span>{isHindi ? 'चरण 2 पर वापस' : 'Back to Step 2'}</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => markStepCompleteAndAdvance(3, 4)}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
-                >
-                  <span>{isHindi ? 'आगे बढ़ें: सीधी कार्रवाई (चरण 4) →' : 'Proceed to Step 4: Take Action →'}</span>
-                </button>
-              </div>
-            </motion.div>
-          )}
+              </motion.div>
+            );
+          })()}
 
           {/* ========================================================================= */}
           {/* STEP 4: DIRECT ACTIONS & STATUTORY REMEDIES                               */}
           {/* ========================================================================= */}
-          {currentStep === 4 && (
-            <motion.div
-              key="step-4"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.25 }}
-              className="space-y-6"
-            >
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-[#F3C5D6] uppercase tracking-wider">
-                  {isHindi ? 'चरण 4: सीधी कार्रवाई और विधिक उपाय' : 'Step 4: Take Direct Action & Legal Remedies'}
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white">
-                  {isHindi ? 'नियंत्रण वापस लें: आवश्यक कार्रवाई शुरू करें' : 'Take Back Control: Execute Immediate Action'}
-                </h2>
-                <p className="text-xs sm:text-sm text-[#D2CCE7]">
-                  {isHindi 
-                    ? 'आपने स्थिति समझ ली है और साक्ष्य सुरक्षित कर लिए हैं। अब नीचे दिए गए उपायों में से अपनी प्राथमिकता चुनें:'
-                    : 'Evidence is secured and threat is contained. Choose your prioritized immediate remedy below:'}
-                </p>
-              </div>
+          {currentStep === 4 && (() => {
+            // Guard false completion language: Check if earlier preparation steps (2 and 3) are actually completed
+            const arePrepStepsComplete = completedSteps.includes(2) && completedSteps.includes(3);
 
-              {/* Action Cards Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {/* 1. StopNCII / TakeItDown Hub */}
-                <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2 text-emerald-300 font-bold text-sm">
-                      <ShieldCheck className="w-4 h-4" />
-                      <span>{isHindi ? 'StopNCII हैश सुरक्षा हब' : 'StopNCII Pre-emptive Hashing'}</span>
-                    </div>
-                    <p className="text-xs text-[#D2CCE7] leading-relaxed">
-                      {isHindi
-                        ? 'अपने डिवाइस पर फोटो का डिजिटल हैश (फिंगरप्रिंट) बनाएं। मूल फोटो कभी अपलोड नहीं होती। मेटा, थ्रेड्स और अन्य साइट्स पर अपलोड स्वतः ब्लॉक हो जाएगा।'
-                        : 'Generates a unique cryptographic hash on your device. Original photo never leaves your phone. Blocks dissemination across Meta, Threads, OnlyFans.'}
-                    </p>
+            return (
+              <motion.div
+                key="step-4"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.25 }}
+                className="space-y-6"
+              >
+                <div className="space-y-1">
+                  <div className="text-xs font-bold text-[#F3C5D6] uppercase tracking-wider">
+                    {isHindi ? 'चरण 4: सीधी कार्रवाई और विधिक उपाय' : 'Step 4: Take Direct Action & Legal Remedies'}
                   </div>
-                  <button
-                    onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')}
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white text-xs font-bold transition-all"
-                  >
-                    <span>{isHindi ? 'StopNCII पोर्टल खोलें' : 'Open StopNCII Hub'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">
+                    {isHindi ? 'नियंत्रण वापस लें: आवश्यक कार्रवाई शुरू करें' : 'Take Back Control: Execute Immediate Action'}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[#D2CCE7]">
+                    {arePrepStepsComplete
+                      ? (isHindi 
+                          ? 'साक्ष्य सुरक्षित हैं और खतरे की रोकथाम की जा चुकी है। नीचे दिए गए विधिक उपायों में से आवश्यक कार्रवाई चुनें:' 
+                          : 'Evidence is secured and threat containment is active. Execute your prioritized immediate remedy below:')
+                      : (isHindi 
+                          ? 'अनुशंसित तैयारी चरण अभी खुले हैं। आप सीधे नीचे दिए गए विधिक उपाय चुन सकती हैं, या किसी भी समय खतरे की पहचान (चरण 2) व साक्ष्य सुरक्षा (चरण 3) पर वापस जा सकती हैं।' 
+                          : 'Recommended preparation steps are open. You can execute direct remedies below, or revisit threat containment (Step 2) and evidence preservation (Step 3) at any time.')}
+                  </p>
                 </div>
 
-                {/* 2. 24-Hour Intermediary Notice */}
-                <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
-                      <FileCheck2 className="w-4 h-4" />
-                      <span>{isHindi ? '24-घंटे Takedown नोटिस' : '24-Hour Intermediary Takedown'}</span>
+                {/* Honest preparation state indicator if earlier steps were skipped */}
+                {!arePrepStepsComplete && (
+                  <div className="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-400/30 flex items-start gap-3 text-xs text-amber-200">
+                    <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <span className="font-bold text-amber-100 block">
+                        {isHindi ? 'सुझाव: साक्ष्य सुरक्षा की पुष्टि करें' : 'Guidance: Verify Evidence Preservation'}
+                      </span>
+                      <p className="leading-relaxed">
+                        {isHindi
+                          ? 'ब्लॉक करने से पहले बिना-क्रॉप किए स्क्रीनशॉट लेना (BSA 63) कोर्ट में आपके पक्ष को मजबूत करता है। आप आवश्यकतानुसार चरण 2 या चरण 3 पर वापस जाकर साक्ष्य सहेज सकती हैं।'
+                          : 'Capturing uncropped screenshots before blocking (under Section 63 BSA) preserves vital proof. You can return to Step 2 or Step 3 whenever you wish.'}
+                      </p>
+                      <div className="flex gap-2 pt-1">
+                        {!completedSteps.includes(2) && (
+                          <button
+                            type="button"
+                            onClick={() => goToStep(2)}
+                            className="text-[11px] font-bold text-amber-300 hover:underline cursor-pointer"
+                          >
+                            {isHindi ? '← चरण 2 (खतरा रोकथाम) देखें' : '← Revisit Step 2 (Threat Assessment)'}
+                          </button>
+                        )}
+                        {!completedSteps.includes(3) && (
+                          <button
+                            type="button"
+                            onClick={() => goToStep(3)}
+                            className="text-[11px] font-bold text-amber-300 hover:underline cursor-pointer"
+                          >
+                            {isHindi ? '← चरण 3 (साक्ष्य सुरक्षा) देखें' : '← Revisit Step 3 (Evidence Proof)'}
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-xs text-[#D2CCE7] leading-relaxed">
-                      {isHindi
-                        ? 'IT Rules के नियम 3(2)(b) के तहत टेलीग्राम, मेटा, व्हाट्सएप के शिकायत अधिकारी को 24 घंटे के अंदर अश्लील सामग्री हटाने का कानूनी नोटिस भेजें।'
-                        : 'Rule 3(2)(b) of IT Rules 2021 mandates platforms remove intimate imagery within 24 hours of receiving notice.'}
-                    </p>
                   </div>
-                  <button
-                    onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')}
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-bold transition-all"
-                  >
-                    <span>{isHindi ? 'प्लेटफॉर्म Takedown खोलें' : 'Platform Grievance Portals'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+                )}
 
-                {/* 3. Police FIR Generator */}
-                <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2 text-teal-300 font-bold text-sm">
-                      <Scale className="w-4 h-4" />
-                      <span>{isHindi ? 'गोपनीय साइबर FIR ड्राफ्ट' : 'Confidential Police FIR Dossier'}</span>
+                {/* Scenario-Tailored Action Cards Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  {/* CARD 1: Prioritized by Scenario */}
+                  {selectedScenario === 'danger_stalking' ? (
+                    <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/50 space-y-3 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
+                          <PhoneCall className="w-4 h-4" />
+                          <span>{isHindi ? 'आपातकालीन पुलिस 112 / महिला 1090' : 'Immediate Police 112 / Women 1090'}</span>
+                        </div>
+                        <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                          {isHindi
+                            ? 'शारीरिक सुरक्षा संकट के लिए तुरंत पुलिस को 112 पर कॉल करें। उत्तर प्रदेश में 1090 (महिला पावर लाइन) तथा राष्ट्रीय स्तर पर 1091 उपलब्ध है।'
+                            : 'Immediate safety response. Dial 112 for police dispatch. Women helpline 1090/1091 provides rapid officer intervention.'}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <a
+                          href="tel:112"
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all"
+                        >
+                          <PhoneCall className="w-3.5 h-3.5" />
+                          <span>112</span>
+                        </a>
+                        <a
+                          href="tel:1090"
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-bold transition-all"
+                        >
+                          <PhoneCall className="w-3.5 h-3.5" />
+                          <span>1090</span>
+                        </a>
+                      </div>
                     </div>
-                    <p className="text-xs text-[#D2CCE7] leading-relaxed">
-                      {isHindi
-                        ? 'BNS धारा 73 के तहत पूर्ण सील पहचान ("सुश्री X") के साथ तैयार औपचारिक शिकायत। IT Act 67A व BNS 308(2) धाराओं सहित प्रिंट या कॉपी करें।'
-                        : 'Pre-formatted legal complaint draft with sealed identity under Section 73 BNS. Cites non-bailable felony provisions.'}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => onNavigateToTab('report', 'complaint-draft-generator')}
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-white text-[#26215C] hover:bg-[#FAF8F3] text-xs font-bold transition-all"
-                  >
-                    <span>{isHindi ? 'शिकायत ड्राफ्ट तैयार करें' : 'Generate FIR Complaint'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+                  ) : selectedScenario === 'paid' ? (
+                    <div className="p-4 rounded-2xl bg-amber-950/40 border border-amber-400/50 space-y-3 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-amber-300 font-bold text-sm">
+                          <PhoneCall className="w-4 h-4" />
+                          <span>{isHindi ? 'गोल्डन ऑवर 1930 बैंक खाता फ्रीज' : '1930 Golden Hour Bank Freeze'}</span>
+                        </div>
+                        <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                          {isHindi
+                            ? 'पैसे भेजने के 2 घंटे के भीतर राष्ट्रीय साइबर हेल्पलाइन 1930 पर कॉल करें ताकि नोडल अधिकारी अपराधी के खाते पर लीन (Lien) लगाकर पैसे फ्रीज कर सके।'
+                            : 'Call 1930 within 2 hours. Police liaison contacts beneficiary banks to freeze stolen funds in transit.'}
+                        </p>
+                      </div>
+                      <a
+                        href="tel:1930"
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-amber-500 hover:bg-amber-600 text-black text-xs font-bold transition-all"
+                      >
+                        <PhoneCall className="w-3.5 h-3.5" />
+                        <span>{isHindi ? '1930 पर तुरंत कॉल करें' : 'Call 1930 Immediately'}</span>
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-emerald-300 font-bold text-sm">
+                          <ShieldCheck className="w-4 h-4" />
+                          <span>{isHindi ? 'StopNCII हैश सुरक्षा हब' : 'StopNCII Pre-emptive Hashing'}</span>
+                        </div>
+                        <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                          {isHindi
+                            ? 'अपने डिवाइस पर फोटो का डिजिटल हैश (फिंगरप्रिंट) बनाएं। मूल फोटो कभी अपलोड नहीं होती। मेटा, थ्रेड्स और अन्य साइट्स पर अपलोड स्वतः ब्लॉक हो जाएगा।'
+                            : 'Generates a unique cryptographic hash on your device. Original photo never leaves your phone. Blocks dissemination across Meta, Threads, OnlyFans.'}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')}
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white text-xs font-bold transition-all cursor-pointer"
+                      >
+                        <span>{isHindi ? 'StopNCII पोर्टल खोलें' : 'Open StopNCII Hub'}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
 
-                {/* 4. National Helplines */}
-                <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2 text-amber-300 font-bold text-sm">
-                      <PhoneCall className="w-4 h-4" />
-                      <span>{isHindi ? '24/7 राष्ट्रीय हेल्पलाइन' : '24/7 National Emergency Helplines'}</span>
+                  {/* CARD 2: 24-Hour Takedown or Security Hardening */}
+                  <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
+                        <FileCheck2 className="w-4 h-4" />
+                        <span>{isHindi ? '24-घंटे Takedown नोटिस' : '24-Hour Intermediary Takedown'}</span>
+                      </div>
+                      <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                        {isHindi
+                          ? 'IT Rules के नियम 3(2)(b) के तहत टेलीग्राम, मेटा, व्हाट्सएप के शिकायत अधिकारी को 24 घंटे के अंदर अश्लील सामग्री हटाने का कानूनी नोटिस भेजें।'
+                          : 'Rule 3(2)(b) of IT Rules 2021 mandates platforms remove intimate imagery within 24 hours of receiving notice.'}
+                      </p>
                     </div>
-                    <p className="text-xs text-[#D2CCE7] leading-relaxed">
-                      {isHindi
-                        ? '1930 (वित्तीय साइबर फ्रॉड), 1090 (महिला पावर लाइन), 112 (आपातकालीन पुलिस) और 1800-599-0019 (किरण मानसिक स्वास्थ्य सहारा)।'
-                        : '1930 (Cyber Fraud & Bank Freeze), 1090 (Women Power Line), 112 (Emergency Police), and 1800-599-0019 (KIRAN Mental Health).'}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <a
-                      href="tel:1930"
-                      className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-black text-xs font-bold transition-all"
+                    <button
+                      onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')}
+                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-bold transition-all cursor-pointer"
                     >
-                      <PhoneCall className="w-3 h-3" />
-                      <span>1930</span>
-                    </a>
-                    <a
-                      href="tel:1090"
-                      className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-bold transition-all"
+                      <span>{isHindi ? 'प्लेटफॉर्म Takedown खोलें' : 'Platform Grievance Portals'}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {/* CARD 3: Police FIR Generator */}
+                  <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2 text-teal-300 font-bold text-sm">
+                        <Scale className="w-4 h-4" />
+                        <span>{isHindi ? 'गोपनीय साइबर FIR ड्राफ्ट' : 'Confidential Police FIR Dossier'}</span>
+                      </div>
+                      <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                        {isHindi
+                          ? 'BNS धारा 73 के तहत पूर्ण सील पहचान ("सुश्री X") के साथ तैयार औपचारिक शिकायत। IT Act 67A व BNS 308(2) धाराओं सहित प्रिंट या कॉपी करें।'
+                          : 'Pre-formatted legal complaint draft with sealed identity under Section 73 BNS. Cites non-bailable felony provisions.'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => onNavigateToTab('report', 'complaint-draft-generator')}
+                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-white text-[#26215C] hover:bg-[#FAF8F3] text-xs font-bold transition-all cursor-pointer"
                     >
-                      <PhoneCall className="w-3 h-3" />
-                      <span>1090</span>
-                    </a>
-                    <a
-                      href="tel:112"
-                      className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all"
-                    >
-                      <PhoneCall className="w-3 h-3" />
-                      <span>112</span>
-                    </a>
+                      <span>{isHindi ? 'शिकायत ड्राफ्ट तैयार करें' : 'Generate FIR Complaint'}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {/* CARD 4: National Emergency Helplines (with accurate NCW description) */}
+                  <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2 text-amber-300 font-bold text-sm">
+                        <PhoneCall className="w-4 h-4" />
+                        <span>{isHindi ? '24/7 राष्ट्रीय हेल्पलाइन' : '24/7 National Emergency Helplines'}</span>
+                      </div>
+                      <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                        {isHindi
+                          ? '1930 (वित्तीय साइबर फ्रॉड), 1090 (महिला पावर लाइन), 112 (आपातकालीन पुलिस), एवं NCW 24×7 हेल्पलाइन (14490 — महिलाओं के खिलाफ हिंसा, उत्पीड़न, घरेलू शोषण आदि में सहायता, केवल साइबर मामलों तक सीमित नहीं)।'
+                          : '1930 (Cyber Fraud & Bank Freeze), 1090 (Women Power Line), 112 (Emergency Police), and NCW 24×7 Helpline (14490 — support for violence against women, harassment, domestic abuse, and more, not limited to cyber cases).'}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <a
+                        href="tel:1930"
+                        className="flex-1 min-w-[70px] inline-flex items-center justify-center gap-1 px-3 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-black text-xs font-bold transition-all"
+                      >
+                        <PhoneCall className="w-3 h-3" />
+                        <span>1930</span>
+                      </a>
+                      <a
+                        href="tel:1090"
+                        className="flex-1 min-w-[70px] inline-flex items-center justify-center gap-1 px-3 py-2 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-bold transition-all"
+                      >
+                        <PhoneCall className="w-3 h-3" />
+                        <span>1090</span>
+                      </a>
+                      <a
+                        href="tel:14490"
+                        className="flex-1 min-w-[70px] inline-flex items-center justify-center gap-1 px-3 py-2 rounded-full bg-[#373078] hover:bg-[#473F94] text-white text-xs font-bold transition-all border border-white/20"
+                      >
+                        <PhoneCall className="w-3 h-3" />
+                        <span>14490</span>
+                      </a>
+                      <a
+                        href="tel:112"
+                        className="flex-1 min-w-[70px] inline-flex items-center justify-center gap-1 px-3 py-2 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all"
+                      >
+                        <PhoneCall className="w-3 h-3" />
+                        <span>112</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Bottom Navigation for Step 4 */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-3">
-                <button
-                  type="button"
-                  onClick={() => goToStep(3)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium text-xs sm:text-sm transition-colors border border-white/20 min-h-[44px]"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span>{isHindi ? 'चरण 3 पर वापस' : 'Back to Step 3'}</span>
-                </button>
+                {/* Bottom Navigation for Step 4 */}
+                <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => goToStep(3)}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium text-xs sm:text-sm transition-colors border border-white/20 min-h-[44px]"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>{isHindi ? 'चरण 3 पर वापस' : 'Back to Step 3'}</span>
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => goToStep(1)}
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-[#FAF8F3] text-xs sm:text-sm font-medium transition-colors border border-white/20 min-h-[44px]"
-                >
-                  <RefreshCw className="w-3.5 h-3.5 text-[#F3C5D6]" />
-                  <span>{isHindi ? 'पाथ पुनः प्रारंभ करें' : 'Start Path Again'}</span>
-                </button>
-              </div>
-            </motion.div>
-          )}
+                  <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <button
+                      type="button"
+                      onClick={() => markStepCompleteAndAdvance(4, 4)}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold transition-all shadow-soft min-h-[44px]"
+                    >
+                      <Check className="w-4 h-4" />
+                      <span>{isHindi ? 'रेस्क्यू पाथ पूर्ण चिह्नित करें' : 'Mark Rescue Path Complete'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => goToStep(1)}
+                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-[#FAF8F3] text-xs sm:text-sm font-medium transition-colors border border-white/20 min-h-[44px]"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5 text-[#F3C5D6]" />
+                      <span>{isHindi ? 'पुनः प्रारंभ' : 'Reset Path'}</span>
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })()}
         </AnimatePresence>
       </div>
 

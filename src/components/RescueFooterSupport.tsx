@@ -180,7 +180,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
               <a
                 href="tel:14490"
                 className="group p-3 rounded-xl bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] transition-all flex items-center justify-between gap-2 min-h-[50px] active:scale-98"
-                title="Dial NCW Helpline 14490 (Calls) or message 7827170170 (WhatsApp)"
+                title="Dial NCW 24x7 Helpline 14490 (Calls) or message 7827170170 (WhatsApp) — Women safety, domestic abuse & harassment support"
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
@@ -189,7 +189,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                     <span className="text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded bg-[#E1F5EE] text-[#0F6E56]">NCW</span>
                   </div>
                   <p className="text-[10px] text-[#666] truncate">
-                    {isHindi ? 'महिला आयोग (कॉल: 14490 • व्हाट्सएप: 7827170170)' : 'NCW (Calls: 14490 • WhatsApp: 7827170170)'}
+                    {isHindi ? 'NCW 24×7 हेल्पलाइन (महिला सुरक्षा, उत्पीड़न, हिंसा निवारण)' : 'NCW 24×7 Helpline (Women Safety, Abuse & Harassment)'}
                   </p>
                 </div>
                 <div className="w-7 h-7 rounded-lg bg-white border border-[#E8E2DC] text-[#26215C] group-hover:bg-[#26215C] group-hover:text-white transition-colors flex items-center justify-center shrink-0">

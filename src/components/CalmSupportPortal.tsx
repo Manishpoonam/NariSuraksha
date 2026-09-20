@@ -88,7 +88,7 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
           href="tel:14490"
           onClick={() => hapticAction()}
           className="flex items-center justify-between p-3.5 rounded-2xl bg-[#993556] hover:bg-[#7A2843] text-white transition-all shadow-soft group min-h-[54px] active:scale-98"
-          title="Dial NCW Helpline 14490 (Calls) or WhatsApp 7827170170"
+          title="Dial NCW 24x7 Helpline 14490 (Calls) or WhatsApp 7827170170 — Women safety, harassment & abuse support"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
@@ -97,7 +97,7 @@ export const CalmSupportPortal: React.FC<CalmSupportPortalProps> = ({
             <div className="min-w-0">
               <div className="font-mono font-extrabold text-base tracking-wider text-white">14490</div>
               <div className="text-[11px] text-rose-100 font-medium leading-tight truncate">
-                {isHindi ? 'महिला आयोग (व्हाट्सएप: 7827170170)' : 'NCW Helpline (WhatsApp: 7827170170)'}
+                {isHindi ? 'NCW 24×7 हेल्पलाइन (व्हाट्सएप: 7827170170)' : 'NCW 24×7 Helpline (WhatsApp: 7827170170)'}
               </div>
             </div>
           </div>

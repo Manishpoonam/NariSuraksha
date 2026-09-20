@@ -68,6 +68,37 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
   const currentStepItem = steps.find((s) => s.number === currentStep) || steps[0];
   const cleanCurrentTitle = (currentStepItem?.title || '').replace(/^\d+\.\s*/, '');
 
+  // Screen reader live region announcement tracking:
+  // Announce step change with context ("Step X of Y, Title, current")
+  // and only announce completion when real completion occurs.
+  const prevCompletedCountRef = React.useRef(completedStepNumbers.length);
+  const [srAnnouncement, setSrAnnouncement] = React.useState<string>(() =>
+    isHindi
+      ? `चरण ${currentStep} का ${steps.length}, ${cleanCurrentTitle}, वर्तमान चरण`
+      : `Step ${currentStep} of ${steps.length}, ${cleanCurrentTitle}, current`
+  );
+
+  React.useEffect(() => {
+    if (completedStepNumbers.length > prevCompletedCountRef.current) {
+      // Find newly completed step number
+      const newlyCompleted = completedStepNumbers[completedStepNumbers.length - 1];
+      const stepItem = steps.find((s) => s.number === newlyCompleted);
+      const title = (stepItem?.title || '').replace(/^\d+\.\s*/, '');
+      setSrAnnouncement(
+        isHindi
+          ? `चरण ${newlyCompleted} (${title}) पूर्ण हुआ। अब चरण ${currentStep} का ${steps.length}, ${cleanCurrentTitle}, वर्तमान चरण।`
+          : `Step ${newlyCompleted} (${title}) completed. Now on Step ${currentStep} of ${steps.length}, ${cleanCurrentTitle}, current.`
+      );
+    } else {
+      setSrAnnouncement(
+        isHindi
+          ? `चरण ${currentStep} का ${steps.length}, ${cleanCurrentTitle}, वर्तमान चरण।`
+          : `Step ${currentStep} of ${steps.length}, ${cleanCurrentTitle}, current.`
+      );
+    }
+    prevCompletedCountRef.current = completedStepNumbers.length;
+  }, [currentStep, completedStepNumbers, steps, cleanCurrentTitle, isHindi]);
+
   return (
     <div
       className={`rounded-[22px] transition-all ${
@@ -76,7 +107,12 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
           : 'bg-white border border-[#26215C]/10 shadow-soft p-3 sm:p-5'
       } ${className}`}
     >
-      {/* 1. INFORMATIONAL SEQUENCE BAR: Zero time-pressure, gentle somatic orientation */}
+      {/* Screen Reader Live Region for Accessible Step Announcements */}
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {srAnnouncement}
+      </div>
+
+      {/* 1. INFORMATIONAL SEQUENCE BAR: Consistent Recommended Framing */}
       {showSequenceHeader && (
         <div className="flex items-center justify-between text-xs mb-3 sm:mb-4">
           <div className="flex items-center gap-2 min-w-0">
@@ -102,7 +138,9 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
                 theme === 'dark' ? 'text-[#9E93C4]' : 'text-[#5A5672]'
               }`}
             >
-              {isHindi ? 'सभी चरण कभी भी सुलभ हैं' : 'All steps freely accessible'}
+              {isHindi
+                ? 'अनुशंसित क्रम • आप किसी भी चरण पर कभी भी जा सकते हैं'
+                : 'Recommended sequence • You can revisit any step at any time'}
             </span>
             {onReset && (
               <button
@@ -131,7 +169,7 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
         {/* MOBILE CONNECTING LINE SEGMENTS (<=639px):
             Runs behind the vertically-centered 32px/36px step circles across the 4 columns.
             3 individual connecting segments between step nodes 1->2, 2->3, and 3->4.
-            Each segment smoothly animates its fill width as the previous step is completed.
+            Filled ONLY when the preceding step is actually completed.
         */}
         <div className="sm:hidden absolute left-[12.5%] right-[12.5%] top-[22px] -translate-y-1/2 pointer-events-none z-0">
           <div className="relative w-full h-[2.5px]">
@@ -185,8 +223,26 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
         {/* 4-COLUMN STEPPER CONTAINER */}
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 md:gap-3 relative z-10">
           {steps.map((s, idx) => {
-            const isCompleted = completedStepNumbers.includes(s.number) && s.number !== currentStep;
+            // Precise 4-state stepper model:
+            // 1. current: active step the user is viewing
+            // 2. completed: actually completed via engagement/action (in completedStepNumbers)
+            // 3. skipped-not-completed: earlier step (number < currentStep) that was bypassed without completion
+            // 4. available: upcoming step (number > currentStep) ready to be engaged
             const isCurrent = s.number === currentStep;
+            const isCompleted = completedStepNumbers.includes(s.number);
+            const isSkipped = s.number < currentStep && !isCompleted;
+            const isAvailable = !isCurrent && !isCompleted && !isSkipped;
+
+            // Accessible state descriptor (NOT relying on color alone)
+            const stateText = isCurrent && isCompleted
+              ? (isHindi ? 'वर्तमान, पूर्ण' : 'Current, Completed')
+              : isCurrent
+              ? (isHindi ? 'वर्तमान' : 'Current')
+              : isCompleted
+              ? (isHindi ? 'पूर्ण' : 'Completed')
+              : isSkipped
+              ? (isHindi ? 'छोड़ा गया - अधूरा' : 'Skipped - not completed')
+              : (isHindi ? 'सुलभ' : 'Available');
 
             // Clean title without numeric prefix for display where step node is shown
             const titleWithoutNum = s.title.replace(/^\d+\.\s*/, '');
@@ -195,7 +251,7 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
             return (
               <div key={s.number} className="relative">
                 {/* TABLET & DESKTOP CONNECTOR LINE SEGMENT (>=640px):
-                    Slim connector segment between adjacent cards that smoothly fills as steps complete
+                    Slim connector segment between adjacent cards that smoothly fills ONLY when completed
                 */}
                 {idx < steps.length - 1 && (
                   <div
@@ -207,56 +263,52 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
                     <div
                       className="h-full bg-[#0F6E56] rounded-full"
                       style={{
-                        width: isCompleted ? '100%' : '0%',
+                        width: completedStepNumbers.includes(s.number) ? '100%' : '0%',
                         transition: prefersReducedMotion ? 'none' : 'width 300ms cubic-bezier(0.16, 1, 0.3, 1)',
                       }}
                     />
                   </div>
                 )}
 
-                {/* STEP BUTTON (Touch target >=44px guaranteed across all viewports) */}
+                {/* STEP BUTTON (Touch target >=44px, visible focus ring, keyboard accessible) */}
                 <button
                   type="button"
                   onClick={() => onStepClick(s.number)}
-                  aria-label={`${isHindi ? 'चरण' : 'Step'} ${s.number}: ${s.title}${
-                    isCompleted
-                      ? isHindi
-                        ? ' (पूर्ण)'
-                        : ' (Completed)'
-                      : isCurrent
-                      ? isHindi
-                        ? ' (वर्तमान)'
-                        : ' (Current)'
-                      : ''
-                  }`}
+                  aria-label={`${isHindi ? 'चरण' : 'Step'} ${s.number}: ${s.title} (${stateText})`}
                   aria-current={isCurrent ? 'step' : undefined}
-                  className={`w-full text-left transition-all cursor-pointer rounded-xl sm:rounded-2xl border min-h-[48px] sm:min-h-[56px] flex flex-col sm:flex-row items-center sm:items-center gap-1 sm:gap-2.5 md:gap-3 p-1.5 sm:p-2.5 md:p-3 active:scale-98 ${
-                    isCompleted
+                  className={`w-full text-left transition-all cursor-pointer rounded-xl sm:rounded-2xl border min-h-[48px] sm:min-h-[56px] flex flex-col sm:flex-row items-center sm:items-center gap-1 sm:gap-2.5 md:gap-3 p-1.5 sm:p-2.5 md:p-3 active:scale-98 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                    theme === 'dark' ? 'focus-visible:ring-[#F3C5D6] focus-visible:ring-offset-[#201B52]' : 'focus-visible:ring-[#993556] focus-visible:ring-offset-white'
+                  } ${
+                    isCompleted && !isCurrent
                       ? theme === 'dark'
-                        ? `bg-[#0F6E56]/15 border-[#0F6E56]/40 text-[#FAF8F3] hover:bg-[#0F6E56]/25 hover:border-[#0F6E56]/60 ${
-                            isCurrent ? 'ring-1 ring-[#0F6E56]/50 shadow-xs' : ''
-                          }`
-                        : `bg-[#E1F5EE]/40 border-[#0F6E56]/30 text-[#0F6E56] hover:bg-[#E1F5EE]/70 hover:border-[#0F6E56]/50 ${
-                            isCurrent ? 'ring-1 ring-[#0F6E56]/40 shadow-soft' : ''
-                          }`
+                        ? 'bg-[#0F6E56]/15 border-[#0F6E56]/40 text-[#FAF8F3] hover:bg-[#0F6E56]/25 hover:border-[#0F6E56]/60'
+                        : 'bg-[#E1F5EE]/40 border-[#0F6E56]/30 text-[#0F6E56] hover:bg-[#E1F5EE]/70 hover:border-[#0F6E56]/50'
                       : isCurrent
-                      ? theme === 'dark'
+                      ? isCompleted
+                        ? theme === 'dark'
+                          ? 'bg-[#0F6E56]/25 border-[#0F6E56] text-white shadow-xs ring-2 ring-[#F3C5D6]/60'
+                          : 'bg-[#E1F5EE] border-[#0F6E56] text-[#0F6E56] shadow-soft ring-2 ring-[#0F6E56]/40'
+                        : theme === 'dark'
                         ? 'bg-white/15 border-[#F3C5D6] text-white shadow-xs ring-1 ring-[#F3C5D6]/30'
                         : 'bg-[#FAF8F3] border-[#993556]/40 text-[#26215C] shadow-soft ring-1 ring-[#993556]/25'
+                      : isSkipped
+                      ? theme === 'dark'
+                        ? 'bg-amber-950/20 border-dashed border-amber-400/40 text-[#D2CCE7] hover:bg-amber-950/30'
+                        : 'bg-amber-50/50 border-dashed border-amber-400/50 text-[#5A5672] hover:bg-amber-50'
                       : theme === 'dark'
                       ? 'bg-white/[0.03] border-white/10 text-[#9E93C4] hover:text-white hover:border-white/20 hover:bg-white/5'
                       : 'bg-[#FAF8F3]/50 border-[#26215C]/10 text-[#5A5672] hover:bg-[#FAF8F3] hover:border-[#26215C]/20'
                   }`}
                 >
-                  {/* Step Marker Node:
-                      - Completed: solid teal fill with checkmark icon in place of number (no badge overlay)
-                      - Current: plum fill with number and gentle somatic pulse
-                      - Upcoming: muted gray outline with number
-                      - Fixed 32px (mobile) / 36px (desktop) box ensures connector line alignment never shifts
+                  {/* Step Marker Node (Uses distinct shapes/icons, never color alone):
+                      - Completed: teal circle with Checkmark icon ✓
+                      - Current: active ring with somatic pulse
+                      - Skipped: dashed border with step number and alert marker
+                      - Available: solid clean outline with step number
                   */}
                   <div className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center shrink-0">
                     <motion.div
-                      animate={!isCompleted && isCurrent ? breathingAnimation : {}}
+                      animate={isCurrent ? breathingAnimation : {}}
                       className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full box-border border flex items-center justify-center font-bold text-xs shrink-0 transition-colors relative z-10 ${
                         isCompleted
                           ? 'bg-[#0F6E56] text-white border-[#0F6E56]'
@@ -264,6 +316,10 @@ export const TraumaInformedStepTracker: React.FC<TraumaInformedStepTrackerProps>
                           ? theme === 'dark'
                             ? 'bg-[#993556] text-white border-[#F3C5D6] ring-2 ring-[#F3C5D6]/50 ring-offset-1 ring-offset-[#201B52]'
                             : 'bg-[#993556] text-white border-[#993556] ring-2 ring-[#993556]/30 ring-offset-1 ring-offset-white'
+                          : isSkipped
+                          ? theme === 'dark'
+                            ? 'bg-amber-900/30 text-amber-200 border-dashed border-amber-400/60'
+                            : 'bg-amber-100 text-amber-900 border-dashed border-amber-500'
                           : theme === 'dark'
                           ? 'bg-[#201B52] sm:bg-white/10 text-[#D2CCE7]/80 border-white/20'
                           : 'bg-white text-[#5A5672] border-[#26215C]/20'

@@ -102,7 +102,7 @@ export const AboutTrustSection: React.FC<AboutTrustSectionProps> = ({ language }
           <span className="font-bold text-[#2D2D2D]">
             {isHindi ? 'मान्यता प्राप्त स्रोत एवं हेल्पलाइन:' : 'Verified Official Sources:'}
           </span>
-          <span>MHA Cyber Crime (1930) • NCW (Calls: 14490 / WhatsApp: +91 7827170170) • Tele-MANAS (14416) • StopNCII.org</span>
+          <span>MHA Cyber Crime (1930) • NCW 24×7 Helpline (Calls: 14490 / WhatsApp: +91 7827170170 — violence, harassment & abuse support) • Tele-MANAS (14416) • StopNCII.org</span>
         </div>
         <span className="text-[11px] text-[#888]">
           {isHindi ? 'भारतीय सूचना प्रौद्योगिकी अधिनियम व BNS (2023) के अनुसार' : 'Aligned with IT Act 2000 & BNS 2023'}

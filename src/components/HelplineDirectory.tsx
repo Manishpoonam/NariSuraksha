@@ -59,8 +59,8 @@ export const HelplineDirectory: React.FC<HelplineDirectoryProps> = ({
         };
       case 'ncw_helpline':
         return {
-          en: 'You speak with an NCW women’s rights counselor. If local police are unresponsive, NCW escalates directly to the state DGP or Cyber Crime Cell head to ensure your complaint is registered under identity-protection provisions.',
-          hi: 'राष्ट्रीय महिला आयोग की महिला परामर्शदाता आपसे बात करेंगी। यदि स्थानीय पुलिस सहयोग नहीं करती, तो NCW सीधे राज्य पुलिस महानिदेशक (DGP) से समन्वय कर कार्रवाई कराती है।'
+          en: 'NCW 24×7 Helpline provides statutory support for violence against women, harassment, domestic abuse, and cybercrimes, escalating directly with senior police leadership to safeguard victim rights and identity.',
+          hi: 'NCW 24×7 हेल्पलाइन महिलाओं के खिलाफ हिंसा, उत्पीड़न, घरेलू हिंसा और साइबर अपराधों में सहायता प्रदान करती है और पीड़िता के अधिकारों व पहचान की रक्षा के लिए सीधे वरिष्ठ पुलिस अधिकारियों से समन्वय कराती है।'
         };
       case 'women_police_1091':
         return {

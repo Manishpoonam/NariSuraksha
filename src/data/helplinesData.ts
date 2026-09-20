@@ -29,8 +29,8 @@ export const HELPLINE_ITEMS: HelplineItem[] = [
   {
     id: 'ncw_helpline',
     name: {
-      en: 'National Commission for Women (NCW) Helpline & Cyber Cell',
-      hi: 'राष्ट्रीय महिला आयोग (NCW) हेल्पलाइन व साइबर सेल',
+      en: 'National Commission for Women (NCW) 24x7 Helpline',
+      hi: 'राष्ट्रीय महिला आयोग (NCW) 24x7 हेल्पलाइन',
     },
     category: 'women_crisis',
     number: '14490 (Calls) / +91 7827170170 (WhatsApp)',
@@ -47,8 +47,8 @@ export const HELPLINE_ITEMS: HelplineItem[] = [
       hi: 'सार्वजनिक रूप से सूचीबद्ध सरकारी हेल्पलाइन',
     },
     description: {
-      en: 'Dedicated 24/7 support for women facing cyber harassment, sextortion, and intimate leaks. Call 14490 for the voice helpline, or message +91 7827170170 on WhatsApp for the NCW cyber cell.',
-      hi: 'साइबर उत्पीड़न, ब्लैकमेल और अश्लील सामग्री के प्रसार के खिलाफ महिलाओं के लिए 24/7 सहायता। फोन कॉल के लिए 14490 डायल करें, या व्हाट्सएप शिकायत के लिए +91 7827170170 पर संपर्क करें।',
+      en: 'NCW 24×7 Helpline — support for violence against women, harassment, domestic abuse, and more, not limited to cyber cases. Call 14490 for the voice helpline, or message +91 7827170170 on WhatsApp.',
+      hi: 'NCW 24×7 हेल्पलाइन — महिलाओं के खिलाफ हिंसा, उत्पीड़न, घरेलू दुर्व्यवहार और अन्य संकटों में सहायता (केवल साइबर मामलों तक सीमित नहीं)। फोन कॉल के लिए 14490 डायल करें, या व्हाट्सएप पर +91 7827170170 पर संपर्क करें।',
     },
   },
   {

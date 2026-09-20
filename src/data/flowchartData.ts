@@ -173,11 +173,11 @@ export const DECISION_NODES: DecisionNode[] = [
         stepNumber: 4,
         title: {
           en: 'Contact NCW (National Commission for Women) 24/7 Helpline',
-          hi: 'राष्ट्रीय महिला आयोग (NCW) हेल्पलाइन (कॉल: 14490 • व्हाट्सएप: 7827170170)',
+          hi: 'राष्ट्रीय महिला आयोग (NCW) 24/7 हेल्पलाइन (कॉल: 14490 • व्हाट्सएप: 7827170170)',
         },
         description: {
-          en: 'NCW has dedicated cyber nodal officers who directly follow up with Director Generals of Police (DGPs) for swift action. Call toll-free 14490 or WhatsApp 7827170170.',
-          hi: 'NCW की स्पेशल साइबर सेल सीधे पुलिस महानिदेशक स्तर पर तेजी से कार्रवाई करवाती है। 14490 पर कॉल करें या 7827170170 पर व्हाट्सएप करें।',
+          en: 'NCW 24×7 Helpline provides assistance for violence against women, harassment, domestic abuse, and cybercrimes, escalating directly with state police leadership. Call 14490 or WhatsApp +91 7827170170.',
+          hi: 'NCW 24×7 हेल्पलाइन महिलाओं के खिलाफ हिंसा, उत्पीड़न, घरेलू हिंसा और साइबर अपराधों में सहायता देती है और राज्य पुलिस नेतृत्व से समन्वय कराती है। 14490 पर कॉल करें या +91 7827170170 पर व्हाट्सएप करें।',
         },
         buttonLabel: {
           en: 'Call NCW (14490 / 7827170170)',

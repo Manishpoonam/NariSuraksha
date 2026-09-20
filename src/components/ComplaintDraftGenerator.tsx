@@ -358,6 +358,7 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
     hapticSuccess();
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
+    setCompletedSteps((prev) => (prev.includes(4) ? prev : [...prev, 4]));
   };
 
   const handleDownload = () => {
@@ -370,6 +371,7 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
     link.click();
     URL.revokeObjectURL(url);
     hapticAction();
+    setCompletedSteps((prev) => (prev.includes(4) ? prev : [...prev, 4]));
   };
 
   const handleExportPDF = (action: 'view_print' | 'download_file' = 'view_print', customName?: string) => {
@@ -381,6 +383,7 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
       { action, customFileName: customName || neutralFileName }
     );
     setPdfGenerated(true);
+    setCompletedSteps((prev) => (prev.includes(4) ? prev : [...prev, 4]));
   };
 
   const handlePrint = () => {

@@ -390,8 +390,8 @@ export const GuidedEmergencyFlow: React.FC<GuidedEmergencyFlowProps> = ({
 
                 <div className="p-4 rounded-2xl bg-[#FAF9F6] border border-[#E8E2DC] space-y-3">
                   <span className="w-7 h-7 rounded-full bg-[#8B6D5C] text-white text-xs font-bold flex items-center justify-center">2</span>
-                  <h5 className="font-bold text-sm text-[#2D2D2D]">{isHindi ? 'NCW साइबर सेल हेल्पलाइन' : 'NCW Cyber WhatsApp'}</h5>
-                  <p className="text-xs text-[#666]">{isHindi ? 'राष्ट्रीय महिला आयोग की व्हाट्सएप हेल्पलाइन पर शिकायत।' : 'Direct WhatsApp support with the National Commission for Women (+91 7827170170).'}</p>
+                  <h5 className="font-bold text-sm text-[#2D2D2D]">{isHindi ? 'NCW 24×7 हेल्पलाइन' : 'NCW 24/7 Helpline'}</h5>
+                  <p className="text-xs text-[#666]">{isHindi ? 'NCW 24×7 हेल्पलाइन — महिलाओं के खिलाफ हिंसा, उत्पीड़न, घरेलू दुर्व्यवहार और संकट में सहायता (कॉल 14490 / व्हाट्सएप: +91 7827170170)।' : 'NCW 24×7 Helpline — support for violence against women, harassment, domestic abuse, and more (Call 14490 or WhatsApp +91 7827170170).'}</p>
                   <a href="https://wa.me/917827170170" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:underline">
                     <span>WhatsApp +91 7827170170</span>
                     <ExternalLink className="w-3 h-3" />
