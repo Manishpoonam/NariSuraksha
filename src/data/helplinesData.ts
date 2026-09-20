@@ -52,6 +52,31 @@ export const HELPLINE_ITEMS: HelplineItem[] = [
     },
   },
   {
+    id: 'women_helpline_181',
+    name: {
+      en: '181 Women Helpline (Mission Shakti)',
+      hi: '181 महिला हेल्पलाइन (मिशन शक्ति)',
+    },
+    category: 'women_crisis',
+    number: '181',
+    directDial: 'tel:181',
+    availableHours: '24x7 / Toll-Free / All States & UTs',
+    isConfidential: true,
+    website: 'https://wcd.nic.in',
+    badge: {
+      en: '24x7 Crisis & One Stop Centre Link',
+      hi: '24x7 संकट सहायता व वन स्टॉप सेंटर',
+    },
+    verificationTag: {
+      en: 'Publicly Listed Government Helpline (MWCD)',
+      hi: 'सार्वजनिक रूप से सूचीबद्ध सरकारी हेल्पलाइन (महिला एवं बाल विकास मंत्रालय)',
+    },
+    description: {
+      en: 'Universal 24×7 toll-free emergency helpline for women facing violence, domestic distress, sexual harassment, stalking, cyber abuse, or family disputes. Provides integrated referral to Police (112), One Stop Centres (Sakhi Centres for shelter, medical and legal aid), counseling, and hospital emergency care in English, Hindi, and local regional languages.',
+      hi: 'संकट, हिंसा, घरेलू उत्पीड़न, स्टॉकिंग या डिजिटल दुर्व्यवहार का सामना कर रही महिलाओं के लिए 24×7 टोल-फ्री हेल्पलाइन। यह पुलिस (112), वन स्टॉप सेंटर (सखी केंद्र - आश्रय, चिकित्सा व विधिक सहायता), अस्पताल व मनोवैज्ञानिक परामर्श से तुरंत जोड़ती है।',
+    },
+  },
+  {
     id: 'women_police_1091',
     name: {
       en: 'Women Police Helpline (All India)',

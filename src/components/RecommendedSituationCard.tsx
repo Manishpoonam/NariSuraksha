@@ -477,25 +477,25 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
             <div className="space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#26215C] bg-[#E1F5EE] px-2 py-0.5 rounded">
-                  NCW 24×7
+                  Mission Shakti
                 </span>
-                <span className="text-[10px] text-[#777] font-semibold">Voice & WhatsApp</span>
+                <span className="text-[10px] text-[#777] font-semibold">24x7 Toll-Free</span>
               </div>
               <h4 className="text-sm font-bold text-[#1A1A1A]">
-                {isHindi ? 'महिला आयोग हेल्पलाइन (14490)' : 'NCW Women Helpline (14490)'}
+                {isHindi ? '181 महिला हेल्पलाइन (सखी OSC)' : '181 Women Helpline (Sakhi OSC)'}
               </h4>
               <p className="text-[11px] text-[#666] leading-snug">
                 {isHindi 
-                  ? 'महिला सुरक्षा, उत्पीड़न व घरेलू हिंसा के लिए सीधे कॉल 14490 या व्हाट्सएप 7827170170।' 
-                  : 'Statutory emergency support for women safety, harassment, and confidential police liaison.'}
+                  ? 'संकट में घिरी महिलाओं के लिए 24×7 सहायता — पुलिस (112) व वन स्टॉप सेंटर से तत्काल समन्वय।' 
+                  : 'Universal 24×7 crisis response for women; coordinates 112 police and district One Stop Centres.'}
               </p>
             </div>
             <a
-              href="tel:14490"
+              href="tel:181"
               className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#26215C] text-xs font-bold transition-colors"
             >
               <PhoneCall className="w-3.5 h-3.5 text-[#26215C]" />
-              <span>{isHindi ? '14490 कॉल करें' : 'Call 14490'}</span>
+              <span>{isHindi ? '181 कॉल करें' : 'Call 181'}</span>
             </a>
           </div>
         )}

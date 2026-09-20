@@ -62,6 +62,11 @@ export const HelplineDirectory: React.FC<HelplineDirectoryProps> = ({
           en: 'NCW 24×7 Helpline provides statutory support for violence against women, harassment, domestic abuse, and cybercrimes, escalating directly with senior police leadership to safeguard victim rights and identity.',
           hi: 'NCW 24×7 हेल्पलाइन महिलाओं के खिलाफ हिंसा, उत्पीड़न, घरेलू हिंसा और साइबर अपराधों में सहायता प्रदान करती है और पीड़िता के अधिकारों व पहचान की रक्षा के लिए सीधे वरिष्ठ पुलिस अधिकारियों से समन्वय कराती है।'
         };
+      case 'women_helpline_181':
+        return {
+          en: 'You speak to a trained female respondent in your regional language. She can coordinate police dispatch (via 112 link), connect you to the nearest district One Stop Centre (Sakhi Centre) for safe temporary shelter, medical attention, psycho-social counseling, and legal assistance. Zero shame, 100% confidential.',
+          hi: 'आपकी भाषा में प्रशिक्षित महिला प्रतिनिधि से बात होगी। वे आवश्यकतानुसार 112 पुलिस टीम, नजदीकी सखी वन स्टॉप सेंटर (सुरक्षित आश्रय, डॉक्टरी सहायता व विधिक सलाह) और परामर्शदाता से तत्काल समन्वय कराती हैं। पूर्णतः गोपनीय व सम्मानजनक सहायता।'
+        };
       case 'women_police_1091':
         return {
           en: 'Connects directly to the Women Helpdesk of your state police. By law, statements in intimate harassment cases must be recorded exclusively by female officers in civil clothes.',

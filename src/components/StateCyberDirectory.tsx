@@ -105,15 +105,15 @@ export const StateCyberDirectory: React.FC<StateCyberDirectoryProps> = ({ langua
             <div>
               <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-200/80 text-[11px] font-bold uppercase tracking-wider mb-1">
                 <Radio className="w-3 h-3 text-amber-600 animate-pulse" />
-                <span>{isHindi ? '36 राज्य व UT डायरेक्टरी — सत्यापन जारी' : '36 States & UTs — Under Verification'}</span>
+                <span>{isHindi ? '36 राज्य व UT डायरेक्टरी — सुरक्षा व आपातकालीन सेवाएं' : '36 States & UTs — Safety & Emergency Support'}</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-bold text-[#1A1A1A] tracking-tight">
-                {isHindi ? 'अखिल भारतीय राज्य व केंद्रशासित प्रदेश साइबर पुलिस डायरेक्टरी' : 'All States & Union Territories Cyber Police Directory'}
+                {isHindi ? 'राज्य व केंद्रशासित प्रदेश सुरक्षा एवं सहायता डायरेक्टरी' : 'State & UT Safety & Support Directory'}
               </h2>
               <p className="text-xs sm:text-sm text-[#555] mt-1 leading-relaxed">
                 {isHindi
-                  ? 'गृह मंत्रालय (MHA) व राज्य CID स्रोतों से संकलित सीधे टेलीफोन नंबर, नोडल अधिकारी, ईमेल व विशेष महिला साइबर सेल (सत्यापन प्रक्रिया जारी)।'
-                  : 'CID cyber crime police stations, nodal officers, 24/7 helplines, and dedicated women wings across all 28 States and 8 Union Territories (directory contacts under active verification).'}
+                  ? 'सभी 28 राज्यों व 8 केंद्रशासित प्रदेशों के CID साइबर सेल, महिला डेस्क, नोडल अधिकारी, आपातकालीन नंबर व पोर्टल संपर्क।'
+                  : 'CID cyber stations, dedicated women cells, emergency response links, and nodal officers across all 28 States and 8 Union Territories.'}
               </p>
             </div>
           </div>

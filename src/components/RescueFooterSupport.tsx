@@ -250,14 +250,36 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
               <div className="p-3 rounded-xl bg-purple-50/50 border border-purple-200/70 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#26215C]">
-                    {isHindi ? '3. महिला सुरक्षा व कानूनी अधिकार' : "3. Women's Support & Legal Aid"}
+                    {isHindi ? '3. महिला सुरक्षा, सखी OSC व कानूनी अधिकार' : "3. Women's Safety, Sakhi OSC & Legal Aid"}
                   </span>
-                  <span className="text-[10px] font-mono text-purple-800">NCW & NALSA</span>
+                  <span className="text-[10px] font-mono text-purple-800">181 • 14490 • 15100</span>
                 </div>
+                {/* 181 Women Helpline (Mission Shakti) Primary Banner */}
+                <a
+                  href="tel:181"
+                  className="p-2.5 rounded-lg bg-white border border-purple-200 hover:border-purple-400 transition-all flex items-center justify-between gap-2"
+                >
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-mono font-bold text-sm text-[#26215C]">181</span>
+                      <span className="text-[9px] font-semibold bg-purple-100 text-[#26215C] px-1.5 py-0.5 rounded">Mission Shakti</span>
+                      <span className="text-[9px] font-medium text-purple-900 bg-purple-50 px-1 rounded border border-purple-100 hidden sm:inline">
+                        {isHindi ? '24×7 टोल-फ्री' : '24x7 Toll-Free'}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-[#555]">
+                      {isHindi 
+                        ? '181 महिला हेल्पलाइन — हिंसा, उत्पीड़न व घरेलू विवाद; पुलिस (112) व वन स्टॉप सेंटर (सखी) से सीधा समन्वय' 
+                        : '181 Women Helpline — 24×7 crisis response connecting to 112 police & One Stop Centres (Sakhi)'}
+                    </p>
+                  </div>
+                  <PhoneCall className="w-3.5 h-3.5 text-[#26215C] shrink-0" />
+                </a>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <a
                     href="tel:14490"
-                    className="p-2.5 rounded-lg bg-white border border-purple-200 hover:border-purple-400 transition-all flex items-center justify-between gap-2"
+                    className="p-2 rounded-lg bg-white border border-purple-200 hover:border-purple-400 transition-all flex items-center justify-between gap-2"
                   >
                     <div>
                       <div className="flex items-center gap-1.5">
@@ -271,7 +293,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
 
                   <a
                     href="tel:15100"
-                    className="p-2.5 rounded-lg bg-white border border-purple-200 hover:border-purple-400 transition-all flex items-center justify-between gap-2"
+                    className="p-2 rounded-lg bg-white border border-purple-200 hover:border-purple-400 transition-all flex items-center justify-between gap-2"
                   >
                     <div>
                       <div className="flex items-center gap-1.5">
