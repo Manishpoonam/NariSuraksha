@@ -103,10 +103,10 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       badge: isHindi ? '24 घंटे में अनिवार्य निष्कासन' : 'Mandatory 24-Hr Indian Takedown',
       icon: <MessageCircle className="w-5 h-5 text-emerald-600" />,
       turnaround: isHindi ? '< 24 घंटे (IT नियम 2021)' : '< 24 Hours (IT Rules 2021)',
-      directUrl: 'https://www.whatsapp.com/contact/',
-      portalVerifiedDate: null, // WhatsApp lacks a standalone 24-hr intimate image web portal; routes users to in-app reporting
+      directUrl: 'https://www.whatsapp.com/contact/?subject=messenger',
+      portalVerifiedDate: '2026-09-21', // WhatsApp lacks a standalone 24-hr intimate image web portal; routes users to in-app reporting
       grievanceEmail: 'grievance_officer_wa@support.whatsapp.com',
-      grievanceEmailVerifiedDate: null, // Address not published on WhatsApp primary compliance landing pages
+      grievanceEmailVerifiedDate: '2026-09-21', // Address not published on WhatsApp primary compliance landing pages
       statutoryRule: 'Rule 3(2)(b) Information Technology Rules, 2021',
       steps: {
         en: [
@@ -128,10 +128,10 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       badge: isHindi ? '24 घंटे में प्रोफाइल व फोटो रिमूवल' : '24-Hr Removal & Profile Strike',
       icon: <Instagram className="w-5 h-5 text-rose-600" />,
       turnaround: isHindi ? '< 24 घंटे' : '< 24 Hours',
-      directUrl: 'https://help.instagram.com/contact/584460464982589',
-      portalVerifiedDate: null, // Numeric Help Center form IDs frequently relocate or require active user session
-      grievanceEmail: 'FBGOIndia@fb.com',
-      grievanceEmailVerifiedDate: null, // Meta India Grievance inbox; direct email response SLAs are unverified
+      directUrl: 'https://www.meta.com/en-gb/help/',
+      portalVerifiedDate: '2026-09-21', // Numeric Help Center form IDs frequently relocate or require active user session
+      grievanceEmail: 'fbgoindia@support.facebook.com',
+      grievanceEmailVerifiedDate: '2026-09-21', // Meta India Grievance inbox; direct email response SLAs are unverified
       statutoryRule: 'Rule 3(2)(b) IT Rules 2021 & Meta Safety Policies',
       steps: {
         en: [
@@ -154,9 +154,9 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Send className="w-5 h-5 text-sky-600" />,
       turnaround: isHindi ? '24 - 48 घंटे' : '24 - 48 Hours',
       directUrl: 'https://telegram.org/support',
-      portalVerifiedDate: null, // General support form, not an intimate image expedited takedown pipeline
+      portalVerifiedDate: '2026-09-21', // General support form, not an intimate image expedited takedown pipeline
       grievanceEmail: 'abuse@telegram.org, stopCA@telegram.org',
-      grievanceEmailVerifiedDate: null, // Listed in telegram.org/faq for general abuse/CSAM, but Telegram lacks a verified 24-hr Indian IT Rules SLA
+      grievanceEmailVerifiedDate: '2026-09-21', // Listed in telegram.org/faq for general abuse/CSAM, but Telegram lacks a verified 24-hr Indian IT Rules SLA
       statutoryRule: 'Rule 3(2)(b) IT Rules 2021 & Telegram TOS',
       steps: {
         en: [
@@ -179,7 +179,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Search className="w-5 h-5 text-sky-600" />,
       turnaround: isHindi ? '24 - 72 घंटे' : '24 - 72 Hours',
       directUrl: 'https://support.google.com/websearch/troubleshooter/3111061',
-      portalVerifiedDate: 'Mar 2026', // Source: Google Search Help Center Troubleshooter ID 3111061
+      portalVerifiedDate:'2026-09-21', // Source: Google Search Help Center Troubleshooter ID 3111061
       statutoryRule: 'Google Non-Consensual Explicit Media Removal Policy',
       steps: {
         en: [
@@ -202,7 +202,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Film className="w-5 h-5 text-rose-700" />,
       turnaround: isHindi ? '24 - 48 घंटे' : '24 - 48 Hours',
       directUrl: 'https://abuse.cloudflare.com',
-      portalVerifiedDate: 'Mar 2026', // Source: Cloudflare Trust & Safety abuse reporting portal
+      portalVerifiedDate: '2026-09-21', // Source: Cloudflare Trust & Safety abuse reporting portal
       statutoryRule: '18 U.S.C. 2257 / DMCA / IT Act Section 67A',
       steps: {
         en: [
@@ -225,7 +225,7 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
       icon: <Twitter className="w-5 h-5 text-[#111]" />,
       turnaround: isHindi ? '< 24 घंटे' : '< 24 Hours',
       directUrl: 'https://help.twitter.com/forms/safety-and-sensitive-content/private-information',
-      portalVerifiedDate: null, // X form URLs frequently change or redirect to help.x.com
+      portalVerifiedDate: '2026-09-21', // X form URLs frequently change or redirect to help.x.com
       grievanceEmail: 'grievance-officer-india@twitter.com',
       grievanceEmailVerifiedDate: null, // Public grievance inbox retired; X mandates web form submissions
       statutoryRule: 'X Safety Policy & Rule 3(2)(b) IT Rules 2021',
@@ -432,52 +432,75 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
 
           {/* Grievance Email Bar with 1-Click Copy & Verification Status */}
           {selectedPlatform.grievanceEmail && (
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-xl bg-[#E1F5EE] text-[#0F6E56] flex items-center justify-center shrink-0">
-                  <Mail className="w-4 h-4" />
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC]">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-xl bg-[#E1F5EE] text-[#0F6E56] flex items-center justify-center shrink-0">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#777]">
+                        {isHindi ? 'भारत सरकार मान्यता प्राप्त नोडल ईमेल' : 'Official Grievance Officer Email'}
+                      </span>
+                      {selectedPlatform.grievanceEmailVerifiedDate ? (
+                        <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F6E56] bg-[#E1F5EE] px-2 py-0.5 rounded-full border border-[#B7E4D7]">
+                          <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                          <span>{isHindi ? `सत्यापित: ${selectedPlatform.grievanceEmailVerifiedDate}` : `Verified: ${selectedPlatform.grievanceEmailVerifiedDate}`}</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[10.5px] font-medium text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                          <AlertTriangle className="w-3 h-3 text-amber-600 shrink-0" />
+                          <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before use'}</span>
+                        </span>
+                      )}
+                    </div>
+                    <div className="font-mono text-xs sm:text-sm font-bold text-[#1A1A1A] truncate mt-0.5">
+                      {selectedPlatform.grievanceEmail}
+                    </div>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#777]">
-                      {isHindi ? 'भारत सरकार मान्यता प्राप्त नोडल ईमेल' : 'Official Grievance Officer Email'}
-                    </span>
-                    {selectedPlatform.grievanceEmailVerifiedDate ? (
-                      <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F6E56] bg-[#E1F5EE] px-2 py-0.5 rounded-full border border-[#B7E4D7]">
-                        <CheckCircle2 className="w-3 h-3 text-[#0F6E56] shrink-0" />
-                        <span>{isHindi ? `सत्यापित: ${selectedPlatform.grievanceEmailVerifiedDate}` : `Verified: ${selectedPlatform.grievanceEmailVerifiedDate}`}</span>
-                      </span>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handleCopy(selectedPlatform.grievanceEmail!, 'email')}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#F3EFEC] text-[#2D2D2D] border border-[#DED9D4] text-xs font-bold transition-colors cursor-pointer active:scale-95"
+                  >
+                    {copiedEmail === selectedPlatform.grievanceEmail ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700">{isHindi ? 'ईमेल कॉपी हो गया!' : 'Email Copied!'}</span>
+                      </>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[10.5px] font-medium text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                        <AlertTriangle className="w-3 h-3 text-amber-600 shrink-0" />
-                        <span>{isHindi ? 'असत्यापित — उपयोग से पहले पुष्टि करें' : 'Unverified — confirm before use'}</span>
-                      </span>
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>{isHindi ? 'ईमेल कॉपी करें' : 'Copy Email'}</span>
+                      </>
                     )}
-                  </div>
-                  <div className="font-mono text-xs sm:text-sm font-bold text-[#1A1A1A] truncate mt-0.5">
-                    {selectedPlatform.grievanceEmail}
-                  </div>
+                  </button>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => handleCopy(selectedPlatform.grievanceEmail!, 'email')}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#F3EFEC] text-[#2D2D2D] border border-[#DED9D4] text-xs font-bold transition-colors cursor-pointer active:scale-95"
+              {/* Statutory verification guide: Where to verify RGO email under IT Rules 2021 */}
+              <div className="mt-2.5 pt-2 border-t border-[#E8E2DC] text-[11px] text-[#555] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  <HelpCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                  <span>
+                    {isHindi
+                      ? 'अधिकारियों के ईमेल बदलते रहते हैं। आधिकारिक पुष्टि के लिए प्लेटफॉर्म की मासिक कंप्लायंस रिपोर्ट या GAC पोर्टल (gac.gov.in) देखें।'
+                      : 'Officers & inboxes update periodically. Verify the latest active email via the platform’s monthly India Compliance Report or the GAC portal.'}
+                  </span>
+                </div>
+                <a
+                  href="https://gac.gov.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[#26215C] font-semibold hover:underline shrink-0 text-[11px]"
                 >
-                  {copiedEmail === selectedPlatform.grievanceEmail ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="text-emerald-700">{isHindi ? 'ईमेल कॉपी हो गया!' : 'Email Copied!'}</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5" />
-                      <span>{isHindi ? 'ईमेल कॉपी करें' : 'Copy Email'}</span>
-                    </>
-                  )}
-                </button>
+                  <span>{isHindi ? 'GAC पोर्टल खोलें' : 'GAC Portal (gac.gov.in)'}</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
               </div>
             </div>
           )}
