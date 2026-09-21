@@ -252,6 +252,13 @@ export default function App() {
     return () => window.removeEventListener('navigate-tab', handleCustomNavigate);
   }, []);
 
+  // Initialize base history state on mount
+  useEffect(() => {
+    if (!window.history.state || typeof window.history.state.viewMode !== 'string') {
+      window.history.replaceState({ viewMode: 'landing', depth: 0, source: 'landing' }, '');
+    }
+  }, []);
+
   // Push history and navigate
   const handleNavigateToTab = (
     tab: string, 
@@ -262,13 +269,8 @@ export default function App() {
     let targetTab = 'rescue';
     let targetSubTab: string | undefined = undefined;
 
-    if (source) {
-      setNavSource(source);
-    } else if (activeTab === 'options') {
-      setNavSource('options');
-    } else if (activeTab === 'rescue') {
-      setNavSource('rescue');
-    }
+    const resolvedSource = source || (viewMode === 'landing' ? 'landing' : (activeTab === 'options' ? 'options' : 'rescue'));
+    setNavSource(resolvedSource);
 
     if (tab === 'rescue' || tab === 'girls_rescue' || tab === 'flowchart') {
       targetTab = 'rescue';
@@ -339,7 +341,14 @@ export default function App() {
         ? window.history.state.depth
         : 0;
       window.history.pushState(
-        { tab: targetTab, subTab: targetSubTab, depth: currentDepth + 1 },
+        { 
+          viewMode: 'app',
+          tab: targetTab, 
+          subTab: targetSubTab, 
+          elementId: elementId,
+          source: resolvedSource,
+          depth: currentDepth + 1 
+        },
         ''
       );
     }
@@ -384,19 +393,19 @@ export default function App() {
   const handleSelectTakedownSubTab = (sub: 'stopncii' | 'evidence' | 'lockdown') => {
     setTakedownSubTab(sub);
     const currentDepth = (window.history.state?.depth || 0) + 1;
-    window.history.pushState({ tab: 'takedown', subTab: sub, depth: currentDepth }, '');
+    window.history.pushState({ viewMode: 'app', tab: 'takedown', subTab: sub, depth: currentDepth, source: navSource }, '');
   };
 
   const handleSelectReportSubTab = (sub: 'drafts' | 'national_portal' | 'rights' | 'state_cells' | 'guidelines') => {
     setReportSubTab(sub);
     const currentDepth = (window.history.state?.depth || 0) + 1;
-    window.history.pushState({ tab: 'report', subTab: sub, depth: currentDepth }, '');
+    window.history.pushState({ viewMode: 'app', tab: 'report', subTab: sub, depth: currentDepth, source: navSource }, '');
   };
 
   const handleSelectSupportSubTab = (sub: 'grounding' | 'helplines' | 'scripts' | 'pins') => {
     setSupportSubTab(sub);
     const currentDepth = (window.history.state?.depth || 0) + 1;
-    window.history.pushState({ tab: 'support', subTab: sub, depth: currentDepth }, '');
+    window.history.pushState({ viewMode: 'app', tab: 'support', subTab: sub, depth: currentDepth, source: navSource }, '');
   };
 
   // Dedicated in-app Back Navigation handler
@@ -429,7 +438,22 @@ export default function App() {
       return;
     }
 
-    // 3. Contextual back for Confidence Pins
+    // 3. Real history navigation: use router/history back mechanism (navigate(-1) equivalent)
+    const currentDepth = (window.history.state && typeof window.history.state.depth === 'number')
+      ? window.history.state.depth
+      : 0;
+
+    if (currentDepth > 0) {
+      window.history.back();
+      return;
+    }
+
+    // Fallback if no history depth available (direct link / refreshed session):
+    if (navSource === 'landing') {
+      setViewMode('landing');
+      return;
+    }
+
     if (activeTab === 'confidence') {
       if (navSource === 'options') {
         handleNavigateToTab('options');
@@ -439,31 +463,26 @@ export default function App() {
       return;
     }
 
-    // 4. Return from Options Overview Hub to Landing Sanctuary
     if (activeTab === 'options') {
       setViewMode('landing');
       return;
     }
 
-    // 5. If user navigated from Options Overview to a sub-feature, return to Options
     if (navSource === 'options' && activeTab !== 'rescue') {
       handleNavigateToTab('options');
       return;
     }
 
-    // 6. If in another hub, go back to Quick Rescue
     if (activeTab !== 'rescue') {
       handleNavigateToTab('rescue');
       return;
     }
 
-    // 7. If at Rescue, return to the Landing Grounding Sanctuary
     if (viewMode === 'app') {
       setViewMode('landing');
       return;
     }
 
-    // 5. Scroll smoothly to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -484,9 +503,31 @@ export default function App() {
         return;
       }
 
-      const state = event.state as { tab?: string; subTab?: string; depth?: number } | null;
+      const state = event.state as { 
+        viewMode?: 'landing' | 'app'; 
+        tab?: string; 
+        subTab?: string; 
+        depth?: number;
+        source?: 'landing' | 'rescue' | 'options';
+      } | null;
 
-      if (state && state.tab) {
+      // If state indicates landing page, or empty state from initial landing load
+      if (!state || state.viewMode === 'landing' || (!state.tab && !state.viewMode)) {
+        setViewMode('landing');
+        setNavSource('landing');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      if (state.viewMode === 'app') {
+        setViewMode('app');
+      }
+
+      if (state.source) {
+        setNavSource(state.source);
+      }
+
+      if (state.tab) {
         setActiveTab(state.tab);
         if (state.subTab) {
           if (state.tab === 'takedown') setTakedownSubTab(state.subTab as any);
@@ -569,7 +610,8 @@ export default function App() {
             onTriggerCamouflage={() => handleTriggerCamouflage(true)}
             onOpenBreathing={() => {
               setViewMode('app');
-              handleNavigateToTab('support', 'somatic-breathing-card');
+              setNavSource('landing');
+              handleNavigateToTab('support', 'somatic-breathing-card', true, 'landing');
             }}
             onOpenDeviceSafety={() => setIsDeviceSafetyOpen(true)}
             onOpenFullDisclaimer={() => {
@@ -659,7 +701,9 @@ export default function App() {
                   ? (navSource === 'options'
                     ? (isHindi ? 'विकल्पों पर वापस जाएं' : 'Back to Options Overview')
                     : (isHindi ? 'त्वरित सहायता पर वापस जाएं' : 'Back to Quick Rescue'))
-                  : (navSource === 'options'
+                  : (navSource === 'landing'
+                    ? (isHindi ? 'मुख्य द्वार पर वापस जाएं' : 'Back to Entry Screen')
+                    : navSource === 'options'
                     ? (isHindi ? 'विकल्पों पर वापस जाएं' : 'Back to Options Overview')
                     : (isHindi ? 'त्वरित सहायता पर वापस जाएं' : 'Back to Quick Rescue'))}
               </span>

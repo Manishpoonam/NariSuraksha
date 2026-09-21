@@ -325,16 +325,27 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
 
                 <div className="p-2.5 rounded-xl bg-teal-50/60 border border-teal-200/80 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase text-teal-900">{isHindi ? 'मानसिक स्वास्थ्य' : 'Mental Health'}</span>
+                    <span className="text-[10px] font-bold uppercase text-teal-900">{isHindi ? 'मानसिक स्वास्थ्य व शांति' : 'Mental Health & Calm'}</span>
                     <span className="text-[9px] font-mono text-teal-800">14416</span>
                   </div>
-                  <a
-                    href="tel:14416"
-                    className="p-2 rounded-lg bg-white border border-teal-200 flex items-center justify-between gap-1.5"
-                  >
-                    <span className="font-mono font-bold text-xs text-[#0F6E56]">Tele-MANAS 14416</span>
-                    <PhoneCall className="w-3 h-3 text-[#0F6E56] shrink-0" />
-                  </a>
+                  <div className="flex flex-col gap-1.5">
+                    <a
+                      href="tel:14416"
+                      className="p-2 rounded-lg bg-white border border-teal-200 flex items-center justify-between gap-1.5 hover:bg-teal-50/50 transition-colors"
+                    >
+                      <span className="font-mono font-bold text-xs text-[#0F6E56]">Tele-MANAS 14416</span>
+                      <PhoneCall className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => onNavigateToTab('support', 'somatic-breathing-card')}
+                      className="p-1.5 rounded-lg bg-[#E1F5EE] border border-[#B7E4D7] flex items-center justify-between gap-1.5 text-xs font-semibold text-[#0F6E56] hover:bg-[#cceedf] transition-all cursor-pointer active:scale-98"
+                      title={isHindi ? '2 मिनट की 4-7-8 शांत श्वास क्रिया' : '2-minute 4-7-8 calming breathing exercise'}
+                    >
+                      <span className="truncate">{isHindi ? '♡ 2 मिनट श्वास पेसर' : '♡ 2-Min Breathing Pacer'}</span>
+                      <ArrowRight className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -521,10 +521,16 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
             >
               {/* Grounding & Breath Cue */}
               <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E1F5EE]/15 text-[#E1F5EE] text-xs font-medium border border-[#B7E4D7]/20">
+                <button
+                  type="button"
+                  onClick={() => onNavigateToTab('support', 'somatic-breathing-card')}
+                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E1F5EE]/15 hover:bg-[#E1F5EE]/25 text-[#E1F5EE] text-xs font-medium border border-[#B7E4D7]/20 transition-all cursor-pointer group active:scale-98 text-left"
+                  title={isHindi ? '2 मिनट की शांत श्वास क्रिया शुरू करें' : 'Open 2-minute calming breathing pacer'}
+                >
                   <Lock className="w-3.5 h-3.5 text-[#E1F5EE]" />
-                  <span>{isHindi ? 'गहरी सांस लें • आप इस समय पूरी तरह सुरक्षित हैं' : 'Take a slow, deep breath • You are physically safe right now'}</span>
-                </div>
+                  <span>{isHindi ? 'गहरी सांस लें • 2 मिनट की श्वास क्रिया' : 'Take a slow, deep breath • Try 2-min breathing pacer'}</span>
+                  <ArrowRight className="w-3 h-3 text-[#E1F5EE]/70 group-hover:translate-x-0.5 transition-transform" />
+                </button>
 
                 <h1 className="text-2xl sm:text-3xl lg:text-[32px] font-bold text-white leading-tight tracking-tight">
                   {isHindi 
