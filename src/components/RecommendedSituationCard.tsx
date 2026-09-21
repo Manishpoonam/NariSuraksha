@@ -13,7 +13,8 @@ import {
   HeartHandshake, 
   ShieldCheck, 
   X,
-  Lock
+  Lock,
+  MessageSquare
 } from 'lucide-react';
 import { Language, IncidentCategory } from '../types';
 import { CrisisScenarioKey } from './EmergencyCockpit';
@@ -324,8 +325,8 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
         </div>
       )}
 
-      {/* 1-3 DIRECTLY RELEVANT ACTIONS (The Core Requirement) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {/* DIRECTLY RELEVANT ACTIONS: Compiled, never replaced */}
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${stateCell ? 'lg:grid-cols-2 xl:grid-cols-4' : 'lg:grid-cols-3'} gap-3`}>
         {/* ACTION 1: SCENARIO-DRIVEN PRIMARY CALL */}
         {isPhysicalDanger ? (
           <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 flex flex-col justify-between space-y-3">
@@ -347,7 +348,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
             </div>
             <a
               href="tel:112"
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors shadow-xs"
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors shadow-xs cursor-pointer"
             >
               <PhoneCall className="w-3.5 h-3.5" />
               <span>{isHindi ? '112 डायल करें' : 'Call 112 Now'}</span>
@@ -373,7 +374,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
             </div>
             <a
               href="tel:1930"
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#0F6E56] hover:bg-[#0B5441] text-white text-xs font-bold transition-colors shadow-xs"
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#0F6E56] hover:bg-[#0B5441] text-white text-xs font-bold transition-colors shadow-xs cursor-pointer"
             >
               <PhoneCall className="w-3.5 h-3.5" />
               <span>{isHindi ? '1930 डायल करें' : 'Call 1930 Now'}</span>
@@ -426,7 +427,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
             </div>
             <a
               href="tel:1930"
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#0F6E56] hover:bg-[#0B5441] text-white text-xs font-bold transition-colors shadow-xs"
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#0F6E56] hover:bg-[#0B5441] text-white text-xs font-bold transition-colors shadow-xs cursor-pointer"
             >
               <PhoneCall className="w-3.5 h-3.5" />
               <span>{isHindi ? '1930 डायल करें' : 'Call 1930'}</span>
@@ -434,73 +435,61 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
           </div>
         )}
 
-        {/* ACTION 2: STATE-SPECIFIC OR WOMEN'S NATIONAL INTERVENTION */}
-        {stateCell ? (
-          <div className="p-3.5 rounded-xl bg-white border border-[#E8E2DC] flex flex-col justify-between space-y-3">
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0F6E56] bg-teal-50 px-2 py-0.5 rounded border border-teal-100">
-                  {confirmedState}
-                </span>
-                <span className="text-[10px] text-[#777] font-semibold">{stateCell.region}</span>
-              </div>
-              <h4 className="text-sm font-bold text-[#1A1A1A]">
-                {stateCell.stateName[language]} {isHindi ? 'साइबर सेल' : 'Cyber Cell'}
-              </h4>
-              <p className="text-[11px] text-[#555] line-clamp-2 leading-snug">
-                {stateCell.specialWomenCell[language] || stateCell.headquarters}
-              </p>
+        {/* ACTION 2: 181 WOMEN HELPLINE (MISSION SHAKTI) — ALWAYS VISIBLE */}
+        <div className="p-3.5 rounded-xl bg-white border border-[#E8E2DC] flex flex-col justify-between space-y-3">
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#26215C] bg-[#E1F5EE] px-2 py-0.5 rounded">
+                Mission Shakti
+              </span>
+              <span className="text-[10px] text-[#777] font-semibold">24x7 Toll-Free</span>
             </div>
-            <div className="flex items-center gap-2">
-              <a
-                href={`tel:${stateCell.helplinePhone.split('/')[0].trim().replace(/\s+/g, '')}`}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#1A1A1A] text-xs font-bold transition-colors cursor-pointer"
-              >
-                <PhoneCall className="w-3.5 h-3.5 text-[#0F6E56]" />
-                <span className="truncate">{stateCell.helplinePhone.split('/')[0].trim()}</span>
-              </a>
-              {stateCell.websiteUrl && (
+            <h4 className="text-sm font-bold text-[#1A1A1A]">
+              {stateCell?.id === 'west_bengal'
+                ? (isHindi ? '1091 महिला हेल्पलाइन (पश्चिम बंगाल)' : '1091 Women Helpline (West Bengal)')
+                : (isHindi ? '181 महिला हेल्पलाइन (सखी OSC)' : '181 Women Helpline (Sakhi OSC)')}
+            </h4>
+            <p className="text-[11px] text-[#666] leading-snug">
+              {stateCell?.id === 'west_bengal'
+                ? (isHindi 
+                    ? 'पश्चिम बंगाल में 181 लाइन संचालित नहीं है; राज्य पुलिस महिला हेल्पलाइन 1091 व 112 पर सेवाएं उपलब्ध हैं।' 
+                    : '181 line is not operational in WB per WCD; WB Police operates 1091 and 112 for women safety.')
+                : (isHindi 
+                    ? 'संकट में घिरी महिलाओं के लिए 24×7 सहायता — पुलिस (112) व वन स्टॉप सेंटर से तत्काल समन्वय।' 
+                    : 'Universal 24×7 crisis response for women; coordinates 112 police and district One Stop Centres.')}
+            </p>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            {stateCell?.id === 'west_bengal' ? (
+              <div className="flex items-center gap-2">
                 <a
-                  href={stateCell.websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#555] transition-colors"
-                  title="Police Portal"
+                  href="tel:1091"
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#26215C] hover:bg-[#1A1644] text-white text-xs font-bold transition-colors cursor-pointer"
                 >
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <PhoneCall className="w-3.5 h-3.5" />
+                  <span>{isHindi ? 'कॉल 1091 (WB)' : 'Call 1091 (WB)'}</span>
                 </a>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="p-3.5 rounded-xl bg-white border border-[#E8E2DC] flex flex-col justify-between space-y-3">
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#26215C] bg-[#E1F5EE] px-2 py-0.5 rounded">
-                  Mission Shakti
-                </span>
-                <span className="text-[10px] text-[#777] font-semibold">24x7 Toll-Free</span>
+                <a
+                  href="tel:181"
+                  className="inline-flex items-center justify-center px-2.5 py-2 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#26215C] text-xs font-semibold transition-colors cursor-pointer"
+                  title="National 181"
+                >
+                  <span>181</span>
+                </a>
               </div>
-              <h4 className="text-sm font-bold text-[#1A1A1A]">
-                {isHindi ? '181 महिला हेल्पलाइन (सखी OSC)' : '181 Women Helpline (Sakhi OSC)'}
-              </h4>
-              <p className="text-[11px] text-[#666] leading-snug">
-                {isHindi 
-                  ? 'संकट में घिरी महिलाओं के लिए 24×7 सहायता — पुलिस (112) व वन स्टॉप सेंटर से तत्काल समन्वय।' 
-                  : 'Universal 24×7 crisis response for women; coordinates 112 police and district One Stop Centres.'}
-              </p>
-            </div>
-            <a
-              href="tel:181"
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#26215C] text-xs font-bold transition-colors"
-            >
-              <PhoneCall className="w-3.5 h-3.5 text-[#26215C]" />
-              <span>{isHindi ? '181 कॉल करें' : 'Call 181'}</span>
-            </a>
+            ) : (
+              <a
+                href="tel:181"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#26215C] text-xs font-bold transition-colors cursor-pointer"
+              >
+                <PhoneCall className="w-3.5 h-3.5 text-[#26215C]" />
+                <span>{isHindi ? '181 कॉल करें' : 'Call 181'}</span>
+              </a>
+            )}
           </div>
-        )}
+        </div>
 
-        {/* ACTION 3: COMPLEMENTARY LEGAL / MINOR / MENTAL HEALTH ROUTE */}
+        {/* ACTION 3: COMPLEMENTARY LEGAL / MINOR / MENTAL HEALTH ROUTE — ALWAYS VISIBLE */}
         <div className="p-3.5 rounded-xl bg-white border border-[#E8E2DC] flex flex-col justify-between space-y-3">
           <div className="space-y-1">
             <div className="flex items-center justify-between">
@@ -524,12 +513,117 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
           </div>
           <a
             href={isMinor ? "tel:1098" : "tel:14416"}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#1A1A1A] text-xs font-bold transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#1A1A1A] text-xs font-bold transition-colors cursor-pointer"
           >
             <PhoneCall className="w-3.5 h-3.5 text-[#0F6E56]" />
             <span>{isMinor ? (isHindi ? '1098 कॉल करें' : 'Call 1098') : (isHindi ? '14416 कॉल करें' : 'Call 14416')}</span>
           </a>
         </div>
+
+        {/* ACTION 4: STATE-SPECIFIC INTERVENTION (ADDED ALONGSIDE, NEVER REPLACING) */}
+        {stateCell && (
+          <div className="p-3.5 rounded-xl bg-white border border-[#E8E2DC] flex flex-col justify-between space-y-3">
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0F6E56] bg-teal-50 px-2 py-0.5 rounded border border-teal-100">
+                  {confirmedState}
+                </span>
+                <span className="text-[10px] text-[#777] font-semibold">{stateCell.region}</span>
+              </div>
+              <h4 className="text-sm font-bold text-[#1A1A1A]">
+                {stateCell.stateName[language]} {isHindi ? 'साइबर व आपातकालीन सेल' : 'Cyber & Emergency'}
+              </h4>
+              <p className="text-[11px] text-[#555] line-clamp-2 leading-snug">
+                {stateCell.specialWomenCell[language] || stateCell.headquarters}
+              </p>
+              <p className="text-[10px] text-[#777]">
+                {isHindi ? 'कवरेज:' : 'Coverage:'} <span className="font-semibold text-[#444]">{stateCell.coverage}</span>
+              </p>
+            </div>
+
+            {/* Separate, Clearly Labeled Call Buttons for Every Distinct Number */}
+            <div className="space-y-1.5 pt-1">
+              {stateCell.alternate_number && (
+                <a
+                  href={`tel:${stateCell.alternate_number.replace(/\s+/g, '')}`}
+                  className="w-full inline-flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#1A1A1A] text-xs font-bold transition-colors cursor-pointer"
+                  aria-label={`${isHindi ? 'साइबर थाना कॉल करें' : 'Call Cyber Police Station'} ${stateCell.alternate_number}`}
+                >
+                  <span className="flex items-center gap-1.5 truncate">
+                    <PhoneCall className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
+                    <span className="truncate">{stateCell.alternate_number}</span>
+                  </span>
+                  <span className="text-[10px] text-[#666] shrink-0 font-medium">
+                    {isHindi ? 'साइबर थाना' : 'Cyber PS'}
+                  </span>
+                </a>
+              )}
+
+              {stateCell.women_mobile && (
+                <a
+                  href={`tel:${stateCell.women_mobile.replace(/\s+/g, '')}`}
+                  className="w-full inline-flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#1A1A1A] text-xs font-bold transition-colors cursor-pointer"
+                  aria-label={`${isHindi ? 'मोबाइल हेल्पलाइन कॉल करें' : 'Call Mobile Helpline'} ${stateCell.women_mobile}`}
+                >
+                  <span className="flex items-center gap-1.5 truncate">
+                    <PhoneCall className="w-3.5 h-3.5 text-[#26215C] shrink-0" />
+                    <span className="truncate">{stateCell.women_mobile}</span>
+                  </span>
+                  <span className="text-[10px] text-[#666] shrink-0 font-medium">
+                    {isHindi ? 'मोबाइल' : 'Mobile'}
+                  </span>
+                </a>
+              )}
+
+              {stateCell.women_whatsapp && (() => {
+                const cleanDigits = stateCell.women_whatsapp.replace(/\D/g, '');
+                const waNum = cleanDigits.startsWith('91') && cleanDigits.length > 10 ? cleanDigits : `91${cleanDigits}`;
+                return (
+                  <a
+                    href={`https://wa.me/${waNum}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 text-emerald-950 text-xs font-bold transition-colors cursor-pointer"
+                    aria-label={`Open WhatsApp chat with ${stateCell.women_whatsapp}`}
+                  >
+                    <span className="flex items-center gap-1.5 truncate">
+                      <MessageSquare className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                      <span className="font-mono">{stateCell.women_whatsapp}</span>
+                    </span>
+                    <span className="text-[10px] text-emerald-800 shrink-0 font-medium">
+                      WhatsApp
+                    </span>
+                  </a>
+                );
+              })()}
+
+              <div className="flex flex-wrap items-center gap-2">
+                {stateCell.police_emergency && (
+                  <a
+                    href={`tel:${stateCell.police_emergency.replace(/\s+/g, '')}`}
+                    className="flex-1 min-w-[100px] inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#8B6D5C] text-xs font-bold transition-colors cursor-pointer shrink-0 whitespace-nowrap"
+                    aria-label={`Call Police ${stateCell.police_emergency}`}
+                  >
+                    <PhoneCall className="w-3 h-3 text-[#8B6D5C] shrink-0" />
+                    <span>{isHindi ? 'पुलिस 112' : `Police ${stateCell.police_emergency}`}</span>
+                  </a>
+                )}
+                {stateCell.police_website && (
+                  <a
+                    href={stateCell.police_website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#555] transition-colors cursor-pointer shrink-0"
+                    title={`${stateCell.stateName.en} Police Portal`}
+                    aria-label={`${stateCell.stateName.en} Police Portal`}
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Below card link: "Browse State / UT Services" link to the full directory */}

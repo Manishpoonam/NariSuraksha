@@ -18,7 +18,8 @@ import {
   ArrowUpRight,
   ChevronDown,
   CheckCircle2,
-  HelpCircle
+  HelpCircle,
+  MessageSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { STATE_CYBER_CELLS } from '../data/stateCyberCells';
@@ -66,6 +67,10 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
         !q ||
         item.stateOrUT.toLowerCase().includes(q) ||
         (item.stateOrUTHi && item.stateOrUTHi.includes(q)) ||
+        (item.women_helpline && item.women_helpline.toLowerCase().includes(q)) ||
+        (item.police_emergency && item.police_emergency.toLowerCase().includes(q)) ||
+        (item.child_helpline && item.child_helpline.toLowerCase().includes(q)) ||
+        (item.alternate_number && item.alternate_number.toLowerCase().includes(q)) ||
         (item.helphoneNumber && item.helphoneNumber.toLowerCase().includes(q));
 
       const matchesType =
@@ -298,7 +303,7 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
                   </span>
                 </div>
 
-                {/* Verification status label on every card: "Verified: [date]" or "Not yet verified — confirm before relying" */}
+                {/* Verification status label on every card: "Verified: [date]" or "Unverified — confirm before relying" */}
                 <div className="pt-0.5 flex items-center gap-1 text-[10px]">
                   {cell.verifiedDate ? (
                     <div className="flex items-center gap-1 font-semibold text-[#0F6E56]">
@@ -306,30 +311,61 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
                       <span>{isHindi ? `सत्यापित: ${cell.verifiedDate}` : `Verified: ${cell.verifiedDate}`}</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-1 font-medium text-[#8B6D5C]">
-                      <HelpCircle className="w-3 h-3 text-[#8B6D5C] shrink-0" />
-                      <span>{isHindi ? 'अभी सत्यापित नहीं — उपयोग से पहले पुष्टि करें' : 'Not yet verified — confirm before relying'}</span>
+                    <div className="flex items-center gap-1 font-medium text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                      <HelpCircle className="w-3 h-3 text-amber-700 shrink-0" />
+                      <span>{isHindi ? 'सत्यापन शेष — पहले पुष्टि करें' : 'Unverified — confirm before relying'}</span>
                     </div>
                   )}
                 </div>
               </div>
 
-              {/* Middle Section: Helpline or Fallback Box (Flex-1 vertically centers content in consistent height card) */}
-              <div className="flex-1 flex flex-col justify-center my-2">
-                {hasPhone ? (
-                  <div className="p-2.5 rounded-lg bg-[#FAF8F3] border border-[#E8E2DC] flex items-center justify-between gap-2 text-xs">
-                    <div className="flex items-center gap-1.5 font-mono font-bold text-[#1A1A1A] min-w-0">
-                      <Phone className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
-                      <span className="truncate">{cell.helphoneNumber}</span>
+              {/* Middle Section: Structured Numbers & Coverage */}
+              <div className="flex-1 flex flex-col justify-center my-2 space-y-1.5 text-xs">
+                {/* Women Helpline or Main Helpline Row */}
+                {cell.women_helpline ? (
+                  <div className="p-2 rounded-lg bg-[#FAF8F3] border border-[#E8E2DC] flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 font-mono font-bold text-[#1A1A1A]">
+                        <Phone className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
+                        <span className="truncate">{cell.women_helpline}</span>
+                      </div>
+                      <span className="text-[10px] text-[#666]">
+                        {isHindi ? 'महिला हेल्पलाइन' : 'Women Helpline'} • {cell.coverage}
+                      </span>
                     </div>
 
                     <button
                       type="button"
-                      onClick={() => handleCopy(cell.helphoneNumber!)}
+                      onClick={() => handleCopy(cell.women_helpline!)}
                       className="p-1 rounded text-[#777] hover:text-[#111] hover:bg-white transition-colors cursor-pointer shrink-0"
-                      aria-label={isHindi ? 'हेल्पलाइन नंबर कॉपी करें' : 'Copy helpline number'}
+                      aria-label={isHindi ? 'नंबर कॉपी करें' : 'Copy number'}
                     >
-                      {copiedNumber === cell.helphoneNumber ? (
+                      {copiedNumber === cell.women_helpline ? (
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      ) : (
+                        <Copy className="w-3.5 h-3.5" />
+                      )}
+                    </button>
+                  </div>
+                ) : cell.alternate_number ? (
+                  <div className="p-2 rounded-lg bg-[#FAF8F3] border border-[#E8E2DC] flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 font-mono font-bold text-[#1A1A1A]">
+                        <Phone className="w-3.5 h-3.5 text-[#8B6D5C] shrink-0" />
+                        <span className="truncate">{cell.alternate_number}</span>
+                      </div>
+                      <span className="text-[10px] text-[#666]">
+                        {isHindi ? 'साइबर थाना / हेल्पलाइन' : 'Cyber Unit'} • {cell.coverage}
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(cell.alternate_number!)}
+                      className="p-1 rounded text-[#777] hover:text-[#111] hover:bg-white transition-colors cursor-pointer shrink-0"
+                      aria-label={isHindi ? 'नंबर कॉपी करें' : 'Copy number'}
+                    >
+                      {copiedNumber === cell.alternate_number ? (
                         <Check className="w-3.5 h-3.5 text-emerald-600" />
                       ) : (
                         <Copy className="w-3.5 h-3.5" />
@@ -344,23 +380,97 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
                     </div>
                     <p className="text-[10px] text-amber-800 leading-tight">
                       {isHindi 
-                        ? 'स्थानीय सेल नंबर का सत्यापन जारी है — केंद्रीय 1930 पर सीधे कॉल करें।'
-                        : 'Local division contact pending verification — routed to 24/7 National 1930 Helpline.'}
+                        ? 'केंद्रीय 1930 या आपातकाल में 112 पर सीधे कॉल करें।'
+                        : 'Call 24/7 National 1930 or 112 police emergency.'}
                     </p>
                   </div>
                 )}
+
+                {/* WhatsApp Status Row */}
+                <div className="p-1.5 px-2 rounded-lg bg-[#FAF8F3] border border-[#E8E2DC] flex items-center justify-between gap-2 text-[11px]">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <MessageSquare className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span className="text-[#666] shrink-0">WhatsApp:</span>
+                    {cell.women_whatsapp ? (() => {
+                      const cleanDigits = cell.women_whatsapp.replace(/\D/g, '');
+                      const waNum = cleanDigits.startsWith('91') && cleanDigits.length > 10 ? cleanDigits : `91${cleanDigits}`;
+                      return (
+                        <a
+                          href={`https://wa.me/${waNum}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-mono font-bold text-emerald-700 hover:text-emerald-800 underline underline-offset-2 decoration-emerald-400 hover:decoration-emerald-700 inline-flex items-center gap-1 transition-colors truncate"
+                          aria-label={`Open WhatsApp chat with ${cell.women_whatsapp}`}
+                        >
+                          <span>{cell.women_whatsapp}</span>
+                          <ExternalLink className="w-2.5 h-2.5 shrink-0 opacity-70" />
+                        </a>
+                      );
+                    })() : (
+                      <span className="text-[#888] italic text-[10px] truncate">
+                        {isHindi ? 'आधिकारिक रूप से प्रकाशित नहीं' : 'Not officially published'}
+                      </span>
+                    )}
+                  </div>
+                  {cell.women_whatsapp && (() => {
+                    const cleanDigits = cell.women_whatsapp.replace(/\D/g, '');
+                    const waNum = cleanDigits.startsWith('91') && cleanDigits.length > 10 ? cleanDigits : `91${cleanDigits}`;
+                    return (
+                      <a
+                        href={`https://wa.me/${waNum}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2 py-0.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold transition-colors shrink-0"
+                        aria-label={`Open WhatsApp chat with ${cell.women_whatsapp}`}
+                      >
+                        {isHindi ? 'चैट' : 'Chat'}
+                      </a>
+                    );
+                  })()}
+                </div>
               </div>
 
-              {/* Bottom Section: Call & Portal Actions (Item 1: Removed native title attributes) */}
-              <div className="flex items-center gap-2 pt-2 border-t border-[#F0EBE6]">
-                <a
-                  href={`tel:${rawPhone}`}
-                  aria-label={`${isHindi ? 'कॉल करें' : 'Call'} ${cell.stateOrUT} ${hasPhone ? cell.helphoneNumber : '1930'}`}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#0F6E56] hover:bg-[#0b5442] text-white text-xs font-semibold transition-colors shadow-2xs cursor-pointer min-h-[36px]"
-                >
-                  <PhoneCall className="w-3.5 h-3.5" />
-                  <span>{hasPhone ? (isHindi ? 'कॉल करें' : 'Call') : (isHindi ? '1930 कॉल करें' : 'Call 1930')}</span>
-                </a>
+              {/* Bottom Section: Separate Call & Portal Actions */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[#F0EBE6]">
+                {cell.women_helpline ? (
+                  <a
+                    href={`tel:${cell.women_helpline.replace(/\s+/g, '')}`}
+                    aria-label={`${isHindi ? 'कॉल करें' : 'Call'} ${cell.women_helpline}`}
+                    className="flex-1 min-w-[115px] inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#0F6E56] hover:bg-[#0b5442] text-white text-xs font-semibold transition-colors shadow-2xs cursor-pointer min-h-[36px] whitespace-nowrap"
+                  >
+                    <PhoneCall className="w-3 h-3 shrink-0" />
+                    <span>{isHindi ? `कॉल ${cell.women_helpline}` : `Call ${cell.women_helpline}`}</span>
+                  </a>
+                ) : cell.alternate_number ? (
+                  <a
+                    href={`tel:${cell.alternate_number.replace(/\s+/g, '')}`}
+                    aria-label={`${isHindi ? 'कॉल करें' : 'Call'} ${cell.alternate_number}`}
+                    className="flex-1 min-w-[115px] inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#1A1A1A] text-xs font-semibold transition-colors cursor-pointer min-h-[36px] whitespace-nowrap"
+                  >
+                    <PhoneCall className="w-3 h-3 text-[#8B6D5C] shrink-0" />
+                    <span>{isHindi ? 'कॉल करें' : 'Call Unit'}</span>
+                  </a>
+                ) : (
+                  <a
+                    href="tel:1930"
+                    aria-label={isHindi ? '1930 कॉल करें' : 'Call 1930'}
+                    className="flex-1 min-w-[100px] inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition-colors cursor-pointer min-h-[36px] whitespace-nowrap"
+                  >
+                    <PhoneCall className="w-3 h-3 shrink-0" />
+                    <span>{isHindi ? '1930 कॉल' : 'Call 1930'}</span>
+                  </a>
+                )}
+
+                {cell.police_emergency && (
+                  <a
+                    href={`tel:${cell.police_emergency.replace(/\s+/g, '')}`}
+                    aria-label={`${isHindi ? 'पुलिस 112' : 'Police 112'}`}
+                    className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#8B6D5C] text-xs font-semibold transition-colors cursor-pointer min-h-[36px] shrink-0 whitespace-nowrap"
+                  >
+                    <PhoneCall className="w-3 h-3 shrink-0" />
+                    <span>112</span>
+                  </a>
+                )}
 
                 {cell.portalUrl && (
                   <a
@@ -368,10 +478,10 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${cell.stateOrUT} ${isHindi ? 'पुलिस पोर्टल खोलें' : 'Police Portal'}`}
-                    className="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] text-[#333] border border-[#E8E2DC] text-xs font-medium transition-colors cursor-pointer min-h-[36px]"
+                    className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] text-[#333] border border-[#E8E2DC] text-xs font-medium transition-colors cursor-pointer min-h-[36px] shrink-0 whitespace-nowrap"
                   >
                     <span className="text-[11px]">{isHindi ? 'पोर्टल' : 'Portal'}</span>
-                    <ExternalLink className="w-3 h-3 text-[#666]" />
+                    <ExternalLink className="w-3 h-3 text-[#666] shrink-0" />
                   </a>
                 )}
               </div>
