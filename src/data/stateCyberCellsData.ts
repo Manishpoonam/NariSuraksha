@@ -48,14 +48,65 @@ export interface StateCyberCell {
   source_url: string; // REQUIRED if any number is populated
   last_verified: string | null; // date, or null if unverified
 
-  // Backwards compatibility helpers
-  helplinePhone: string;
-  websiteUrl: string;
+  // Backwards compatibility helpers (derived at runtime to prevent data drift)
+  helplinePhone?: string;
+  websiteUrl?: string;
   isVerified?: boolean;
   verifiedDate?: string;
 }
 
-export const STATE_CYBER_CELLS: StateCyberCell[] = [
+/**
+ * Canonical selector function: derives the primary phone number from canonical fields.
+ * Follows the canonical priority:
+ * 1. women_helpline (since this is a women safety & rescue platform)
+ * 2. women_mobile
+ * 3. alternate_number
+ * 4. police_emergency
+ * 5. fallback '112'
+ * Guarantees zero data drift between verified canonical fields and UI callers.
+ */
+export function getPrimaryPhone(cell: StateCyberCell): string {
+  return (
+    cell.women_helpline ||
+    cell.women_mobile ||
+    cell.alternate_number ||
+    cell.police_emergency ||
+    '112'
+  );
+}
+
+/**
+ * Canonical selector function: derives the primary official web portal from canonical fields.
+ * Follows the canonical priority:
+ * 1. police_website
+ * 2. women_child_website
+ * 3. source_url
+ * 4. fallback 'https://cybercrime.gov.in'
+ */
+export function getPrimaryWebsite(cell: StateCyberCell): string {
+  return (
+    cell.police_website ||
+    cell.women_child_website ||
+    cell.source_url ||
+    'https://cybercrime.gov.in'
+  );
+}
+
+/**
+ * Checks if a record has been verified against Tier 1/2 official sources.
+ */
+export function isRecordVerified(cell: StateCyberCell): boolean {
+  return Boolean(cell.isVerified || (cell.last_verified && cell.last_verified.trim().length > 0));
+}
+
+/**
+ * Returns the official verification date or null.
+ */
+export function getVerifiedDate(cell: StateCyberCell): string | null {
+  return cell.last_verified || cell.verifiedDate || null;
+}
+
+export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
   // ==========================================
   // 8 UNION TERRITORIES
   // ==========================================
@@ -1381,3 +1432,36 @@ export const STATE_CYBER_CELLS: StateCyberCell[] = [
     verifiedDate: undefined
   }
 ];
+
+/**
+ * Single Canonical Source of Truth:
+ * STATE_CYBER_CELLS exports the full list of 36 States & UTs with all fields strictly typed.
+ * To eliminate data drift risk, UI compatibility fields (helplinePhone, websiteUrl, isVerified, verifiedDate)
+ * are derived directly from canonical fields at load time.
+ */
+export const STATE_CYBER_CELLS: StateCyberCell[] = RAW_STATE_CYBER_CELLS.map((cell) => ({
+  ...cell,
+  helplinePhone: getPrimaryPhone(cell),
+  websiteUrl: getPrimaryWebsite(cell),
+  isVerified: isRecordVerified(cell),
+  verifiedDate: getVerifiedDate(cell) || undefined,
+}));
+
+/**
+ * Consistency Validator: Flags any raw record whose static compatibility fields
+ * conflict with the canonical source fields.
+ */
+export function validateStateCyberCellsConsistency(): { valid: boolean; warnings: string[] } {
+  const warnings: string[] = [];
+  for (const cell of RAW_STATE_CYBER_CELLS) {
+    const canonicalPhone = getPrimaryPhone(cell);
+    const canonicalWebsite = getPrimaryWebsite(cell);
+    if (cell.helplinePhone && cell.helplinePhone !== canonicalPhone) {
+      warnings.push(`[Data Drift] ${cell.state}: legacy helplinePhone (${cell.helplinePhone}) drifted from canonical getPrimaryPhone (${canonicalPhone})`);
+    }
+    if (cell.websiteUrl && cell.websiteUrl !== canonicalWebsite) {
+      warnings.push(`[Data Drift] ${cell.state}: legacy websiteUrl (${cell.websiteUrl}) drifted from canonical getPrimaryWebsite (${canonicalWebsite})`);
+    }
+  }
+  return { valid: warnings.length === 0, warnings };
+}

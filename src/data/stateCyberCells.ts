@@ -3,7 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { STATE_CYBER_CELLS as CANONICAL_CELLS, StateCyberCell as CanonicalStateCyberCell } from './stateCyberCellsData';
+import { 
+  STATE_CYBER_CELLS as CANONICAL_CELLS, 
+  StateCyberCell as CanonicalStateCyberCell,
+  getPrimaryPhone,
+  getPrimaryWebsite,
+  isRecordVerified,
+  getVerifiedDate
+} from './stateCyberCellsData';
+
+export { getPrimaryPhone, getPrimaryWebsite, isRecordVerified, getVerifiedDate };
 
 export interface StateCyberCell extends CanonicalStateCyberCell {
   stateOrUT: string;
@@ -25,8 +34,9 @@ export const STATE_CYBER_CELLS: StateCyberCell[] = CANONICAL_CELLS.map((cell: Ca
   stateOrUT: cell.stateName.en,
   stateOrUTHi: cell.stateName.hi,
   isUnionTerritory: cell.region === 'UT',
-  helphoneNumber: cell.alternate_number || cell.police_emergency || null,
-  portalUrl: cell.police_website || cell.websiteUrl || null,
-  isVerified: !!cell.last_verified,
-  verifiedDate: cell.last_verified,
+  helphoneNumber: getPrimaryPhone(cell),
+  portalUrl: getPrimaryWebsite(cell),
+  isVerified: isRecordVerified(cell),
+  verifiedDate: getVerifiedDate(cell),
 }));
+
