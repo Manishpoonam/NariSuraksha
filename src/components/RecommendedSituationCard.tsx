@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { Language, IncidentCategory } from '../types';
 import { CrisisScenarioKey } from './EmergencyCockpit';
-import { STATE_CYBER_CELLS } from '../data/stateCyberCellsData';
+import type { StateCyberCell } from '../data/stateCyberCellsData';
 import { detectCurrentStateOnDevice } from '../utils/localGeocode';
 import { hapticAction } from '../utils/haptics';
 
@@ -59,6 +59,16 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
   const [showGrantedConfirmBanner, setShowGrantedConfirmBanner] = useState<boolean>(false);
   const [isDetecting, setIsDetecting] = useState<boolean>(false);
   const [manualSelectOpen, setManualSelectOpen] = useState<boolean>(false);
+  const [cellsList, setCellsList] = useState<StateCyberCell[]>([]);
+
+  // Dynamically load the 36-state dataset only when state confirmation, detection or manual select is requested
+  useEffect(() => {
+    if (confirmedState || candidateState || manualSelectOpen) {
+      import('../data/stateCyberCellsData').then((m) => {
+        setCellsList(m.STATE_CYBER_CELLS);
+      });
+    }
+  }, [confirmedState, candidateState, manualSelectOpen]);
 
   // Check browser-level permission status on mount
   useEffect(() => {
@@ -146,8 +156,8 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
   };
 
   // Find state cell information if state is confirmed
-  const stateCell = confirmedState 
-    ? STATE_CYBER_CELLS.find(
+  const stateCell = confirmedState && cellsList.length > 0
+    ? cellsList.find(
         (c) => c.stateName.en.toLowerCase() === confirmedState.toLowerCase() || 
                c.stateName.hi === confirmedState ||
                c.stateName.en.toLowerCase().includes(confirmedState.toLowerCase())
@@ -311,7 +321,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
             </button>
           </div>
           <div className="max-h-40 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 gap-1.5 pr-1">
-            {STATE_CYBER_CELLS.map((cell) => (
+            {cellsList.map((cell) => (
               <button
                 key={cell.id}
                 type="button"

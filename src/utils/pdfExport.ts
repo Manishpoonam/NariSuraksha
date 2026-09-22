@@ -1,13 +1,14 @@
-import jsPDF from 'jspdf';
+import type jsPDF from 'jspdf';
 import { ComplaintFormData, IncidentCategory } from '../types';
 import { getStatuteCitationsForIncident } from '../data/statuteCitations';
 
 const generatePDFDocument = (
+  jsPDFClass: typeof jsPDF,
   formData: ComplaintFormData,
   templateType: 'fir_police' | 'intermediary_notice' | 'ncw_petition',
   customText?: string
 ) => {
-  const doc = new jsPDF({
+  const doc = new jsPDFClass({
     orientation: 'portrait',
     unit: 'mm',
     format: 'a4',
@@ -284,13 +285,14 @@ export interface PDFExportOptions {
   customFileName?: string;
 }
 
-export const exportComplaintDraftPDF = (
+export const exportComplaintDraftPDF = async (
   formData: ComplaintFormData,
   templateType: 'fir_police' | 'intermediary_notice' | 'ncw_petition',
   customText?: string,
   options: PDFExportOptions = { action: 'view_print' }
-): { blobUrl: string; defaultFileName: string } => {
-  const doc = generatePDFDocument(formData, templateType, customText);
+): Promise<{ blobUrl: string; defaultFileName: string }> => {
+  const { default: jsPDFClass } = await import('jspdf');
+  const doc = generatePDFDocument(jsPDFClass, formData, templateType, customText);
 
   const dateStr = new Date().toISOString().slice(0, 10);
   const neutralFileName = options.customFileName?.trim() 

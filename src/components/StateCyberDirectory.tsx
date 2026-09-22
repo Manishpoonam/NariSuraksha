@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { STATE_CYBER_CELLS } from '../data/stateCyberCellsData';
+import React, { useState, useEffect } from 'react';
+import type { StateCyberCell } from '../data/stateCyberCellsData';
 import { Language } from '../types';
 import { StateLocationDetector } from './StateLocationDetector';
 import { 
@@ -32,6 +32,13 @@ export const StateCyberDirectory: React.FC<StateCyberDirectoryProps> = ({ langua
   const [detectedConfirmedState, setDetectedConfirmedState] = useState<string | null>(null);
   const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
   const [copiedPhone, setCopiedPhone] = useState<string | null>(null);
+  const [cells, setCells] = useState<StateCyberCell[]>([]);
+
+  useEffect(() => {
+    import('../data/stateCyberCellsData').then((m) => {
+      setCells(m.STATE_CYBER_CELLS);
+    });
+  }, []);
 
   const handleConfirmDetectedState = (stateName: string) => {
     setDetectedConfirmedState(stateName);
@@ -56,7 +63,7 @@ export const StateCyberDirectory: React.FC<StateCyberDirectoryProps> = ({ langua
     setTimeout(() => setCopiedPhone(null), 2000);
   };
 
-  const filteredCells = STATE_CYBER_CELLS.filter((cell) => {
+  const filteredCells = cells.filter((cell) => {
     const q = searchQuery.toLowerCase().trim();
     const matchesSearch =
       !q ||

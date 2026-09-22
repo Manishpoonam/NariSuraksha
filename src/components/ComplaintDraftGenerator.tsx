@@ -374,16 +374,20 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
     setCompletedSteps((prev) => (prev.includes(4) ? prev : [...prev, 4]));
   };
 
-  const handleExportPDF = (action: 'view_print' | 'download_file' = 'view_print', customName?: string) => {
+  const handleExportPDF = async (action: 'view_print' | 'download_file' = 'view_print', customName?: string) => {
     hapticAction();
-    exportCourtReadyPDF(
-      { ...formData, isMinorVictim: isMinorIncident },
-      activeTemplate,
-      getActiveText(),
-      { action, customFileName: customName || neutralFileName }
-    );
-    setPdfGenerated(true);
-    setCompletedSteps((prev) => (prev.includes(4) ? prev : [...prev, 4]));
+    try {
+      await exportCourtReadyPDF(
+        { ...formData, isMinorVictim: isMinorIncident },
+        activeTemplate,
+        getActiveText(),
+        { action, customFileName: customName || neutralFileName }
+      );
+      setPdfGenerated(true);
+      setCompletedSteps((prev) => (prev.includes(4) ? prev : [...prev, 4]));
+    } catch (err) {
+      console.error('Failed to generate PDF:', err);
+    }
   };
 
   const handlePrint = () => {

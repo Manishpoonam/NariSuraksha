@@ -2,11 +2,20 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig(() => {
   return {
     base: './',
-    plugins: [react(), tailwindcss()],
+    plugins: [
+      react(), 
+      tailwindcss(),
+      visualizer({
+        filename: 'dist/stats.json',
+        json: true,
+        gzipSize: true,
+      })
+    ],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

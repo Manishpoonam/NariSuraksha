@@ -23,9 +23,12 @@ import { Language, IncidentCategory } from '../types';
 import { hapticAction } from '../utils/haptics';
 import { ZeroShameLegalShield } from './ZeroShameLegalShield';
 import { GirlsRescueGuide } from './GirlsRescueGuide';
-import { StateCyberDirectoryInline } from './StateCyberDirectoryInline';
 import { RecommendedSituationCard } from './RecommendedSituationCard';
 import { CrisisScenarioKey } from './EmergencyCockpit';
+
+const StateCyberDirectoryInline = React.lazy(() => 
+  import('./StateCyberDirectoryInline').then(m => ({ default: m.StateCyberDirectoryInline }))
+);
 
 interface RescueFooterSupportProps {
   language: Language;
@@ -397,10 +400,17 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                 transition={{ duration: 0.25, ease: 'easeInOut' }}
                 className="overflow-hidden"
               >
-                <StateCyberDirectoryInline 
-                  language={language}
-                  onNavigateToFullDirectory={() => onNavigateToTab('state_cells', 'state-cyber-directory')}
-                />
+                <React.Suspense fallback={
+                  <div className="py-8 text-center text-xs text-[#666] flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-[#0F6E56]/30 border-t-[#0F6E56] rounded-full animate-spin" />
+                    <span>{language === 'hi' ? 'निर्देशिका लोड हो रही है...' : 'Loading directory...'}</span>
+                  </div>
+                }>
+                  <StateCyberDirectoryInline 
+                    language={language}
+                    onNavigateToFullDirectory={() => onNavigateToTab('state_cells', 'state-cyber-directory')}
+                  />
+                </React.Suspense>
               </motion.div>
             )}
           </AnimatePresence>

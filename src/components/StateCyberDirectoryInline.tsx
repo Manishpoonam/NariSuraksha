@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Search, 
   Phone, 
@@ -14,15 +14,15 @@ import {
   Building2, 
   Shield, 
   Info, 
-  X,
-  ArrowUpRight,
-  ChevronDown,
-  CheckCircle2,
-  HelpCircle,
-  MessageSquare
+  X, 
+  ArrowUpRight, 
+  ChevronDown, 
+  CheckCircle2, 
+  HelpCircle, 
+  MessageSquare 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { STATE_CYBER_CELLS } from '../data/stateCyberCells';
+import type { StateCyberCell } from '../data/stateCyberCells';
 import { Language } from '../types';
 import { StateLocationDetector } from './StateLocationDetector';
 import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
@@ -42,6 +42,13 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
   const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
   const [isDisclaimerExpanded, setIsDisclaimerExpanded] = useState<boolean>(false);
   const [detectedConfirmedState, setDetectedConfirmedState] = useState<string | null>(null);
+  const [cells, setCells] = useState<StateCyberCell[]>([]);
+
+  useEffect(() => {
+    import('../data/stateCyberCells').then((m) => {
+      setCells(m.STATE_CYBER_CELLS);
+    });
+  }, []);
 
   const handleConfirmDetectedState = (stateName: string) => {
     setDetectedConfirmedState(stateName);
@@ -62,7 +69,7 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
 
   const filteredCells = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
-    return STATE_CYBER_CELLS.filter((item) => {
+    return cells.filter((item) => {
       const matchesSearch = 
         !q ||
         item.stateOrUT.toLowerCase().includes(q) ||
@@ -80,7 +87,7 @@ export const StateCyberDirectoryInline: React.FC<StateCyberDirectoryInlineProps>
 
       return matchesSearch && matchesType;
     });
-  }, [searchQuery, filterType]);
+  }, [cells, searchQuery, filterType]);
 
   return (
     <div className="mt-3 p-3.5 sm:p-5 rounded-2xl bg-[#FAF8F3] border border-[#E8E2DC] space-y-4">

@@ -1,4 +1,4 @@
-import { INDIA_STATE_BOUNDARIES, StateBoundaryFeature } from '../data/indiaBoundariesData';
+import type { StateBoundaryFeature } from '../data/indiaBoundariesData';
 
 /**
  * 100% Client-Side Reverse Geocoding for Indian States & Union Territories.
@@ -9,6 +9,15 @@ import { INDIA_STATE_BOUNDARIES, StateBoundaryFeature } from '../data/indiaBound
  * - Zero persistent storage (never writes to localStorage, sessionStorage, or cookies).
  * - Uses local ray-casting point-in-polygon over bundled simplified boundaries (~60KB).
  */
+
+let cachedBoundaries: StateBoundaryFeature[] | null = null;
+async function getBoundaries(): Promise<StateBoundaryFeature[]> {
+  if (!cachedBoundaries) {
+    const mod = await import('../data/indiaBoundariesData');
+    cachedBoundaries = mod.INDIA_STATE_BOUNDARIES;
+  }
+  return cachedBoundaries;
+}
 
 /**
  * Standard ray-casting algorithm to test if a 2D point [lng, lat]
@@ -79,11 +88,12 @@ function pointInFeature(point: [number, number], feature: StateBoundaryFeature):
  * Detects the Indian State or Union Territory from GPS coordinates using local GeoJSON.
  * Returns the exact state/UT name as defined in `STATE_CYBER_CELLS`, or null if not found.
  */
-export function detectIndianStateFromCoords(latitude: number, longitude: number): string | null {
+export async function detectIndianStateFromCoords(latitude: number, longitude: number): Promise<string | null> {
+  const boundaries = await getBoundaries();
   const point: [number, number] = [longitude, latitude];
 
   // 1. Strict point-in-polygon lookup
-  for (const feature of INDIA_STATE_BOUNDARIES) {
+  for (const feature of boundaries) {
     if (pointInFeature(point, feature)) {
       return feature.name;
     }
@@ -93,7 +103,7 @@ export function detectIndianStateFromCoords(latitude: number, longitude: number)
   let bestCandidate: string | null = null;
   let minDistanceSq = 0.25 * 0.25; // ~25-30 km radius threshold
 
-  for (const feature of INDIA_STATE_BOUNDARIES) {
+  for (const feature of boundaries) {
     if (pointInBBox(point, feature.bbox, 0.3)) {
       const centerLng = (feature.bbox[0] + feature.bbox[2]) / 2;
       const centerLat = (feature.bbox[1] + feature.bbox[3]) / 2;
@@ -150,14 +160,14 @@ export async function detectCurrentStateOnDevice(): Promise<StateDetectionResult
       }
     };
 
-    const handleSuccess = (position: GeolocationPosition) => {
+    const handleSuccess = async (position: GeolocationPosition) => {
       if (hasResolved) return;
       hasResolved = true;
       cleanup();
 
       try {
         const { latitude, longitude } = position.coords;
-        const detected = detectIndianStateFromCoords(latitude, longitude);
+        const detected = await detectIndianStateFromCoords(latitude, longitude);
         if (detected) {
           resolve({ state: detected });
         } else {

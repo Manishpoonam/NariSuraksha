@@ -7,27 +7,40 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { Header } from './components/Header';
-import { EmergencyHero } from './components/EmergencyHero';
-import { GirlsRescueGuide } from './components/GirlsRescueGuide';
-import { CrisisFlowchart } from './components/CrisisFlowchart';
-import { PlatformTakedownPortal } from './components/PlatformTakedownPortal';
-import { EvidencePreservationTool } from './components/EvidencePreservationTool';
-import { GuidedReportPortal } from './components/GuidedReportPortal';
-import { CalmSupportPortal } from './components/CalmSupportPortal';
 import { CamouflageScreen } from './components/CamouflageScreen';
 import { FloatingPanicBar } from './components/FloatingPanicBar';
 import { EmergencySOSModal } from './components/EmergencySOSModal';
-import { ConfidenceCourageBoard } from './components/ConfidenceCourageBoard';
-import { OptionsOverviewHub } from './components/OptionsOverviewHub';
-import { RescueFooterSupport } from './components/RescueFooterSupport';
-import { CampusSafetyPrintableCard } from './components/CampusSafetyPrintableCard';
-import { PurgeFootprintModal } from './components/PurgeFootprintModal';
 import { LandingGroundingScreen } from './components/LandingGroundingScreen';
-import { ImmediateActionPath } from './components/ImmediateActionPath';
-import { DeviceSafetyChecklist } from './components/DeviceSafetyChecklist';
-import { EmergencyCockpit, CrisisScenarioKey } from './components/EmergencyCockpit';
 import { CountdownBusterBanner } from './components/CountdownBusterBanner';
+import type { CrisisScenarioKey } from './components/EmergencyCockpit';
 import { smoothScrollTo } from './utils/scroll';
+
+// Code-split major tabs and heavy modals to keep initial bundle lightweight
+const EmergencyCockpit = React.lazy(() => import('./components/EmergencyCockpit').then((m) => ({ default: m.EmergencyCockpit })));
+const RescueFooterSupport = React.lazy(() => import('./components/RescueFooterSupport').then((m) => ({ default: m.RescueFooterSupport })));
+const OptionsOverviewHub = React.lazy(() => import('./components/OptionsOverviewHub').then((m) => ({ default: m.OptionsOverviewHub })));
+const ConfidenceCourageBoard = React.lazy(() => import('./components/ConfidenceCourageBoard').then((m) => ({ default: m.ConfidenceCourageBoard })));
+const PlatformTakedownPortal = React.lazy(() => import('./components/PlatformTakedownPortal').then((m) => ({ default: m.PlatformTakedownPortal })));
+const EvidencePreservationTool = React.lazy(() => import('./components/EvidencePreservationTool').then((m) => ({ default: m.EvidencePreservationTool })));
+const GuidedReportPortal = React.lazy(() => import('./components/GuidedReportPortal').then((m) => ({ default: m.GuidedReportPortal })));
+const CalmSupportPortal = React.lazy(() => import('./components/CalmSupportPortal').then((m) => ({ default: m.CalmSupportPortal })));
+const CampusSafetyPrintableCard = React.lazy(() => import('./components/CampusSafetyPrintableCard').then((m) => ({ default: m.CampusSafetyPrintableCard })));
+const PurgeFootprintModal = React.lazy(() => import('./components/PurgeFootprintModal').then((m) => ({ default: m.PurgeFootprintModal })));
+const ImmediateActionPath = React.lazy(() => import('./components/ImmediateActionPath').then((m) => ({ default: m.ImmediateActionPath })));
+const DeviceSafetyChecklist = React.lazy(() => import('./components/DeviceSafetyChecklist').then((m) => ({ default: m.DeviceSafetyChecklist })));
+
+const TabSuspenseFallback = () => (
+  <div 
+    className="w-full py-20 flex flex-col items-center justify-center space-y-3" 
+    role="status" 
+    aria-label="Loading section safely"
+  >
+    <div className="w-8 h-8 rounded-full border-2 border-[#993556]/20 border-t-[#993556] animate-spin" />
+    <span className="text-xs font-medium text-[#85819C]">
+      Loading safely on device...
+    </span>
+  </div>
+);
 import { hapticCamouflage, hapticSOS, hapticAction } from './utils/haptics';
 import { useThreeFingerEmergencyGesture } from './hooks/useThreeFingerEmergencyGesture';
 import { Language, IncidentCategory } from './types';
@@ -583,15 +596,17 @@ export default function App() {
         <CamouflageScreen key="camouflage-view" onRestore={() => handleTriggerCamouflage(false)} />
       ) : isDeviceSafetyOpen ? (
         <div key="device-safety-view" className="min-h-screen bg-[#FAF8F3] text-[#26215C] py-4 sm:py-8 selection:bg-[#993556] selection:text-white">
-          <DeviceSafetyChecklist
-            language={language}
-            onBack={() => setIsDeviceSafetyOpen(false)}
-            onProceedToEmergency={() => {
-              setIsDeviceSafetyOpen(false);
-              setViewMode('app');
-              handleNavigateToTab('rescue');
-            }}
-          />
+          <React.Suspense fallback={<TabSuspenseFallback />}>
+            <DeviceSafetyChecklist
+              language={language}
+              onBack={() => setIsDeviceSafetyOpen(false)}
+              onProceedToEmergency={() => {
+                setIsDeviceSafetyOpen(false);
+                setViewMode('app');
+                handleNavigateToTab('rescue');
+              }}
+            />
+          </React.Suspense>
         </div>
       ) : viewMode === 'landing' ? (
         <React.Fragment key="landing-fragment">
@@ -623,17 +638,19 @@ export default function App() {
             }}
           />
           {isImmediateActionOpen && (
-            <ImmediateActionPath
-              key="immediate-action-path"
-              language={language}
-              onClose={() => setIsImmediateActionOpen(false)}
-              onTriggerCamouflage={() => handleTriggerCamouflage(true)}
-              onOpenFullApp={() => {
-                setIsImmediateActionOpen(false);
-                setViewMode('app');
-                handleNavigateToTab('rescue');
-              }}
-            />
+            <React.Suspense fallback={<TabSuspenseFallback />}>
+              <ImmediateActionPath
+                key="immediate-action-path"
+                language={language}
+                onClose={() => setIsImmediateActionOpen(false)}
+                onTriggerCamouflage={() => handleTriggerCamouflage(true)}
+                onOpenFullApp={() => {
+                  setIsImmediateActionOpen(false);
+                  setViewMode('app');
+                  handleNavigateToTab('rescue');
+                }}
+              />
+            </React.Suspense>
           )}
         </React.Fragment>
       ) : (
@@ -735,109 +752,121 @@ export default function App() {
           >
             {/* HUB 0: CALM OPTIONS & RIGHTS OVERVIEW */}
             {activeTab === 'options' && (
-              <OptionsOverviewHub
-                language={language}
-                onNavigateToTab={(tab, elemId) => {
-                  setNavSource('options');
-                  handleNavigateToTab(tab, elemId, true, 'options');
-                }}
-                onBackToLanding={() => {
-                  setViewMode('landing');
-                }}
-              />
+              <React.Suspense fallback={<TabSuspenseFallback />}>
+                <OptionsOverviewHub
+                  language={language}
+                  onNavigateToTab={(tab, elemId) => {
+                    setNavSource('options');
+                    handleNavigateToTab(tab, elemId, true, 'options');
+                  }}
+                  onBackToLanding={() => {
+                    setViewMode('landing');
+                  }}
+                />
+              </React.Suspense>
             )}
 
             {/* HUB 1: QUICK RESCUE & IMMEDIATE TRIAGE */}
             {activeTab === 'rescue' && (
-              <div className="space-y-8">
-                {/* 1. THE UNIFIED LINEAR RESCUE PATH STEPPER */}
-                <EmergencyCockpit
-                  language={language}
-                  onTriggerSOS={handleTriggerSOS}
-                  onTriggerCamouflage={() => handleTriggerCamouflage(true)}
-                  onNavigateToTab={handleNavigateToTab}
-                  onSelectSituation={(sitId) => {
-                    setRescueSituation(sitId as any);
-                  }}
-                />
+              <React.Suspense fallback={<TabSuspenseFallback />}>
+                <div className="space-y-8">
+                  {/* 1. THE UNIFIED LINEAR RESCUE PATH STEPPER */}
+                  <EmergencyCockpit
+                    language={language}
+                    onTriggerSOS={handleTriggerSOS}
+                    onTriggerCamouflage={() => handleTriggerCamouflage(true)}
+                    onNavigateToTab={handleNavigateToTab}
+                    onSelectSituation={(sitId) => {
+                      setRescueSituation(sitId as any);
+                    }}
+                  />
 
-                {/* 2. SIMPLIFIED ESSENTIAL SAFETY & EXPANDABLE REFERENCE HUB */}
-                <RescueFooterSupport
-                  language={language}
-                  onNavigateToTab={handleNavigateToTab}
-                  onOpenPrintCard={() => setIsPrintCardOpen(true)}
-                  onOpenPurgeModal={() => setIsPurgeModalOpen(true)}
-                  onOpenDeviceSafety={() => setIsDeviceSafetyOpen(true)}
-                  onSelectCategoryForDraft={setDraftCategory}
-                  onOpenSOS={handleTriggerSOS}
-                  showPlatformGuides={showDeepScenarios}
-                  onTogglePlatformGuides={() => setShowDeepScenarios((prev) => !prev)}
-                  rescueSituation={rescueSituation}
-                  draftCategory={draftCategory}
-                />
-              </div>
+                  {/* 2. SIMPLIFIED ESSENTIAL SAFETY & EXPANDABLE REFERENCE HUB */}
+                  <RescueFooterSupport
+                    language={language}
+                    onNavigateToTab={handleNavigateToTab}
+                    onOpenPrintCard={() => setIsPrintCardOpen(true)}
+                    onOpenPurgeModal={() => setIsPurgeModalOpen(true)}
+                    onOpenDeviceSafety={() => setIsDeviceSafetyOpen(true)}
+                    onSelectCategoryForDraft={setDraftCategory}
+                    onOpenSOS={handleTriggerSOS}
+                    showPlatformGuides={showDeepScenarios}
+                    onTogglePlatformGuides={() => setShowDeepScenarios((prev) => !prev)}
+                    rescueSituation={rescueSituation}
+                    draftCategory={draftCategory}
+                  />
+                </div>
+              </React.Suspense>
             )}
 
             {/* HUB: COURAGE & CONFIDENCE PINS (DEDICATED PINTEREST VIEW) */}
             {activeTab === 'confidence' && (
-              <div className="space-y-6">
-                <ConfidenceCourageBoard
-                  language={language}
-                  onNavigateToTab={handleNavigateToTab}
-                  onBack={handleGoBack}
-                  backLabel={
-                    navSource === 'options'
-                      ? (isHindi ? 'विकल्पों पर वापस जाएं' : 'Back to Options Overview')
-                      : (isHindi ? 'त्वरित सहायता पर वापस जाएं' : 'Back to Quick Rescue')
-                  }
-                />
-              </div>
+              <React.Suspense fallback={<TabSuspenseFallback />}>
+                <div className="space-y-6">
+                  <ConfidenceCourageBoard
+                    language={language}
+                    onNavigateToTab={handleNavigateToTab}
+                    onBack={handleGoBack}
+                    backLabel={
+                      navSource === 'options'
+                        ? (isHindi ? 'विकल्पों पर वापस जाएं' : 'Back to Options Overview')
+                        : (isHindi ? 'त्वरित सहायता पर वापस जाएं' : 'Back to Quick Rescue')
+                    }
+                  />
+                </div>
+              </React.Suspense>
             )}
 
             {/* HUB 2: STOP LEAKS & TOOLS */}
             {activeTab === 'takedown' && (
-              <div className="space-y-6">
-                {takedownSubTab === 'evidence' ? (
-                  <div className="space-y-4">
-                    <button
-                      type="button"
-                      onClick={() => handleSelectTakedownSubTab('stopncii')}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#8B6D5C] hover:text-[#1A1A1A] transition-colors cursor-pointer py-1"
-                    >
-                      <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>{isHindi ? 'लीक रोकें पोर्टल पर वापस जाएं' : 'Back to Stop Leaks & Takedown Portals'}</span>
-                    </button>
-                    <EvidencePreservationTool language={language} onNavigateToTab={handleNavigateToTab} />
-                  </div>
-                ) : (
-                  <PlatformTakedownPortal 
-                    language={language} 
-                    onNavigateToTab={handleNavigateToTab} 
-                  />
-                )}
-              </div>
+              <React.Suspense fallback={<TabSuspenseFallback />}>
+                <div className="space-y-6">
+                  {takedownSubTab === 'evidence' ? (
+                    <div className="space-y-4">
+                      <button
+                        type="button"
+                        onClick={() => handleSelectTakedownSubTab('stopncii')}
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-[#8B6D5C] hover:text-[#1A1A1A] transition-colors cursor-pointer py-1"
+                      >
+                        <ArrowLeft className="w-3.5 h-3.5" />
+                        <span>{isHindi ? 'लीक रोकें पोर्टल पर वापस जाएं' : 'Back to Stop Leaks & Takedown Portals'}</span>
+                      </button>
+                      <EvidencePreservationTool language={language} onNavigateToTab={handleNavigateToTab} />
+                    </div>
+                  ) : (
+                    <PlatformTakedownPortal 
+                      language={language} 
+                      onNavigateToTab={handleNavigateToTab} 
+                    />
+                  )}
+                </div>
+              </React.Suspense>
             )}
 
             {/* HUB 3: REPORT & E-FIR */}
             {activeTab === 'report' && (
-              <GuidedReportPortal
-                language={language}
-                initialCategory={draftCategory}
-                onNavigateToTab={handleNavigateToTab}
-                activeSubView={reportSubTab === 'national_portal' ? 'national_portal' : 'drafts'}
-                onSelectSubView={(sub) => handleSelectReportSubTab(sub as any)}
-              />
+              <React.Suspense fallback={<TabSuspenseFallback />}>
+                <GuidedReportPortal
+                  language={language}
+                  initialCategory={draftCategory}
+                  onNavigateToTab={handleNavigateToTab}
+                  activeSubView={reportSubTab === 'national_portal' ? 'national_portal' : 'drafts'}
+                  onSelectSubView={(sub) => handleSelectReportSubTab(sub as any)}
+                />
+              </React.Suspense>
             )}
 
             {/* HUB 4: CALM & HELPLINES */}
             {activeTab === 'support' && (
-              <div className="space-y-8">
-                <CalmSupportPortal
-                  language={language}
-                  onNavigateToTab={handleNavigateToTab}
-                  defaultSection={supportSubTab === 'scripts' ? 'scripts' : supportSubTab === 'helplines' ? 'helplines' : 'grounding'}
-                />
-              </div>
+              <React.Suspense fallback={<TabSuspenseFallback />}>
+                <div className="space-y-8">
+                  <CalmSupportPortal
+                    language={language}
+                    onNavigateToTab={handleNavigateToTab}
+                    defaultSection={supportSubTab === 'scripts' ? 'scripts' : supportSubTab === 'helplines' ? 'helplines' : 'grounding'}
+                  />
+                </div>
+              </React.Suspense>
             )}
           </motion.div>
         </AnimatePresence>
@@ -915,30 +944,40 @@ export default function App() {
       />
 
       {/* Hostel & Campus Emergency Safety Card (Print Ready) */}
-      <CampusSafetyPrintableCard
-        isOpen={isPrintCardOpen}
-        onClose={() => setIsPrintCardOpen(false)}
-        language={language}
-      />
+      {isPrintCardOpen && (
+        <React.Suspense fallback={null}>
+          <CampusSafetyPrintableCard
+            isOpen={isPrintCardOpen}
+            onClose={() => setIsPrintCardOpen(false)}
+            language={language}
+          />
+        </React.Suspense>
+      )}
 
       {/* Shared Phone Footprint Purge Modal */}
-      <PurgeFootprintModal
-        isOpen={isPurgeModalOpen}
-        onClose={() => setIsPurgeModalOpen(false)}
-        language={language}
-      />
+      {isPurgeModalOpen && (
+        <React.Suspense fallback={null}>
+          <PurgeFootprintModal
+            isOpen={isPurgeModalOpen}
+            onClose={() => setIsPurgeModalOpen(false)}
+            language={language}
+          />
+        </React.Suspense>
+      )}
 
       {/* 2-Minute Emergency Immediate Action Path Modal */}
       {isImmediateActionOpen && (
-        <ImmediateActionPath
-          language={language}
-          onClose={() => setIsImmediateActionOpen(false)}
-          onTriggerCamouflage={() => handleTriggerCamouflage(true)}
-          onOpenFullApp={() => {
-            setIsImmediateActionOpen(false);
-            handleNavigateToTab('rescue');
-          }}
-        />
+        <React.Suspense fallback={<TabSuspenseFallback />}>
+          <ImmediateActionPath
+            language={language}
+            onClose={() => setIsImmediateActionOpen(false)}
+            onTriggerCamouflage={() => handleTriggerCamouflage(true)}
+            onOpenFullApp={() => {
+              setIsImmediateActionOpen(false);
+              handleNavigateToTab('rescue');
+            }}
+          />
+        </React.Suspense>
       )}
         </motion.div>
       )}
