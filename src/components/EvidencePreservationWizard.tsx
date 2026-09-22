@@ -175,7 +175,7 @@ Recorded on: ${new Date().toLocaleString('en-IN')}
           className="inline-flex items-center gap-2 text-xs font-semibold text-[#8B6D5C] hover:text-[#2D2D2D] transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>{isHindi ? 'वापस मुख्य मेनू पर जाएं' : 'Return to Sanctuary'}</span>
+          <span>{isHindi ? 'वापस होम पर जाएं' : 'Return to Home'}</span>
         </button>
       )}
 

@@ -20,10 +20,11 @@ import {
   BookOpen,
   Moon,
   VolumeX,
-  Home
+  Home,
+  Smartphone
 } from 'lucide-react';
 import { Language } from '../types';
-import { hapticCamouflage, hapticPanic, hapticAction } from '../utils/haptics';
+import { hapticCamouflage, hapticPanic, hapticAction, isHapticEnabled, setHapticEnabled, triggerVibration } from '../utils/haptics';
 import { CloudSyncIndicator } from './CloudSyncIndicator';
 import { subscribeToSync, getCloudSyncState } from '../utils/cloudSync';
 import { CloudSyncState } from '../types';
@@ -74,6 +75,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const isHindi = language === 'hi';
   const [syncState, setSyncState] = React.useState<CloudSyncState>(getCloudSyncState());
+  const [hapticsOptIn, setHapticsOptIn] = React.useState<boolean>(() => isHapticEnabled());
 
   React.useEffect(() => {
     return subscribeToSync(setSyncState);
@@ -190,6 +192,34 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="hidden lg:inline">{isNightDimmer ? (isHindi ? 'अंधेरा मोड' : 'Dim: ON') : (isHindi ? 'डिम' : 'Dim')}</span>
               </button>
             )}
+
+            {/* Haptic Feedback Opt-in (Default OFF per audit requirement) */}
+            <button
+              id="header-toggle-haptics"
+              type="button"
+              onClick={() => {
+                const nextState = !hapticsOptIn;
+                setHapticEnabled(nextState);
+                setHapticsOptIn(nextState);
+                if (nextState) {
+                  triggerVibration(40);
+                }
+              }}
+              className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full transition-colors cursor-pointer ${
+                hapticsOptIn 
+                  ? 'bg-teal-500/30 text-teal-200 border border-teal-400' 
+                  : 'bg-white/10 hover:bg-white/20 text-[#FAF8F3]/80'
+              }`}
+              title={isHindi 
+                ? (hapticsOptIn ? 'स्पर्श कंपन: चालू (बंद करने के लिए क्लिक करें)' : 'स्पर्श कंपन: बंद (चालू करने के लिए क्लिक करें)') 
+                : (hapticsOptIn ? 'Tactile Haptics: ON (Click to disable)' : 'Tactile Haptics: OFF (Click to opt in)')}
+              aria-label={isHindi 
+                ? (hapticsOptIn ? 'स्पर्श कंपन चालू' : 'स्पर्श कंपन बंद') 
+                : (hapticsOptIn ? 'Tactile Haptics ON' : 'Tactile Haptics OFF')}
+            >
+              <Smartphone className={`w-3 h-3 ${hapticsOptIn ? 'text-teal-300' : 'text-white/60'} shrink-0`} />
+              <span className="hidden xl:inline">{hapticsOptIn ? (isHindi ? 'कंपन: चालू' : 'Haptics: ON') : (isHindi ? 'कंपन: बंद' : 'Haptics: OFF')}</span>
+            </button>
 
             {/* Purge Local Storage */}
             {onOpenPurgeModal && (
@@ -371,7 +401,7 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-[#5A5672] font-normal leading-none mt-0.5 truncate">
-              {isHindi ? 'डिजिटल सुरक्षा व गोपनीय कानूनी ढाल' : 'Trauma-Informed Crisis Sanctuary'}
+              {isHindi ? 'डिजिटल सुरक्षा व गोपनीय कानूनी ढाल' : 'Trauma-Informed Crisis Support & Protection'}
             </p>
           </div>
         </div>
@@ -382,10 +412,11 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onReturnToLanding}
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-medium text-[#26215C] bg-white hover:bg-[#FAF8F3] border border-[#26215C]/12 transition-colors cursor-pointer min-h-[40px]"
-              title={isHindi ? 'शांत मन / ग्राउंडिंग स्क्रीन' : 'Grounding Sanctuary'}
+              title={isHindi ? 'होम स्क्रीन' : 'Home'}
+              aria-label={isHindi ? 'होम' : 'Home'}
             >
               <Home className="w-3.5 h-3.5 text-[#0F6E56]" />
-              <span className="hidden sm:inline">{isHindi ? 'होम / सांस लें' : 'Sanctuary'}</span>
+              <span className="hidden sm:inline">{isHindi ? 'होम' : 'Home'}</span>
             </button>
           )}
         </div>

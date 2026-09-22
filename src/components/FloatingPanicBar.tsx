@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { EyeOff, PhoneCall, X, AlertTriangle, Copy, Check, Heart, ShieldAlert } from 'lucide-react';
+import { EyeOff, PhoneCall, X, AlertTriangle, Heart, ShieldAlert } from 'lucide-react';
 import { Language } from '../types';
 import { CrisisScenarioKey } from './EmergencyCockpit';
-import { hapticCamouflage, hapticSOS, hapticPanic, hapticAction, hapticSuccess } from '../utils/haptics';
+import { hapticCamouflage, hapticSOS, hapticPanic, hapticAction } from '../utils/haptics';
 
 interface FloatingPanicBarProps {
   language: Language;
@@ -22,7 +22,6 @@ export const FloatingPanicBar: React.FC<FloatingPanicBarProps> = ({
   const isPhysicalDanger = rescueSituation === 'danger_stalking';
   const isPaidMoney = rescueSituation === 'paid';
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
-  const [copiedScript, setCopiedScript] = useState<boolean>(false);
   const [isScreenActive, setIsScreenActive] = useState<boolean>(() => {
     if (typeof document !== 'undefined') {
       return !document.hidden;
@@ -45,21 +44,6 @@ export const FloatingPanicBar: React.FC<FloatingPanicBarProps> = ({
       window.removeEventListener('blur', () => setIsScreenActive(!document.hidden));
     };
   }, []);
-
-  const freezeScript = isHindi
-    ? `मैंने इस बातचीत और आपके मोबाइल नंबर/UPI की आधिकारिक शिकायत राष्ट्रीय साइबर अपराध पोर्टल (cybercrime.gov.in / हेल्पलाइन 1930) पर दर्ज करा दी है। 
-
-सूचना प्रौद्योगिकी अधिनियम (धारा 66E व 67A) एवं भारतीय न्याय संहिता (धारा 308 - जबरन वसूली/ब्लैकमेल) के तहत किसी की निजी तस्वीरें प्रसारित करना या धमकी देना संज्ञेय अपराध है। सभी चैट स्क्रीनशॉट, टाइमस्टैम्प और आपका नंबर पुलिस जांच हेतु सुरक्षित कर लिए गए हैं। तुरंत संपर्क बंद करें और सभी सामग्री नष्ट करें।`
-    : `This incident, your phone number, UPI handle, and chat records have been formally logged with the National Cyber Crime Reporting Portal (Helpline 1930 / cybercrime.gov.in).
-
-Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya Sanhita (Section 308 - Extortion), transmitting or threatening to publish intimate media is a cognizable criminal offence. All evidence has been digitally documented and preserved for law enforcement investigation. Cease all contact and delete all media immediately.`;
-
-  const handleCopyScript = () => {
-    navigator.clipboard.writeText(freezeScript);
-    hapticSuccess();
-    setCopiedScript(true);
-    setTimeout(() => setCopiedScript(false), 3000);
-  };
 
   return (
     <div className="fixed bottom-[calc(68px+env(safe-area-inset-bottom,0px))] sm:bottom-4 right-2 sm:right-4 z-50 pointer-events-none">
@@ -204,42 +188,7 @@ Under the Information Technology Act (Sections 66E and 67A) and Bharatiya Nyaya 
               </span>
             </motion.button>
 
-            {/* 2. 1-TAP DELAY SCRIPT COPY: Buys safe time without provocation */}
-            <motion.button
-              id="floating-copy-freeze-script"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.94 }}
-              transition={{ duration: 0.12 }}
-              onClick={handleCopyScript}
-              className={`flex items-center gap-1 sm:gap-1.5 px-3 py-2 rounded-full cursor-pointer shrink-0 font-bold min-h-[44px] border transition-colors shadow-xs focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none ${
-                copiedScript 
-                  ? 'bg-emerald-600 border-emerald-400 text-white' 
-                  : 'bg-white/10 hover:bg-white/20 border-white/20 text-[#FAF9F6]'
-              }`}
-              title={isHindi ? 'तटस्थ कानूनी चेतावनी संदेश कॉपी करें' : 'Copy Statutory Warning Script to Clipboard'}
-              aria-label={isHindi ? 'तटस्थ कानूनी चेतावनी संदेश कॉपी करें' : 'Copy Statutory Warning Script to Clipboard'}
-            >
-              {copiedScript ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-white shrink-0" />
-                  <span className="text-[11px] sm:text-xs whitespace-nowrap">
-                    {isHindi ? 'कॉपी!' : 'Copied!'}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                  <span className="text-[11px] sm:text-xs whitespace-nowrap hidden sm:inline">
-                    {isHindi ? 'कानूनी संदेश' : 'Warning Script'}
-                  </span>
-                  <span className="text-[11px] sm:text-xs whitespace-nowrap sm:hidden">
-                    {isHindi ? 'मैसेज' : 'Script'}
-                  </span>
-                </>
-              )}
-            </motion.button>
-
-            {/* 3. SOS GPS alert button: High emergency contrast with reassuring subtle pulse */}
+            {/* 2. SOS GPS alert button: High emergency contrast with reassuring subtle pulse */}
             {onTriggerSOS && (
               <motion.button
                 id="floating-sos-alert"

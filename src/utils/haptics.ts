@@ -9,6 +9,8 @@
  * Safely guards against unsupported environments or permission blocks.
  */
 
+export const HAPTIC_STORAGE_KEY = 'suraksha_haptics_opt_in_v1';
+
 export const isHapticSupported = (): boolean => {
   return (
     typeof window !== 'undefined' &&
@@ -17,7 +19,35 @@ export const isHapticSupported = (): boolean => {
   );
 };
 
+/**
+ * Audit Requirement: Haptics must be opt-in only.
+ * Defaults to FALSE (disabled) unless explicitly enabled by user preference.
+ */
+export const isHapticEnabled = (): boolean => {
+  try {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem(HAPTIC_STORAGE_KEY) === 'true';
+  } catch {
+    return false;
+  }
+};
+
+export const setHapticEnabled = (enabled: boolean): void => {
+  try {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(HAPTIC_STORAGE_KEY, enabled ? 'true' : 'false');
+  } catch {
+    // Fail silently in restricted storage environments
+  }
+};
+
 export const triggerVibration = (pattern: number | number[]): boolean => {
+  // Guard 1: Must be explicitly enabled by user (default OFF)
+  if (!isHapticEnabled()) {
+    return false;
+  }
+
+  // Guard 2: Must be supported by browser/device hardware
   try {
     if (isHapticSupported()) {
       return window.navigator.vibrate(pattern);

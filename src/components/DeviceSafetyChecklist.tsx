@@ -141,7 +141,7 @@ export const DeviceSafetyChecklist: React.FC<DeviceSafetyChecklistProps> = ({
           className="inline-flex items-center gap-2 text-xs font-semibold text-[#8B6D5C] hover:text-[#2D2D2D] transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>{isHindi ? 'वापस मुख्य मेनू पर जाएं' : 'Return to Sanctuary'}</span>
+          <span>{isHindi ? 'वापस होम पर जाएं' : 'Return to Home'}</span>
         </button>
       )}
 
@@ -391,7 +391,7 @@ export const DeviceSafetyChecklist: React.FC<DeviceSafetyChecklistProps> = ({
               }}
               className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#26215C] hover:bg-[#1E1949] text-white text-xs font-bold transition-all shadow-sm cursor-pointer text-center"
             >
-              {isHindi ? 'डिवाइस सुरक्षित है — मुख्य पोर्टल खोलें' : 'Device is Secure — Open Main Sanctuary'}
+              {isHindi ? 'डिवाइस सुरक्षित है — होम खोलें' : 'Device is Secure — Open Home'}
             </button>
           )}
         </div>

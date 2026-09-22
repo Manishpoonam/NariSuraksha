@@ -78,7 +78,7 @@ export function setDisguisedManifest(disguise: boolean): void {
       favicon.href = '/icon-polity.svg';
     }
   } else {
-    document.title = 'NariSuraksha - Crisis Sanctuary & Legal Shield';
+    document.title = 'NariSuraksha - Crisis Support & Legal Shield';
     const favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
     if (favicon) {
       favicon.href = '/icon.svg';
