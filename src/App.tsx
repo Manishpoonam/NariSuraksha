@@ -850,7 +850,7 @@ export default function App() {
                   language={language}
                   initialCategory={draftCategory}
                   onNavigateToTab={handleNavigateToTab}
-                  activeSubView={reportSubTab === 'national_portal' ? 'national_portal' : 'drafts'}
+                  activeSubView={reportSubTab}
                   onSelectSubView={(sub) => handleSelectReportSubTab(sub as any)}
                 />
               </React.Suspense>

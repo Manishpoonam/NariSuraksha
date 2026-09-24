@@ -122,8 +122,8 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     email: 'dcp-ifso@delhipolice.gov.in',
     address: 'Cyber Crime Unit, IFSO, Sector-16C, Dwarka, New Delhi - 110075',
     specialWomenCell: {
-      en: 'Specialized Cyber Women & Child Safety Wing (IFSO)',
-      hi: 'विशेष साइबर महिला एवं बाल सुरक्षा विंग (IFSO)'
+      en: 'Special Police Unit for Women & Children (SPUWAC), Delhi Police',
+      hi: 'महिला एवं बाल के लिए विशेष पुलिस इकाई (SPUWAC), दिल्ली पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'NCT of Delhi (Statewide, 24x7)',
@@ -140,11 +140,11 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     police_website: 'https://delhipolice.gov.in',
     women_child_website: 'https://spuwac.in',
     source_url: 'https://spuwac.in/helplines.html',
-    last_verified: '2026-09-22',
+    last_verified: '2026-09-24',
     helplinePhone: '1091',
     websiteUrl: 'https://spuwac.in',
     isVerified: true,
-    verifiedDate: '2026-09-22'
+    verifiedDate: '2026-09-24'
   },
   {
     id: 'chandigarh',
@@ -154,7 +154,7 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     region: 'UT',
     isUnionTerritory: true,
     headquarters: 'Cyber Crime Investigation Cell (CCIC) Police Station, 17E, Sector 17, Chandigarh - 160017',
-    nodalOfficer: 'DSP / Cyber Crime Cell, Chandigarh Police',
+    nodalOfficer: 'Addl. Charge of DSP / Cyber Crime Cell, Chandigarh Police',
     email: 'cybercrime-chd@nic.in',
     address: 'Cyber Crime Investigation Cell (CCIC) Police Station, 17E, Sector 17, Chandigarh - 160017',
     specialWomenCell: {
@@ -167,20 +167,20 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     women_helpline_coverage: 'UT-wide (Chandigarh Police Women & Child Helpline)',
     child_helpline: '1098',
     child_helpline_coverage: 'UT-wide (Chandigarh Administration / Child Helpline)',
-    women_mobile: null,
+    women_mobile: '7087239005',
     women_whatsapp: null,
-    alternate_number: '0172-2746097',
-    alternate_number_label: 'Cyber Crime Cell Landline',
-    alternate_number_coverage: 'UT-wide (Sector 17 Cyber Cell)',
+    alternate_number: '0172-2705011',
+    alternate_number_label: 'Women & Child Helpline Alternate Number',
+    alternate_number_coverage: 'UT-wide (Chandigarh Police Women & Child Support)',
     coverage: 'UT-wide',
-    police_website: 'https://chandigarhpolice.gov.in',
+    police_website: 'https://portal.chandigarhpolice.gov.in/public/',
     women_child_website: 'https://chdsw.gov.in',
-    source_url: 'https://chandigarhpolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0172-2746097',
-    websiteUrl: 'https://chandigarhpolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    source_url: 'https://portal.chandigarhpolice.gov.in/Public/Home/EmergencyContacts',
+    last_verified: '2026-09-24',
+    helplinePhone: '1091',
+    websiteUrl: 'https://portal.chandigarhpolice.gov.in/public/',
+    isVerified: true,
+    verifiedDate: '2026-09-24'
   },
   {
     id: 'jammu_kashmir',
@@ -189,34 +189,47 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Jammu & Kashmir', hi: 'जम्मू और कश्मीर' },
     region: 'UT',
     isUnionTerritory: true,
-    headquarters: 'Cyber Police Station Cargo (Srinagar) & Cyber PS Jammu',
-    nodalOfficer: 'SP Cyber Crime J&K Police',
-    email: 'cyberpolice-jk@nic.in',
-    address: 'Cyber Police Station, Cargo Complex, Shergarhi, Srinagar - 190001 / ZPHQ Complex, Jammu',
+
+    headquarters: 'Cyber Police Station Kashmir Zone, 3rd Floor, P/S Shergari Complex, Srinagar & Cyber Police Station Jammu',
+    nodalOfficer: 'SP PC Srinagar / Cyber Police Station Kashmir Zone',
+    email: 'cyberpskmr@gmail.com',
+    address: '3rd Floor, P/S Shergari Complex, Srinagar / Cyber Police Station Jammu, Jammu',
+
     specialWomenCell: {
-      en: 'J&K Cyber Special Women Support Desk',
-      hi: 'जम्मू-कश्मीर साइबर विशेष महिला सहायता डेस्क'
+      en: 'Special Cell For Women, J&K Police',
+      hi: 'महिलाओं के लिए विशेष प्रकोष्ठ, जम्मू-कश्मीर पुलिस'
     },
+
     police_emergency: '112',
-    police_coverage: 'Statewide (UT-wide)',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide (UT-wide)',
+    police_coverage: 'UT-wide',
+
+    women_helpline: '1091',
+    women_helpline_coverage: 'UT-wide (Women Helpline)',
+
     child_helpline: '1098',
-    child_helpline_coverage: 'Statewide (UT-wide)',
+    child_helpline_coverage: 'UT-wide (Child Helpline)',
+
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0194-2451597',
-    alternate_number_label: 'Cyber Police Station Cargo (Srinagar)',
-    alternate_number_coverage: 'Kashmir Division / Srinagar (Jammu unit: 0191-2566780)',
-    coverage: 'Statewide (UT-wide)',
+
+    alternate_number: '0191-2436709',
+    alternate_number_label: 'Cyber Police Station Jammu',
+    alternate_number_coverage: 'Jammu Division / Jammu',
+
+    coverage: 'UT-wide',
+
     police_website: 'https://jkpolice.gov.in',
     women_child_website: 'https://socialwelfare.jk.gov.in',
-    source_url: 'https://jkpolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0194-2451597',
+
+    source_url: 'https://jkpolice.gov.in/specialwomen',
+
+    last_verified: '2026-09-24',
+
+    helplinePhone: '1091',
     websiteUrl: 'https://jkpolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    isVerified: true,
+    verifiedDate: '2026-09-24'
   },
   {
     id: 'ladakh',
@@ -225,35 +238,49 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Ladakh', hi: 'लद्दाख' },
     region: 'UT',
     isUnionTerritory: true,
-    headquarters: 'Cyber Crime Unit, District Police Lines Leh & Kargil',
-    nodalOfficer: 'SP / DSP Cyber Crime Cell Ladakh',
-    email: 'cybercrime-ladakh@nic.in',
-    address: 'Cyber Crime Police Station, District Police Lines, Skalzangling, Leh, UT Ladakh - 194101',
+
+    headquarters: 'Cyber Police Station, Ladakh (existing Cyber Unit, Leh), UT Ladakh',
+    nodalOfficer: 'Chief Executive Officer, Ladakh Cyber Crime Coordination Centre (L4C)',
+    email: 'igp-ladakh@police.ladakh.gov.in',
+    address: 'Ladakh Police Headquarters, Agling, Leh-Ladakh - 194101',
+
     specialWomenCell: {
-      en: 'Women Cyber Assistance Cell Ladakh',
-      hi: 'महिला साइबर सहायता प्रकोष्ठ लद्दाख'
+      en: 'Women Police Stations, Ladakh Police (Leh & Kargil)',
+      hi: 'महिला पुलिस थाने, लद्दाख पुलिस (लेह और कारगिल)'
     },
+
     police_emergency: '112',
     police_coverage: 'UT-wide',
-    women_helpline: '181',
-    women_helpline_coverage: 'UT-wide',
+
+    women_helpline: '1091',
+    women_helpline_coverage: 'UT-wide (Ladakh Women Helpline)',
+
     child_helpline: '1098',
-    child_helpline_coverage: 'UT-wide',
-    women_mobile: '9541900291',
-    women_mobile_coverage: 'Cyber Crime Unit Mobile, Leh & Kargil',
+    child_helpline_coverage: 'UT-wide (Child Helpline under Mission Vatsalya)',
+
+    women_mobile: '9544902328',
+    women_mobile_coverage: 'Kargil District (Women Police Station)',
+
     women_whatsapp: null,
-    alternate_number: '01982-252200',
-    alternate_number_label: 'Cyber Crime Unit Leh Landline',
-    alternate_number_coverage: 'UT-wide (Leh Cyber PS)',
+
+    alternate_number: '9541900291',
+    alternate_number_label: 'Cyber-Crime Unit Leh',
+    alternate_number_coverage: 'Leh District / Ladakh Cyber Police operations',
+
     coverage: 'UT-wide',
+
     police_website: 'https://police.ladakh.gov.in',
-    women_child_website: 'https://sw.ladakh.gov.in',
-    source_url: 'https://police.ladakh.gov.in',
-    last_verified: null,
-    helplinePhone: '01982-252200',
+    women_child_website: 'https://socialwelfare.ladakh.gov.in',
+
+    source_url: 'https://police.ladakh.gov.in/pages/emergency.html',
+
+    last_verified: '2026-09-24',
+
+    helplinePhone: '1091',
     websiteUrl: 'https://police.ladakh.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    isVerified: true,
+    verifiedDate: '2026-09-24'
   },
   {
     id: 'andaman_nicobar',
@@ -262,35 +289,47 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Andaman & Nicobar Islands', hi: 'अंडमान और निकोबार द्वीप समूह' },
     region: 'UT',
     isUnionTerritory: true,
-    headquarters: 'Cyber Crime Cell, CID Complex, Port Blair',
-    nodalOfficer: 'SP CID / Cyber Crime Officer',
+
+    headquarters: 'Crime Investigation Department (CID), Andaman & Nicobar Police, Port Blair',
+    nodalOfficer: 'SP / SSP (CID), Andaman & Nicobar Police',
     email: 'spcid.and@nic.in',
-    address: 'CID Police Station, Aberdeen Bazaar, Port Blair, Andaman & Nicobar - 744101',
+    address: 'Crime Investigation Department (CID), Port Blair, Andaman & Nicobar Islands - 744101',
+
     specialWomenCell: {
-      en: 'A&N Islands Women Cyber Safety Unit',
-      hi: 'अंडमान एवं निकोबार महिला साइबर सुरक्षा यूनिट'
+      en: 'Crime Against Women Cell, Andaman & Nicobar Police',
+      hi: 'महिलाओं के विरुद्ध अपराध प्रकोष्ठ, अंडमान एवं निकोबार पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'UT-wide',
-    women_helpline: '181',
-    women_helpline_coverage: 'UT-wide',
+
+    women_helpline: '1091',
+    women_helpline_coverage: 'UT-wide (A&N Police Women in Distress)',
+
     child_helpline: '1098',
-    child_helpline_coverage: 'UT-wide',
-    women_mobile: '9531856083',
-    women_mobile_coverage: 'CID Cyber Unit Mobile, Port Blair',
+    child_helpline_coverage: 'UT-wide (Child Helpline)',
+
+    women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '03192-232100',
-    alternate_number_label: 'CID Police Station Landline',
-    alternate_number_coverage: 'UT-wide (Port Blair CID)',
+
+    alternate_number: '181',
+    alternate_number_label: 'Women Helpline - Mission Shakti / WCD Control Room',
+    alternate_number_coverage: 'UT-wide (Directorate of Social Welfare, A&N Administration)',
+
     coverage: 'UT-wide',
-    police_website: 'https://police.andaman.gov.in',
-    women_child_website: 'https://wcd.andaman.gov.in',
-    source_url: 'https://police.andaman.gov.in',
-    last_verified: null,
-    helplinePhone: '03192-232100',
-    websiteUrl: 'https://police.andaman.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    police_website: 'https://police.andamannicobar.gov.in',
+    women_child_website: 'https://andssw1.and.nic.in/socialwelfare/',
+
+    source_url: 'https://police.andamannicobar.gov.in/index.php/en/support-units/criminal-investigation-department.html',
+
+    last_verified: '2026-09-24',
+
+    helplinePhone: '1091',
+    websiteUrl: 'https://police.andamannicobar.gov.in',
+
+    isVerified: true,
+    verifiedDate: '2026-09-24'
   },
   {
     id: 'puducherry',
@@ -299,34 +338,47 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Puducherry', hi: 'पुदुचेरी' },
     region: 'UT',
     isUnionTerritory: true,
-    headquarters: 'Cyber Crime Police Station, Police Complex, Gorimedu',
-    nodalOfficer: 'SP Cyber Crime Puducherry Police',
-    email: 'cyberps.py@gov.in',
-    address: 'Cyber Crime Police Station, Police Complex, Gorimedu, Puducherry - 605006',
+
+    headquarters: 'Cyber Crime Police Station, Multi-storied Building, Gorimedu, Puducherry - 605006',
+    nodalOfficer: 'SP Cyber Crime Cell, Puducherry Police',
+    email: 'cybercell-police@py.gov.in',
+    address: 'Cyber Crime Police Station, Multi-storied Building, Gorimedu, Puducherry - 605006',
+
     specialWomenCell: {
-      en: 'Puducherry Women & Child Cyber Cell',
-      hi: 'पुदुचेरी महिला एवं बाल साइबर प्रकोष्ठ'
+      en: 'All Women Police Station (AWPS), Puducherry Police',
+      hi: 'अखिल महिला पुलिस थाना (AWPS), पुदुचेरी पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'UT-wide',
-    women_helpline: '181',
-    women_helpline_coverage: 'UT-wide',
+
+    women_helpline: '1091',
+    women_helpline_coverage: 'UT-wide (Puducherry Women Helpline)',
+
     child_helpline: '1098',
-    child_helpline_coverage: 'UT-wide',
+    child_helpline_coverage: 'UT-wide (Puducherry Child Helpline)',
+
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0413-2277700',
-    alternate_number_label: 'Gorimedu Cyber PS Landline',
-    alternate_number_coverage: 'UT-wide (Gorimedu Cyber PS)',
+
+    alternate_number: '0413-2272581',
+    alternate_number_label: 'SP Crime Against Women',
+    alternate_number_coverage: 'UT-wide (Puducherry Police)',
+
     coverage: 'UT-wide',
+
     police_website: 'https://police.py.gov.in',
-    women_child_website: 'https://socwelfare.py.gov.in',
-    source_url: 'https://police.py.gov.in',
-    last_verified: null,
-    helplinePhone: '0413-2277700',
+    women_child_website: 'https://wcd.py.gov.in',
+
+    source_url: 'https://police.py.gov.in/Contact%20us/HELP%20CENTER.htm',
+
+    last_verified: '2026-09-24',
+
+    helplinePhone: '1091',
     websiteUrl: 'https://police.py.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    isVerified: true,
+    verifiedDate: '2026-09-24'
   },
   {
     id: 'dadra_nagar_daman_diu',
@@ -335,34 +387,47 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Dadra & Nagar Haveli and Daman & Diu', hi: 'दादरा और नगर हवेली एवं दमन और दीव' },
     region: 'UT',
     isUnionTerritory: true,
-    headquarters: 'Cyber Crime Cell PHQ, Airport Road, Daman / Silvassa',
-    nodalOfficer: 'SP / Addl. SP Cyber Crime',
-    email: 'phq-dd@nic.in',
-    address: 'Police Headquarters, Airport Road, Dunetha, Daman - 396210 / Cyber Cell, Silvassa',
+
+    headquarters: 'Police Headquarters, Airport Road, Dunetha, Daman, DNH & DD',
+    nodalOfficer: 'Deputy Inspector General of Police, UT of Dadra & Nagar Haveli and Daman & Diu',
+    email: 'digp-daman-dd@nic.in',
+    address: 'Police Headquarters, Airport Road, Dunetha, Daman, DNH & DD',
+
     specialWomenCell: {
-      en: 'Women Police Helpline & Cyber Support Wing',
-      hi: 'महिला पुलिस हेल्पलाइन एवं साइबर सहायता विंग'
+      en: 'Crime Against Women Cell, Dadra & Nagar Haveli and Daman & Diu Police',
+      hi: 'महिलाओं के विरुद्ध अपराध प्रकोष्ठ, दादरा और नगर हवेली एवं दमन और दीव पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'UT-wide',
+
     women_helpline: '181',
-    women_helpline_coverage: 'UT-wide',
+    women_helpline_coverage: 'UT-wide (Women Help, UT Administration)',
+
     child_helpline: '1098',
-    child_helpline_coverage: 'UT-wide',
+    child_helpline_coverage: 'UT-wide (Child Helpline)',
+
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0260-2220140',
-    alternate_number_label: 'Police HQ Daman Landline',
-    alternate_number_coverage: 'UT-wide (Daman PHQ & Silvassa)',
+
+    alternate_number: '0260-2633001',
+    alternate_number_label: 'Crime Against Women Cell',
+    alternate_number_coverage: 'UT-wide (Crime Against Women Cell; district cells in DNH, Daman and Diu)',
+
     coverage: 'UT-wide',
-    police_website: 'https://ddd.gov.in',
-    women_child_website: 'https://ddd.gov.in',
-    source_url: 'https://ddd.gov.in',
-    last_verified: null,
-    helplinePhone: '0260-2220140',
-    websiteUrl: 'https://ddd.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    police_website: 'https://police.ddd.gov.in',
+    women_child_website: 'https://ddd.gov.in/social-welfare-department-2/',
+
+    source_url: 'https://police.ddd.gov.in/organization/crime-against-women-cell/',
+
+    last_verified: '2026-09-24',
+
+    helplinePhone: '181',
+    websiteUrl: 'https://police.ddd.gov.in',
+
+    isVerified: true,
+    verifiedDate: '2026-09-24'
   },
   {
     id: 'lakshadweep',
@@ -371,34 +436,34 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Lakshadweep', hi: 'लक्षद्वीप' },
     region: 'UT',
     isUnionTerritory: true,
-    headquarters: 'Cyber Crime Cell, Police HQ Kavaratti',
-    nodalOfficer: 'DSP (HQ) / SP Cyber Lakshadweep',
-    email: 'cctns-lk@nic.in',
+    headquarters: 'Police Headquarters, Kavaratti Island, UT of Lakshadweep - 682555',
+    nodalOfficer: 'Superintendent of Police, Lakshadweep Police',
+    email: 'lak-sop@nic.in',
     address: 'Police Headquarters, Kavaratti Island, UT of Lakshadweep - 682555',
     specialWomenCell: {
-      en: 'Lakshadweep Women Safety Cyber Cell',
-      hi: 'लक्षद्वीप महिला सुरक्षा साइबर प्रकोष्ठ'
+      en: 'Women & Child Development Department, Lakshadweep Administration',
+      hi: 'महिला एवं बाल विकास विभाग, लक्षद्वीप प्रशासन'
     },
     police_emergency: '112',
     police_coverage: 'UT-wide',
-    women_helpline: '181',
-    women_helpline_coverage: 'UT-wide',
+    women_helpline: '1091',
+    women_helpline_coverage: 'UT-wide (Women Helpline, Lakshadweep Administration)',
     child_helpline: '1098',
-    child_helpline_coverage: 'UT-wide',
+    child_helpline_coverage: 'UT-wide (Child Helpline, Lakshadweep Administration)',
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '04896-262258',
-    alternate_number_label: 'Police HQ Kavaratti Landline',
-    alternate_number_coverage: 'UT-wide (Kavaratti Cyber Cell)',
+    alternate_number: '04896-262273',
+    alternate_number_label: 'Police Department Office',
+    alternate_number_coverage: 'UT-wide (Lakshadweep Police Headquarters / Administration)',
     coverage: 'UT-wide',
-    police_website: 'https://lakshadweeppolice.gov.in',
-    women_child_website: 'https://lakshadweep.gov.in',
-    source_url: 'https://lakshadweeppolice.gov.in',
-    last_verified: null,
-    helplinePhone: '04896-262258',
-    websiteUrl: 'https://lakshadweeppolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    police_website: 'https://lakshadweep.gov.in/departments-new/police-department/',
+    women_child_website: 'https://lakshadweep.gov.in/department-of-women-and-child-development/',
+    source_url: 'https://lakshadweep.gov.in/departments-new/police-department/',
+    last_verified: '2026-09-24',
+    helplinePhone: '1091',
+    websiteUrl: 'https://lakshadweep.gov.in/departments-new/police-department/',
+    isVerified: true,
+    verifiedDate: '2026-09-24'
   },
 
   // ==========================================
