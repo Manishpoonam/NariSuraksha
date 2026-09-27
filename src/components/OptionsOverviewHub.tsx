@@ -336,7 +336,7 @@ export const OptionsOverviewHub: React.FC<OptionsOverviewHubProps> = ({
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#26215C] hover:bg-[#1E1949] text-white text-xs font-bold transition-all shadow-xs cursor-pointer shrink-0"
               >
                 <span>{activePath.buttonLabel[language]}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center" />
               </button>
             </div>
 

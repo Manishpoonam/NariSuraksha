@@ -189,7 +189,7 @@ export const GuidedEmergencyFlow: React.FC<GuidedEmergencyFlowProps> = ({
 
                 <div className="mt-4 pt-2.5 border-t border-black/5 flex items-center justify-between text-xs font-semibold opacity-90">
                   <span>{isSelected ? (isHindi ? 'सक्रिय उपाय' : 'Active Plan') : (isHindi ? 'कदम देखें' : 'View Action')}</span>
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center" />
                 </div>
               </motion.button>
             );
@@ -298,7 +298,7 @@ export const GuidedEmergencyFlow: React.FC<GuidedEmergencyFlowProps> = ({
                   <p className="text-xs text-[#666]">{isHindi ? 'धारा 63 BSA इलेक्ट्रॉनिक घोषणा प्रारूप के साथ तैयार ड्राफ्ट।' : 'Formal complaint draft formatted with Section 63 BSA evidence declaration.'}</p>
                   <button onClick={() => { onSelectCategoryForDraft('extortion_blackmail'); onNavigateToTab('drafts', 'complaint-draft-generator'); }} className="inline-flex items-center gap-1 text-xs font-bold text-[#8B6D5C] hover:underline cursor-pointer">
                     <span>{isHindi ? 'ड्राफ्ट टूल खोलें' : 'Open Draft Generator'}</span>
-                    <ArrowRight className="w-3 h-3" />
+                    <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] shrink-0 self-center" />
                   </button>
                 </div>
 
@@ -336,7 +336,7 @@ export const GuidedEmergencyFlow: React.FC<GuidedEmergencyFlowProps> = ({
                   <p className="text-xs text-[#666]">{isHindi ? 'इंस्टाग्राम, टेलीग्राम, गूगल सर्च व रेडिट के डायरेक्ट ग्रीवेंस लिंक्स।' : 'Direct grievance officer escalation links for Telegram, Instagram, Google.'}</p>
                   <button onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')} className="inline-flex items-center gap-1 text-xs font-bold text-[#8B6D5C] hover:underline cursor-pointer">
                     <span>{isHindi ? 'सभी लिंक्स देखें' : 'View Takedown Links'}</span>
-                    <ArrowRight className="w-3 h-3" />
+                    <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] shrink-0 self-center" />
                   </button>
                 </div>
 
@@ -384,7 +384,7 @@ export const GuidedEmergencyFlow: React.FC<GuidedEmergencyFlowProps> = ({
                   <p className="text-xs text-[#666]">{isHindi ? 'सोशल मीडिया प्राइवेट करें और लोकेशन ट्रैकिंग बंद करें।' : 'Lockdown Instagram, revoke third-party app permissions, hide active status.'}</p>
                   <button onClick={() => onNavigateToTab('lockdown', 'privacy-lockdown-guide')} className="inline-flex items-center gap-1 text-xs font-bold text-[#8B6D5C] hover:underline cursor-pointer">
                     <span>{isHindi ? 'लॉकडाउन गाइड' : 'Open Lockdown Guide'}</span>
-                    <ArrowRight className="w-3 h-3" />
+                    <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] shrink-0 self-center" />
                   </button>
                 </div>
 
@@ -404,7 +404,7 @@ export const GuidedEmergencyFlow: React.FC<GuidedEmergencyFlowProps> = ({
                   <p className="text-xs text-[#666]">{isHindi ? 'मैसेज और प्रोफाइल URL के टाइमस्टैम्प स्क्रीनशॉट लें।' : 'Capture timestamped screenshots and compute SHA-256 integrity hash.'}</p>
                   <button onClick={() => onNavigateToTab('evidence', 'evidence-preservation-tool')} className="inline-flex items-center gap-1 text-xs font-bold text-[#8B6D5C] hover:underline cursor-pointer">
                     <span>{isHindi ? 'सबूत टूल देखें' : 'Preserve Evidence'}</span>
-                    <ArrowRight className="w-3 h-3" />
+                    <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] shrink-0 self-center" />
                   </button>
                 </div>
               </div>
@@ -420,7 +420,7 @@ export const GuidedEmergencyFlow: React.FC<GuidedEmergencyFlowProps> = ({
                   <p className="text-xs text-[#666]">{isHindi ? 'सेटिंग्स में जाकर "Log out all devices" चुनें।' : 'Force sign-out all other active sessions and reset recovery email.'}</p>
                   <button onClick={() => onNavigateToTab('lockdown', 'privacy-lockdown-guide')} className="inline-flex items-center gap-1 text-xs font-bold text-[#8B6D5C] hover:underline cursor-pointer">
                     <span>{isHindi ? 'सुरक्षा चेकलिस्ट' : 'Security Steps'}</span>
-                    <ArrowRight className="w-3 h-3" />
+                    <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] shrink-0 self-center" />
                   </button>
                 </div>
 
@@ -436,7 +436,7 @@ export const GuidedEmergencyFlow: React.FC<GuidedEmergencyFlowProps> = ({
                   <p className="text-xs text-[#666]">{isHindi ? 'IT Act 66 (हैकिंग) के तहत कानूनी ड्राफ्ट बनाएं।' : 'Generate formal complaint under Section 43/66 IT Act.'}</p>
                   <button onClick={() => { onSelectCategoryForDraft('account_takeover'); onNavigateToTab('drafts', 'complaint-draft-generator'); }} className="inline-flex items-center gap-1 text-xs font-bold text-[#8B6D5C] hover:underline cursor-pointer">
                     <span>{isHindi ? 'ड्राफ्ट बनाएं' : 'Create Draft'}</span>
-                    <ArrowRight className="w-3 h-3" />
+                    <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] shrink-0 self-center" />
                   </button>
                 </div>
               </div>
@@ -498,7 +498,7 @@ export const GuidedEmergencyFlow: React.FC<GuidedEmergencyFlowProps> = ({
                   <p className="text-xs text-[#666]">{isHindi ? 'धारा 73 BNS (पहचान गोपनीयता) व जीरो FIR की जानकारी।' : 'Learn about mandatory identity sealing and free legal aid.'}</p>
                   <button onClick={() => onNavigateToTab('rights', 'legal-rights-faq')} className="inline-flex items-center gap-1 text-xs font-bold text-[#8B6D5C] hover:underline cursor-pointer">
                     <span>{isHindi ? 'अधिकार गाइड पढ़ें' : 'Read Rights FAQ'}</span>
-                    <ArrowRight className="w-3 h-3" />
+                    <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] shrink-0 self-center" />
                   </button>
                 </div>
               </div>

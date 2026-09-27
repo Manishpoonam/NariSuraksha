@@ -125,7 +125,7 @@ export const PanicSafetyBanner: React.FC<PanicSafetyBannerProps> = ({
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-[#8B6D5C] hover:underline"
                 >
                   <span>{isHindi ? 'पूर्ण सबूत चेकलिस्ट खोलें' : 'Open Comprehensive Evidence Checklist Tool'}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
                 </button>
               </div>
             </motion.div>

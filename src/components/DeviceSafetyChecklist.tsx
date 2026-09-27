@@ -31,12 +31,14 @@ interface DeviceSafetyChecklistProps {
   language: Language;
   onBack?: () => void;
   onProceedToEmergency?: () => void;
+  returnLabel?: string;
 }
 
 export const DeviceSafetyChecklist: React.FC<DeviceSafetyChecklistProps> = ({
   language,
   onBack,
-  onProceedToEmergency
+  onProceedToEmergency,
+  returnLabel
 }) => {
   const isHindi = language === 'hi';
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
@@ -140,8 +142,8 @@ export const DeviceSafetyChecklist: React.FC<DeviceSafetyChecklistProps> = ({
           }}
           className="inline-flex items-center gap-2 text-xs font-semibold text-[#8B6D5C] hover:text-[#2D2D2D] transition-colors cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>{isHindi ? 'वापस होम पर जाएं' : 'Return to Home'}</span>
+          <ArrowLeft className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center" />
+          <span>{returnLabel || (isHindi ? 'वापस जाएं' : 'Return to Previous Screen')}</span>
         </button>
       )}
 
@@ -391,7 +393,9 @@ export const DeviceSafetyChecklist: React.FC<DeviceSafetyChecklistProps> = ({
               }}
               className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#26215C] hover:bg-[#1E1949] text-white text-xs font-bold transition-all shadow-sm cursor-pointer text-center"
             >
-              {isHindi ? 'डिवाइस सुरक्षित है — होम खोलें' : 'Device is Secure — Open Home'}
+              {returnLabel 
+                ? (isHindi ? `पूर्ण • ${returnLabel}` : `Done • ${returnLabel}`) 
+                : (isHindi ? 'डिवाइस सुरक्षित है — वापस जाएं' : 'Device is Secure — Return')}
             </button>
           )}
         </div>

@@ -296,7 +296,7 @@ export const ImmediateActionPath: React.FC<ImmediateActionPathProps> = ({
               }}
               className="flex-1 sm:flex-initial px-5 py-2.5 rounded-full bg-white hover:bg-neutral-100 text-[#26215C] text-xs font-bold border border-[#26215C]/15 transition-all cursor-pointer text-center min-h-[44px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none"
             >
-              {isHindi ? 'वापस जाएं' : 'Back'}
+              {isHindi ? 'होमपेज पर वापस जाएं' : 'Back to Homepage'}
             </button>
 
             <button
@@ -306,9 +306,10 @@ export const ImmediateActionPath: React.FC<ImmediateActionPathProps> = ({
                 onOpenFullApp();
               }}
               className="flex-1 sm:flex-initial px-5 py-2.5 rounded-full bg-[#26215C] hover:bg-[#1E1949] text-white text-xs font-bold transition-all shadow-sm cursor-pointer inline-flex items-center justify-center gap-1.5 text-center min-h-[44px] focus-visible:ring-2 focus-visible:ring-[#F3C5D6] focus-visible:outline-none"
+              title={isHindi ? 'पूर्ण क्राइसिस रेस्क्यू फ्लो खोलें' : 'Open Full Crisis Rescue Flow'}
             >
               <span>{isHindi ? 'पूरा क्राइसिस कॉकपिट' : 'Full Crisis Cockpit'}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#F3C5D6]" />
+              <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] text-[#F3C5D6] shrink-0 self-center" />
             </button>
           </div>
         </footer>

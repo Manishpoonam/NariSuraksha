@@ -318,7 +318,7 @@ export const HelplineDirectory: React.FC<HelplineDirectoryProps> = ({
             className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#FAF8F3] hover:bg-[#26215C] text-[#26215C] hover:text-white border border-[#26215C]/15 font-semibold text-xs transition-colors shrink-0 cursor-pointer"
           >
             <span>{isHindi ? 'राज्य डायरेक्टरी खोलें' : 'Open State Directory'}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
           </button>
         </div>
       )}

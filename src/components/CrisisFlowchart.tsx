@@ -102,7 +102,7 @@ export const CrisisFlowchart: React.FC<CrisisFlowchartProps> = ({
               </div>
               <div className="mt-4 flex items-center justify-between text-xs font-medium opacity-90">
                 <span>{isHindi ? 'समाधान देखें' : 'View Protocol'}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center" />
               </div>
             </button>
           );

@@ -604,7 +604,7 @@ export const GirlsRescueGuide: React.FC<GirlsRescueGuideProps> = ({
 
                 <div className="pt-2 border-t border-[#F0EBE6] flex items-center justify-between text-[11px] text-[#777]">
                   <span>{isHindi ? 'समाधान देखें' : 'View protocol'}</span>
-                  <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isSelected ? 'translate-x-1 text-[#8B6D5C]' : 'group-hover:translate-x-0.5'}`} />
+                  <ChevronRight className={`w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center transition-transform ${isSelected ? 'translate-x-1 text-[#8B6D5C]' : 'group-hover:translate-x-0.5'}`} />
                 </div>
               </button>
             );
@@ -756,7 +756,7 @@ export const GirlsRescueGuide: React.FC<GirlsRescueGuideProps> = ({
                           className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-[#2D2D2D] hover:text-white text-[#2D2D2D] rounded-full text-xs font-bold border border-[#DED9D4] transition-colors shadow-2xs cursor-pointer"
                         >
                           <span>{step.actionText[language]}</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
+                          <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
                         </button>
                       )}
                     </div>

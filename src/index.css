@@ -122,6 +122,14 @@
       scroll-behavior: auto !important;
     }
   }
+
+  /* Prevent SVG icons from collapsing into a flat horizontal line on mobile flex layouts */
+  svg.lucide,
+  button svg,
+  a svg {
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
+  }
 }
 
 /* Hide scrollbars cleanly while preserving scrollability */

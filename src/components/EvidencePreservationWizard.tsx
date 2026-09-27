@@ -321,7 +321,7 @@ Recorded on: ${new Date().toLocaleString('en-IN')}
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#2D2D2D] hover:bg-black text-white rounded-full text-xs font-bold transition-all cursor-pointer"
             >
               <span>{isHindi ? 'अगला: आरोपी की पहचान दर्ज करें' : 'Next: Log Suspect Details'}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center" />
             </button>
           </div>
         </motion.div>
@@ -460,7 +460,7 @@ Recorded on: ${new Date().toLocaleString('en-IN')}
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#2D2D2D] hover:bg-black text-white rounded-full text-xs font-bold transition-all cursor-pointer"
             >
               <span>{isHindi ? 'अगला: साक्ष्य समरी देखें' : 'Next: Review Dossier'}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center" />
             </button>
           </div>
         </motion.div>

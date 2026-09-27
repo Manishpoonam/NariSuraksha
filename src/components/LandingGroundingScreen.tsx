@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { Language } from '../types';
 import { hapticAction, hapticCamouflage, hapticSOS } from '../utils/haptics';
-import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
+import { LEGAL_DISCLAIMER, dispatchOpenDisclaimer } from '../data/legalDisclaimer';
 
 interface LandingGroundingScreenProps {
   language: Language;
@@ -60,11 +60,7 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
     if (onOpenFullDisclaimer) {
       onOpenFullDisclaimer();
     } else {
-      onChooseUnderstandOptions();
-      setTimeout(() => {
-        const el = document.getElementById('about-trust-section');
-        el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+      dispatchOpenDisclaimer();
     }
   };
 
@@ -207,11 +203,11 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
                 </span>
               </div>
 
-              <div className="mt-4">
+              <div className="mt-4 text-left">
                 <h2 className="text-lg sm:text-xl font-semibold text-white tracking-tight flex items-center gap-1.5">
                   <span>{isHindi ? 'मुझे अभी तुरंत मदद चाहिए →' : 'I need help right now →'}</span>
                 </h2>
-                <p className="text-xs sm:text-sm text-[#D2CCE7] mt-1.5 font-normal leading-normal">
+                <p className="text-left text-xs sm:text-sm text-[#D2CCE7] mt-1.5 font-normal leading-normal">
                   {isHindi
                     ? 'अपने सबूत सुरक्षित करें और अगला सुरक्षित कदम उठाएं।'
                     : 'Secure your evidence and take the next safe step.'}
@@ -239,11 +235,11 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
                 </span>
               </div>
 
-              <div className="mt-4">
+              <div className="mt-4 text-left">
                 <h2 className="text-lg sm:text-xl font-semibold text-[#26215C] tracking-tight flex items-center gap-1.5">
                   <span>{isHindi ? 'अपने विकल्प समझें →' : 'Understand my options →'}</span>
                 </h2>
-                <p className="text-xs sm:text-sm text-[#5A5672] mt-1.5 font-normal leading-normal">
+                <p className="text-left text-xs sm:text-sm text-[#5A5672] mt-1.5 font-normal leading-normal">
                   {isHindi
                     ? 'जानें कि आप क्या कर सकती हैं, रिपोर्ट कैसे करें, और सहायता कहां से प्राप्त करें।'
                     : 'Learn what you can do, how to report it, and where to get support.'}

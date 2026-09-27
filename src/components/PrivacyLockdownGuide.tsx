@@ -13,7 +13,9 @@ import {
   Key,
   RotateCcw,
   CheckCircle2,
-  Check
+  Check,
+  PhoneCall,
+  ExternalLink
 } from 'lucide-react';
 import { Language } from '../types';
 import { sessionDraft, STORAGE_KEYS } from '../utils/storage';
@@ -287,6 +289,34 @@ export const PrivacyLockdownGuide: React.FC<PrivacyLockdownGuideProps> = ({ lang
             ? 'यदि पीड़िता या मीडिया में दिखने वाला व्यक्ति 18 वर्ष से कम आयु का है, तो POCSO अधिनियम 2012 के तहत यह अत्यंत गंभीर अपराध है। ऐसे मामलों में सहमति का कोई महत्व नहीं होता और अपराधी को 20 वर्ष से लेकर आजीवन कारावास तक की सजा होती है। चाइल्डलाइन 1098 या 1930 पर सीधे नाबालिग के रूप में रिपोर्ट करें।'
             : 'Under the Protection of Children from Sexual Offences (POCSO) Act 2012, non-consensual creation or distribution of intimate media of anyone under 18 carries mandatory severe imprisonment up to Life Term. Lack of consent is statutorily presumed. Direct helpline: 1098 / 1930.'}
         </p>
+
+        <div className="flex flex-wrap gap-2 pt-1">
+          <a
+            href="tel:1098"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors cursor-pointer"
+          >
+            <PhoneCall className="w-3.5 h-3.5 shrink-0" />
+            <span>CHILDLINE 1098</span>
+          </a>
+          <a
+            href="https://ebaalnidan.nic.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#E8E2DC] hover:bg-[#FAF8F3] text-[#1A1A1A] text-xs font-semibold transition-colors cursor-pointer"
+          >
+            <span>POCSO e-Box (NCPCR)</span>
+            <ExternalLink className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
+          </a>
+          <a
+            href="https://takeitdown.ncmec.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#E8E2DC] hover:bg-[#FAF8F3] text-[#1A1A1A] text-xs font-semibold transition-colors cursor-pointer"
+          >
+            <span>Take It Down (Under 18 Hashing)</span>
+            <ExternalLink className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
+          </a>
+        </div>
       </div>
 
       {/* Platform Checklist Cards */}

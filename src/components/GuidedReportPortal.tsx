@@ -386,7 +386,7 @@ export const GuidedReportPortal: React.FC<GuidedReportPortalProps> = ({
           </div>
           <span className="text-xs font-bold text-[#993556] group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
             <span>{isHindi ? 'विवरण देखें' : 'Learn more'}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
           </span>
         </button>
       </div>

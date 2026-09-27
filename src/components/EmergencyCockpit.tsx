@@ -43,9 +43,10 @@ import {
 import { Language, IncidentCategory } from '../types';
 import { hapticCamouflage, hapticSOS, hapticAction, hapticPanic, hapticSuccess } from '../utils/haptics';
 import { PocsoMinorShieldModal } from './PocsoMinorShieldModal';
+import { StateEmergencyHighlightCard } from './StateEmergencyHighlightCard';
 import { TraumaInformedStepTracker } from './TraumaInformedStepTracker';
 import { smoothScrollTo } from '../utils/scroll';
-import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
+import { LEGAL_DISCLAIMER, dispatchOpenDisclaimer } from '../data/legalDisclaimer';
 import { EXTORTION_RESPONSE_SCRIPTS, EXTORTION_SEQUENCED_GUIDANCE } from '../data/extortionResponseScripts';
 
 export type CrisisScenarioKey = 
@@ -398,26 +399,29 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
       className="rounded-[24px] bg-[#26215C] text-[#FAF8F3] border border-[#373078] shadow-elevated overflow-hidden"
     >
       {/* 1. TOP SECURE STATUS STRIP */}
-      <div className="bg-[#1E1949] px-4 sm:px-7 py-3 flex items-center justify-between text-xs text-[#FAF8F3] border-b border-white/10">
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#0F6E56] animate-pulse" />
+      <div className="bg-[#1E1949] px-3.5 sm:px-7 py-2.5 sm:py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 text-xs text-[#FAF8F3] border-b border-white/10">
+        <div className="flex items-center gap-2 min-w-0">
+          {/* Responsive, non-degrading status indicator dot with reduced motion support */}
+          <div className="relative flex items-center justify-center w-2.5 h-2.5 shrink-0" aria-hidden="true">
+            <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-60 motion-safe:animate-ping motion-reduce:hidden" />
+            <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-400" />
+          </div>
           <span 
-            className="font-semibold tracking-wide text-[11px] sm:text-xs text-[#FAF8F3]"
+            className="font-semibold tracking-wide text-[11px] sm:text-xs text-[#FAF8F3] truncate"
             title={isHindi ? '100% निजी व स्थानीय: आपका डेटा डिवाइस से बाहर कभी नहीं जाता, कोई ट्रैकिंग या नेटवर्क कॉल नहीं।' : '100% Private & Local: All data stays entirely in your browser session; zero telemetry, analytics, or external logging.'}
           >
             {isHindi ? 'रेस्क्यू पाथ: अनुशंसित संकट समाधान • 100% गोपनीय व स्थानीय' : 'Rescue Path: Recommended Crisis Response • 100% Private & Local'}
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+          {/* Consolidated Silent Mode Status Pill */}
           <span 
-            className="inline-flex items-center gap-1.5 text-[11px] text-[#D2CCE7]"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-medium text-[#E1F5EE] shadow-2xs whitespace-nowrap"
             title={isHindi ? 'वेबसाइट पूर्णतः मूक है — कोई ध्वनि या ऑडियो अलर्ट नहीं बजाती (फोन की सामान्य रिंगटोन प्रभावित नहीं)' : 'Silent Mode: App generates zero sounds or audio alerts (device phone ringers unaffected)'}
+            aria-label={isHindi ? 'मूक मोड: वेबसाइट शांत' : 'Silent Mode: Site Muted'}
           >
-            <VolumeX className="w-3.5 h-3.5 text-[#E1F5EE]" aria-hidden="true" />
-            <span>{isHindi ? 'ध्वनिरहित मोड (वेबसाइट मूक)' : 'Silent Mode (Site Muted)'}</span>
-            <span className="sr-only">
-              {isHindi ? 'वेबसाइट से कोई ध्वनि नहीं बजाई जाएगी, फोन की अपनी रिंगटोन प्रभावित नहीं होगी।' : 'No audio will play from this website. Device hardware ringers and system notifications are unaffected.'}
-            </span>
+            <VolumeX className="w-3.5 h-3.5 text-[#E1F5EE] shrink-0" aria-hidden="true" />
+            <span>{isHindi ? 'मूक मोड • वेबसाइट शांत' : 'Silent Mode • Site Muted'}</span>
           </span>
         </div>
       </div>
@@ -497,7 +501,8 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                 onClick={() => goToStep(4)}
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-all border border-white/20 min-h-[44px]"
               >
-                <span>{isHindi ? 'सीधे सुरक्षा उपायों पर जाएं (चरण 4) →' : 'Jump to Safety Remedies (Step 4) →'}</span>
+                <span>{isHindi ? 'सीधे सुरक्षा उपायों पर जाएं (चरण 4)' : 'Jump to Safety Remedies (Step 4)'}</span>
+                <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center text-white" aria-hidden="true" />
               </button>
             )}
           </div>
@@ -529,7 +534,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                 >
                   <Lock className="w-3.5 h-3.5 text-[#E1F5EE]" />
                   <span>{isHindi ? 'गहरी सांस लें • 2 मिनट की श्वास क्रिया' : 'Take a slow, deep breath • Try 2-min breathing pacer'}</span>
-                  <ArrowRight className="w-3 h-3 text-[#E1F5EE]/70 group-hover:translate-x-0.5 transition-transform" />
+                  <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] shrink-0 self-center text-[#E1F5EE]/70 group-hover:translate-x-0.5 transition-transform" />
                 </button>
 
                 <h1 className="text-2xl sm:text-3xl lg:text-[32px] font-bold text-white leading-tight tracking-tight">
@@ -622,9 +627,10 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                   <button
                     type="button"
                     onClick={() => markStepCompleteAndAdvance(1, 2)}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
                   >
-                    <span>{isHindi ? 'आगे बढ़ें: खतरा व रोकथाम (चरण 2) →' : 'Proceed to Step 2: Assess Threat →'}</span>
+                    <span>{isHindi ? 'आगे बढ़ें: खतरा व रोकथाम (चरण 2)' : 'Proceed to Step 2: Assess Threat'}</span>
+                    <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center text-white" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -1034,9 +1040,10 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                 <button
                   type="button"
                   onClick={() => markStepCompleteAndAdvance(2, 3)}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
                 >
-                  <span>{isHindi ? 'आगे बढ़ें: साक्ष्य सुरक्षा (चरण 3) →' : 'Proceed to Step 3: Secure Evidence →'}</span>
+                  <span>{isHindi ? 'आगे बढ़ें: साक्ष्य सुरक्षा (चरण 3)' : 'Proceed to Step 3: Secure Evidence'}</span>
+                  <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center text-white" aria-hidden="true" />
                 </button>
               </div>
             </motion.div>
@@ -1442,9 +1449,10 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                   <button
                     type="button"
                     onClick={() => markStepCompleteAndAdvance(3, 4)}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs sm:text-sm transition-all shadow-soft active:scale-97 min-h-[44px]"
                   >
-                    <span>{isHindi ? 'आगे बढ़ें: सीधी कार्रवाई (चरण 4) →' : 'Proceed to Step 4: Take Action →'}</span>
+                    <span>{isHindi ? 'आगे बढ़ें: सीधी कार्रवाई (चरण 4)' : 'Proceed to Step 4: Take Action'}</span>
+                    <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center text-white" aria-hidden="true" />
                   </button>
                 </div>
               </motion.div>
@@ -1522,6 +1530,14 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                   </div>
                 )}
 
+                {/* Single Polished State-Specific Contact Card */}
+                <StateEmergencyHighlightCard
+                  language={language}
+                  selectedScenario={selectedScenario}
+                  onNavigateToTab={onNavigateToTab}
+                  onBrowseStateServices={() => onNavigateToTab('directory', 'state-directory-section')}
+                />
+
                 {/* Scenario-Tailored Action Cards Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   {/* CARD 1: Prioritized by Scenario */}
@@ -1594,7 +1610,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                         className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white text-xs font-bold transition-all cursor-pointer"
                       >
                         <span>{isHindi ? 'StopNCII पोर्टल खोलें' : 'Open StopNCII Hub'}</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
                       </button>
                     </div>
                   )}
@@ -1604,7 +1620,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                     <div className="space-y-1.5">
                       <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
                         <FileCheck2 className="w-4 h-4" />
-                        <span>{isHindi ? '24-घंटे Takedown नोटिस' : '24-Hour Intermediary Takedown'}</span>
+                        <span>{isHindi ? '24-घंटे Takedown नोटिस' : '24-Hour Intermediando Takedown'}</span>
                       </div>
                       <p className="text-xs text-[#D2CCE7] leading-relaxed">
                         {isHindi
@@ -1617,7 +1633,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                       className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-bold transition-all cursor-pointer"
                     >
                       <span>{isHindi ? 'प्लेटफॉर्म Takedown खोलें' : 'Platform Grievance Portals'}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
                     </button>
                   </div>
 
@@ -1639,7 +1655,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                       className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-white text-[#26215C] hover:bg-[#FAF8F3] text-xs font-bold transition-all cursor-pointer"
                     >
                       <span>{isHindi ? 'शिकायत ड्राफ्ट तैयार करें' : 'Generate FIR Complaint'}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
                     </button>
                   </div>
 
@@ -1730,17 +1746,17 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
       <div className="mt-4 text-center px-4">
         <p className="text-[11px] text-[#85819C] leading-relaxed max-w-3xl mx-auto">
           <span>{LEGAL_DISCLAIMER.short[language]} — </span>
-          <a
-            href={`#${LEGAL_DISCLAIMER.anchorId}`}
+          <button
+            type="button"
             onClick={(e) => {
               e.preventDefault();
-              const el = document.getElementById(LEGAL_DISCLAIMER.anchorId);
-              el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              hapticAction();
+              dispatchOpenDisclaimer();
             }}
-            className="text-[#FAF8F3] hover:underline font-semibold underline-offset-2"
+            className="text-[#FAF8F3] hover:underline font-semibold underline-offset-2 cursor-pointer inline-flex items-center"
           >
             {LEGAL_DISCLAIMER.linkText[language]}
-          </a>
+          </button>
         </p>
       </div>
 

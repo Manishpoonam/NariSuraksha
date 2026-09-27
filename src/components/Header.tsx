@@ -218,7 +218,8 @@ export const Header: React.FC<HeaderProps> = ({
                 : (hapticsOptIn ? 'Tactile Haptics ON' : 'Tactile Haptics OFF')}
             >
               <Smartphone className={`w-3 h-3 ${hapticsOptIn ? 'text-teal-300' : 'text-white/60'} shrink-0`} />
-              <span className="hidden xl:inline">{hapticsOptIn ? (isHindi ? 'कंपन: चालू' : 'Haptics: ON') : (isHindi ? 'कंपन: बंद' : 'Haptics: OFF')}</span>
+              <span className="hidden lg:inline">{hapticsOptIn ? (isHindi ? 'कंपन: चालू' : 'Haptics: ON') : (isHindi ? 'कंपन: बंद' : 'Haptics: OFF')}</span>
+              <span className="hidden sm:inline lg:hidden">{hapticsOptIn ? (isHindi ? 'कंपन' : 'Haptics: ON') : (isHindi ? 'कंपन' : 'Haptics')}</span>
             </button>
 
             {/* Purge Local Storage */}
@@ -316,15 +317,43 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Row 2: Secondary Utilities (Cloud Status Left, Stealth & Dimmer Right) */}
+          {/* Row 2: Secondary Utilities (Cloud Status Left, Haptics, Stealth & Dimmer Right) */}
           <div className="flex items-center justify-between gap-1 pt-1 border-t border-white/10 text-[11px]">
             {/* Cloud-Sync Backup Indicator */}
             <div className="flex items-center min-w-0">
               <CloudSyncIndicator language={language} />
             </div>
 
-            {/* Stealth & Dimmer Toggles */}
+            {/* Stealth, Dimmer & Mobile Haptic Toggles */}
             <div className="flex items-center gap-1.5 shrink-0">
+              {/* Mobile Haptic Feedback Opt-in (Default strictly OFF per audit requirement) */}
+              <button
+                id="mobile-header-toggle-haptics"
+                type="button"
+                onClick={() => {
+                  const nextState = !hapticsOptIn;
+                  setHapticEnabled(nextState);
+                  setHapticsOptIn(nextState);
+                  if (nextState) {
+                    triggerVibration(40);
+                  }
+                }}
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full transition-colors cursor-pointer text-[10.5px] ${
+                  hapticsOptIn 
+                    ? 'bg-teal-500/30 text-teal-200 border border-teal-400 font-medium' 
+                    : 'bg-white/10 text-[#FAF8F3]/80'
+                }`}
+                title={isHindi 
+                  ? (hapticsOptIn ? 'स्पर्श कंपन: चालू (बंद करने के लिए टैप करें)' : 'स्पर्श कंपन: बंद (चालू करने के लिए टैप करें)') 
+                  : (hapticsOptIn ? 'Tactile Haptics: ON (Tap to disable)' : 'Tactile Haptics: OFF (Tap to enable)')}
+                aria-label={isHindi 
+                  ? (hapticsOptIn ? 'स्पर्श कंपन चालू' : 'स्पर्श कंपन बंद') 
+                  : (hapticsOptIn ? 'Tactile Haptics ON' : 'Tactile Haptics OFF')}
+              >
+                <Smartphone className={`w-3 h-3 ${hapticsOptIn ? 'text-teal-300' : 'text-white/60'} shrink-0`} />
+                <span>{hapticsOptIn ? (isHindi ? 'कंपन: चालू' : 'Haptics: ON') : (isHindi ? 'कंपन' : 'Haptics')}</span>
+              </button>
+
               {onToggleStealthTitle && (
                 <button
                   id="mobile-header-toggle-stealth-tab"

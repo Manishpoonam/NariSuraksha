@@ -1,7 +1,8 @@
 import React from 'react';
-import { ShieldCheck, Lock, HeartHandshake, Scale } from 'lucide-react';
+import { ShieldCheck, Lock, HeartHandshake, Scale, ArrowRight } from 'lucide-react';
 import { Language } from '../types';
-import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
+import { LEGAL_DISCLAIMER, dispatchOpenDisclaimer } from '../data/legalDisclaimer';
+import { hapticAction } from '../utils/haptics';
 
 interface AboutTrustSectionProps {
   language: Language;
@@ -93,6 +94,18 @@ export const AboutTrustSection: React.FC<AboutTrustSectionProps> = ({ language }
           <p className="text-[#555] leading-relaxed">
             {LEGAL_DISCLAIMER.full[language]}
           </p>
+          <div className="pt-1.5">
+            <button
+              type="button"
+              onClick={() => {
+                hapticAction();
+                dispatchOpenDisclaimer();
+              }}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0F6E56] hover:underline cursor-pointer"
+            >
+              <span>{isHindi ? 'पूर्ण वैधानिक अस्वीकरण पृष्ठ देखें →' : 'Read Full Legal Disclaimer & Transparency Page →'}</span>
+            </button>
+          </div>
         </div>
       </div>
 

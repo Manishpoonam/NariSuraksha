@@ -28,6 +28,7 @@ const CampusSafetyPrintableCard = React.lazy(() => import('./components/CampusSa
 const PurgeFootprintModal = React.lazy(() => import('./components/PurgeFootprintModal').then((m) => ({ default: m.PurgeFootprintModal })));
 const ImmediateActionPath = React.lazy(() => import('./components/ImmediateActionPath').then((m) => ({ default: m.ImmediateActionPath })));
 const DeviceSafetyChecklist = React.lazy(() => import('./components/DeviceSafetyChecklist').then((m) => ({ default: m.DeviceSafetyChecklist })));
+const LegalDisclaimerPage = React.lazy(() => import('./components/LegalDisclaimerPage').then((m) => ({ default: m.LegalDisclaimerPage })));
 
 const TabSuspenseFallback = () => (
   <div 
@@ -119,6 +120,13 @@ export default function App() {
   const [isPurgeModalOpen, setIsPurgeModalOpen] = useState<boolean>(false);
   const [isImmediateActionOpen, setIsImmediateActionOpen] = useState<boolean>(false);
   const [isDeviceSafetyOpen, setIsDeviceSafetyOpen] = useState<boolean>(false);
+  const [isDisclaimerOpen, setIsDisclaimerOpen] = useState<boolean>(false);
+  const [disclaimerReturnInfo, setDisclaimerReturnInfo] = useState<{
+    viewMode: 'landing' | 'app';
+    tab?: string;
+    subTab?: string;
+    label?: string;
+  }>({ viewMode: 'landing' });
   const [navSource, setNavSource] = useState<'landing' | 'rescue' | 'options' | null>(null);
 
   const STEALTH_TITLE_STORAGE_KEY = 'suraksha_stealth_tab_v1';
@@ -265,6 +273,16 @@ export default function App() {
     return () => window.removeEventListener('navigate-tab', handleCustomNavigate);
   }, []);
 
+  // Global listener for dedicated disclaimer page
+  useEffect(() => {
+    const handleDisclaimerEvent = (e: Event) => {
+      const customEvent = e as CustomEvent<{ returnLabel?: string }>;
+      handleOpenDisclaimer(customEvent.detail?.returnLabel);
+    };
+    window.addEventListener('open-disclaimer', handleDisclaimerEvent);
+    return () => window.removeEventListener('open-disclaimer', handleDisclaimerEvent);
+  }, [viewMode, activeTab, reportSubTab, takedownSubTab, supportSubTab, language]);
+
   // Initialize base history state on mount
   useEffect(() => {
     if (!window.history.state || typeof window.history.state.viewMode !== 'string') {
@@ -279,6 +297,11 @@ export default function App() {
     pushHistory: boolean = true,
     source?: 'landing' | 'rescue' | 'options'
   ) => {
+    if (tab === 'disclaimer' || tab === 'legal-disclaimer') {
+      handleOpenDisclaimer();
+      return;
+    }
+
     let targetTab = 'rescue';
     let targetSubTab: string | undefined = undefined;
 
@@ -421,8 +444,151 @@ export default function App() {
     window.history.pushState({ viewMode: 'app', tab: 'support', subTab: sub, depth: currentDepth, source: navSource }, '');
   };
 
+  // Dedicated Legal Disclaimer handlers
+  const handleOpenDisclaimer = (returnLabel?: string) => {
+    const isFromLanding = viewMode === 'landing';
+    const computedLabel = returnLabel || (
+      isFromLanding
+        ? (language === 'hi' ? 'मुखपृष्ठ पर वापस जाएं' : 'Back to Home Screen')
+        : activeTab === 'rescue'
+        ? (language === 'hi' ? 'क्राइसिस रेस्क्यू पर वापस जाएं' : 'Back to Crisis Rescue')
+        : activeTab === 'options'
+        ? (language === 'hi' ? 'विकल्प ओवरव्यू पर वापस जाएं' : 'Back to Options Overview')
+        : activeTab === 'report'
+        ? (language === 'hi' ? 'e-FIR पोर्टल पर वापस जाएं' : 'Back to e-FIR Portal')
+        : activeTab === 'takedown'
+        ? (language === 'hi' ? 'टेकडाउन पोर्टल पर वापस जाएं' : 'Back to Takedown Portal')
+        : (language === 'hi' ? 'पिछली स्क्रीन पर वापस जाएं' : 'Back to Previous Screen')
+    );
+
+    setDisclaimerReturnInfo({
+      viewMode: viewMode,
+      tab: activeTab,
+      subTab: activeTab === 'report' ? reportSubTab : activeTab === 'takedown' ? takedownSubTab : activeTab === 'support' ? supportSubTab : undefined,
+      label: computedLabel,
+    });
+
+    const currentDepth = (window.history.state && typeof window.history.state.depth === 'number')
+      ? window.history.state.depth
+      : 0;
+
+    window.history.pushState(
+      {
+        viewMode: 'disclaimer',
+        prevViewMode: viewMode,
+        prevTab: activeTab,
+        depth: currentDepth + 1,
+      },
+      ''
+    );
+
+    setIsDisclaimerOpen(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCloseDisclaimer = () => {
+    setIsDisclaimerOpen(false);
+    if (window.history.state?.viewMode === 'disclaimer') {
+      window.history.back();
+    } else {
+      if (disclaimerReturnInfo.viewMode === 'landing') {
+        setViewMode('landing');
+      } else {
+        setViewMode('app');
+        if (disclaimerReturnInfo.tab) {
+          setActiveTab(disclaimerReturnInfo.tab);
+        }
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const [deviceSafetyReturnInfo, setDeviceSafetyReturnInfo] = useState<{
+    source: 'offline-utilities' | 'landing' | 'app';
+    viewMode: 'landing' | 'app';
+    tab?: string;
+    subTab?: string;
+    label?: string;
+  }>({
+    source: 'offline-utilities',
+    viewMode: 'app',
+    tab: 'rescue'
+  });
+
+  const handleOpenDeviceSafety = (source: 'offline-utilities' | 'landing' = 'offline-utilities') => {
+    const computedLabel = source === 'offline-utilities'
+      ? (language === 'hi' ? 'ऑफलाइन टूल्स पर वापस' : 'Back to Offline Safety Utilities')
+      : (source === 'landing'
+          ? (language === 'hi' ? 'होम पर वापस' : 'Back to Home')
+          : (language === 'hi' ? 'पिछली स्क्रीन पर वापस' : 'Back to Previous Screen'));
+
+    setDeviceSafetyReturnInfo({
+      source,
+      viewMode,
+      tab: activeTab,
+      subTab: activeTab === 'report' ? reportSubTab : activeTab === 'takedown' ? takedownSubTab : activeTab === 'support' ? supportSubTab : undefined,
+      label: computedLabel,
+    });
+
+    const currentDepth = (window.history.state && typeof window.history.state.depth === 'number')
+      ? window.history.state.depth
+      : 0;
+
+    window.history.pushState(
+      {
+        viewMode: 'device-safety',
+        source,
+        prevViewMode: viewMode,
+        prevTab: activeTab,
+        depth: currentDepth + 1,
+      },
+      ''
+    );
+
+    setIsDeviceSafetyOpen(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCloseDeviceSafety = () => {
+    setIsDeviceSafetyOpen(false);
+    if (window.history.state?.viewMode === 'device-safety') {
+      window.history.back();
+    } else {
+      if (deviceSafetyReturnInfo.viewMode === 'landing') {
+        setViewMode('landing');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        setViewMode('app');
+        if (deviceSafetyReturnInfo.tab) {
+          setActiveTab(deviceSafetyReturnInfo.tab);
+        }
+        if (deviceSafetyReturnInfo.source === 'offline-utilities') {
+          setTimeout(() => {
+            const el = document.getElementById('offline-privacy-safety-utilities') || 
+                       document.getElementById('rescue-footer-support-section');
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 80);
+        }
+      }
+    }
+  };
+
   // Dedicated in-app Back Navigation handler
   const handleGoBack = () => {
+    // 0. Close device safety if open
+    if (isDeviceSafetyOpen) {
+      handleCloseDeviceSafety();
+      return;
+    }
+
+    // 0.5. Close disclaimer if open
+    if (isDisclaimerOpen) {
+      handleCloseDisclaimer();
+      return;
+    }
+
     // 1. Close active modals if open
     if (isSOSOpen) {
       setIsSOSOpen(false);
@@ -517,12 +683,25 @@ export default function App() {
       }
 
       const state = event.state as { 
-        viewMode?: 'landing' | 'app'; 
+        viewMode?: 'landing' | 'app' | 'disclaimer' | 'device-safety'; 
         tab?: string; 
         subTab?: string; 
         depth?: number;
-        source?: 'landing' | 'rescue' | 'options';
+        source?: 'landing' | 'rescue' | 'options' | 'offline-utilities';
       } | null;
+
+      if (state && state.viewMode === 'disclaimer') {
+        setIsDisclaimerOpen(true);
+        return;
+      }
+      setIsDisclaimerOpen(false);
+
+      if (state && state.viewMode === 'device-safety') {
+        setIsDeviceSafetyOpen(true);
+        return;
+      }
+      const wasDeviceSafetyOpen = isDeviceSafetyOpen;
+      setIsDeviceSafetyOpen(false);
 
       // If state indicates landing page, or empty state from initial landing load
       if (!state || state.viewMode === 'landing' || (!state.tab && !state.viewMode)) {
@@ -536,7 +715,7 @@ export default function App() {
         setViewMode('app');
       }
 
-      if (state.source) {
+      if (state.source && (state.source === 'landing' || state.source === 'rescue' || state.source === 'options')) {
         setNavSource(state.source);
       }
 
@@ -548,11 +727,22 @@ export default function App() {
           if (state.tab === 'support') setSupportSubTab(state.subTab as any);
         }
       }
+
+      // If returning from device-safety or if state indicates offline-utilities
+      if (wasDeviceSafetyOpen && (deviceSafetyReturnInfo.source === 'offline-utilities' || (state as any)?.source === 'offline-utilities')) {
+        setTimeout(() => {
+          const el = document.getElementById('offline-privacy-safety-utilities') || 
+                     document.getElementById('rescue-footer-support-section');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 120);
+      }
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [isSOSOpen, isCamouflage, showDeepScenarios]);
+  }, [isSOSOpen, isCamouflage, showDeepScenarios, isDisclaimerOpen, isDeviceSafetyOpen, deviceSafetyReturnInfo]);
 
   // Global ESC shortcut for instant panic camouflage with physical haptic confirmation
   useEffect(() => {
@@ -594,17 +784,26 @@ export default function App() {
       <AnimatePresence mode="wait">
         {isCamouflage ? (
         <CamouflageScreen key="camouflage-view" onRestore={() => handleTriggerCamouflage(false)} />
+      ) : isDisclaimerOpen ? (
+        <div key="disclaimer-view" className="min-h-screen bg-[#FAF8F3] text-[#26215C] selection:bg-[#993556] selection:text-white">
+          <React.Suspense fallback={<TabSuspenseFallback />}>
+            <LegalDisclaimerPage
+              language={language}
+              onBack={handleCloseDisclaimer}
+              onTriggerCamouflage={() => handleTriggerCamouflage(true)}
+              onToggleLanguage={handleToggleLanguage}
+              returnLabel={disclaimerReturnInfo.label}
+            />
+          </React.Suspense>
+        </div>
       ) : isDeviceSafetyOpen ? (
         <div key="device-safety-view" className="min-h-screen bg-[#FAF8F3] text-[#26215C] py-4 sm:py-8 selection:bg-[#993556] selection:text-white">
           <React.Suspense fallback={<TabSuspenseFallback />}>
             <DeviceSafetyChecklist
               language={language}
-              onBack={() => setIsDeviceSafetyOpen(false)}
-              onProceedToEmergency={() => {
-                setIsDeviceSafetyOpen(false);
-                setViewMode('app');
-                handleNavigateToTab('rescue');
-              }}
+              onBack={handleCloseDeviceSafety}
+              onProceedToEmergency={handleCloseDeviceSafety}
+              returnLabel={deviceSafetyReturnInfo.label}
             />
           </React.Suspense>
         </div>
@@ -628,13 +827,9 @@ export default function App() {
               setNavSource('landing');
               handleNavigateToTab('support', 'somatic-breathing-card', true, 'landing');
             }}
-            onOpenDeviceSafety={() => setIsDeviceSafetyOpen(true)}
+            onOpenDeviceSafety={() => handleOpenDeviceSafety('landing')}
             onOpenFullDisclaimer={() => {
-              setViewMode('app');
-              setTimeout(() => {
-                const el = document.getElementById(LEGAL_DISCLAIMER.anchorId);
-                el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }, 100);
+              handleOpenDisclaimer();
             }}
           />
           {isImmediateActionOpen && (
@@ -787,7 +982,7 @@ export default function App() {
                     onNavigateToTab={handleNavigateToTab}
                     onOpenPrintCard={() => setIsPrintCardOpen(true)}
                     onOpenPurgeModal={() => setIsPurgeModalOpen(true)}
-                    onOpenDeviceSafety={() => setIsDeviceSafetyOpen(true)}
+                    onOpenDeviceSafety={() => handleOpenDeviceSafety('offline-utilities')}
                     onSelectCategoryForDraft={setDraftCategory}
                     onOpenSOS={handleTriggerSOS}
                     showPlatformGuides={showDeepScenarios}

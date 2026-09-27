@@ -148,26 +148,39 @@ export const PocsoMinorShieldModal: React.FC<PocsoMinorShieldModalProps> = ({
                   </div>
                   <div className="text-xs text-[#666]">1098 (24/7 Toll-Free)</div>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-[#2D2D2D] text-white flex items-center justify-center">
-                  <Phone className="w-3.5 h-3.5" />
+                <div className="w-8 h-8 rounded-full bg-[#2D2D2D] text-white flex items-center justify-center shrink-0">
+                  <Phone className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0" />
                 </div>
               </a>
 
               <a
-                href="https://ncpcr.gov.in/pocso-e-box"
+                href="https://ebaalnidan.nic.in"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3.5 rounded-2xl border border-[#E8E2DC] bg-[#FAF9F6] hover:bg-[#F3EFEC] transition-colors flex items-center justify-between"
               >
                 <div>
                   <div className="text-xs font-bold text-[#1A1A1A]">
-                    {isHindi ? 'POCSO e-Box (NCPCR)' : 'POCSO e-Box (NCPCR)'}
+                    {isHindi ? 'POCSO e-Box (NCPCR e-BaalNidan)' : 'POCSO e-Box (NCPCR e-BaalNidan)'}
                   </div>
-                  <div className="text-xs text-[#666]">{isHindi ? 'गोपनीय ऑनलाइन पोर्टल' : 'Confidential Child Rights'}</div>
+                  <div className="text-xs text-[#666]">{isHindi ? 'आधिकारिक ऑनलाइन रिपोर्टिंग' : 'ebaalnidan.nic.in'}</div>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-[#993556] text-white flex items-center justify-center">
-                  <ExternalLink className="w-3.5 h-3.5" />
+                <div className="w-8 h-8 rounded-full bg-[#993556] text-white flex items-center justify-center shrink-0">
+                  <ExternalLink className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0" />
                 </div>
+              </a>
+            </div>
+
+            {/* Direct NCPCR POCSO Reporting Email */}
+            <div className="p-3 rounded-xl bg-[#FAF9F6] border border-[#E8E2DC] flex items-center justify-between gap-2 text-xs">
+              <span className="text-[#666] text-[11px]">
+                {isHindi ? 'NCPCR सीधे ईमेल पर शिकायत:' : 'Direct NCPCR Complaint Desk:'}
+              </span>
+              <a
+                href="mailto:pocsoebox-ncpcr@gov.in?subject=POCSO%20Child%20Protection%20Incident%20Report"
+                className="font-mono font-semibold text-[#0F6E56] hover:underline flex items-center gap-1 text-[11px]"
+              >
+                <span>pocsoebox-ncpcr@gov.in</span>
               </a>
             </div>
           </div>

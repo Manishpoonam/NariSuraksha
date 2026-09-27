@@ -1,3 +1,8 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import React, { useState, useEffect } from 'react';
 import { 
   Compass, 
@@ -14,7 +19,10 @@ import {
   ShieldCheck, 
   X,
   Lock,
-  MessageSquare
+  MessageSquare,
+  Mail,
+  Globe,
+  Info
 } from 'lucide-react';
 import { Language, IncidentCategory } from '../types';
 import { CrisisScenarioKey } from './EmergencyCockpit';
@@ -61,7 +69,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
   const [manualSelectOpen, setManualSelectOpen] = useState<boolean>(false);
   const [cellsList, setCellsList] = useState<StateCyberCell[]>([]);
 
-  // Dynamically load the 36-state dataset only when state confirmation, detection or manual select is requested
+  // Dynamically load the 36-state dataset when state confirmation, detection, or manual select is requested
   useEffect(() => {
     if (confirmedState || candidateState || manualSelectOpen) {
       import('../data/stateCyberCellsData').then((m) => {
@@ -70,12 +78,13 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
     }
   }, [confirmedState, candidateState, manualSelectOpen]);
 
-  // Check browser-level permission status on mount
+  // Check browser-level permission status defensively on mount
+  // Handles Safari iOS, Chrome Android, Firefox, and browsers where navigator.permissions is missing or throws
   useEffect(() => {
     let isMounted = true;
 
     async function checkPermission() {
-      if (typeof navigator !== 'undefined' && 'permissions' in navigator && navigator.permissions?.query) {
+      if (typeof navigator !== 'undefined' && 'permissions' in navigator && typeof navigator.permissions?.query === 'function') {
         try {
           const status = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
           if (!isMounted) return;
@@ -97,8 +106,15 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
             }
           };
         } catch {
-          // Permissions API might throw on unsupported browsers
-          if (isMounted) setPermissionState('unsupported');
+          // In Safari (iOS) and older engines, navigator.permissions.query throws a TypeError for 'geolocation'
+          // Gracefully record unsupported without crashing or blocking the UI
+          if (isMounted) {
+            setPermissionState('unsupported');
+          }
+        }
+      } else {
+        if (isMounted) {
+          setPermissionState('unsupported');
         }
       }
     }
@@ -127,12 +143,16 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
       }
     } catch {
       setIsDetecting(false);
+      // Fallback: open manual state picker if device detection fails
+      setManualSelectOpen(true);
     }
   };
 
   const handleUserDeclinesGrantedLocation = () => {
     hapticAction();
     setShowGrantedConfirmBanner(false);
+    // Crucial UX fix: immediately show the manual selection so user is never left stranded
+    setManualSelectOpen(true);
     try {
       sessionStorage.setItem(CONFIRM_PROMPT_DISMISSED_KEY, 'true');
     } catch {}
@@ -155,7 +175,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
     } catch {}
   };
 
-  // Find state cell information if state is confirmed
+  // Find canonical state cell information if state is confirmed
   const stateCell = confirmedState && cellsList.length > 0
     ? cellsList.find(
         (c) => c.stateName.en.toLowerCase() === confirmedState.toLowerCase() || 
@@ -168,7 +188,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
   const isPhysicalDanger = selectedScenario === 'danger_stalking';
   const isPaidMoney = selectedScenario === 'paid';
   const isLeakedOrDeepfake = selectedScenario === 'leaked' || selectedScenario === 'deepfake' || selectedCategory === 'ai_deepfake_morph' || selectedCategory === 'viral_leaked' || selectedCategory === 'ncii_distribution';
-  const isMinor = selectedCategory === 'known_person_threats' || selectedScenario === 'police'; // Or user indicates minor context
+  const isMinor = selectedCategory === 'known_person_threats' || selectedScenario === 'police';
 
   // Scenario title and description
   const getScenarioLabel = () => {
@@ -215,27 +235,27 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-[#E8E2DC]">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-[#0F6E56]/10 text-[#0F6E56] flex items-center justify-center shrink-0">
-            <Compass className="w-4 h-4 text-[#0F6E56]" />
+            <Compass className="w-4 h-4 text-[#0F6E56] shrink-0" />
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-sm sm:text-base font-bold text-[#1A1A1A]">
                 {isHindi ? 'आपकी स्थिति के लिए अनुशंसित कदम' : 'Recommended for your situation'}
               </h3>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#0F6E56]/10 text-[#0F6E56] border border-[#0F6E56]/20">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#0F6E56]/10 text-[#0F6E56] border border-[#0F6E56]/20 shrink-0">
                 {scenarioMeta.tag}
               </span>
             </div>
             <p className="text-[11px] text-[#666]">
               {isHindi 
-                ? 'आपके द्वारा चुने गए संकट परिदृश्य और आपके स्थान के आधार पर 1-3 सबसे ज़रूरी कदम।' 
-                : '1-3 immediate high-priority actions based on your crisis scenario and location.'}
+                ? 'आपके द्वारा चुने गए संकट परिदृश्य और आपके राज्य के आधिकारिक डेटा के आधार पर 1-3 सबसे ज़रूरी कदम।' 
+                : '1-3 immediate high-priority actions based on your crisis scenario and verified state data.'}
             </p>
           </div>
         </div>
 
         {/* Location Tag / Selector Button */}
-        <div className="flex items-center gap-1.5 self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 self-start sm:self-auto shrink-0">
           {confirmedState ? (
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-teal-50 border border-teal-200 text-teal-900 text-[11px] font-medium">
               <MapPin className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
@@ -247,7 +267,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
                 title={isHindi ? 'स्थान बदलें' : 'Change location'}
                 aria-label={isHindi ? 'स्थान बदलें' : 'Change location'}
               >
-                <X className="w-3 h-3" />
+                <X className="w-3 h-3 shrink-0" />
               </button>
             </div>
           ) : (
@@ -256,25 +276,25 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
               onClick={() => setManualSelectOpen(prev => !prev)}
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-[#D8CFCE] text-[#555] hover:text-[#1A1A1A] hover:bg-[#F3EFEA] text-[11px] font-medium transition-colors cursor-pointer"
             >
-              <MapPin className="w-3 h-3 text-[#8B6D5C]" />
-              <span>{isHindi ? 'राज्य चुनें (+स्थानीय नंबर)' : 'Add State / UT'}</span>
+              <MapPin className="w-3 h-3 text-[#8B6D5C] shrink-0" />
+              <span>{isHindi ? 'राज्य चुनें (+स्थानीय नंबर)' : 'Choose State / UT'}</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Item 2: Explicit Confirmation for Already Granted Geolocation Permission */}
+      {/* Confirmation Banner for Already Granted Geolocation Permission */}
       {showGrantedConfirmBanner && !confirmedState && (
         <div className="p-3 rounded-xl bg-teal-50 border border-teal-200 text-xs text-teal-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
           <div className="flex items-start gap-2.5 min-w-0">
             <div className="w-6 h-6 rounded-md bg-[#0F6E56] text-white flex items-center justify-center shrink-0 mt-0.5">
-              <ShieldCheck className="w-3.5 h-3.5" />
+              <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
             </div>
             <div className="min-w-0">
               <p className="font-semibold text-teal-950 leading-tight">
                 {isHindi 
                   ? 'आपने पहले ही लोकेशन की अनुमति दी हुई है — क्या अब आपके राज्य का आपातकालीन नंबर दिखाएं?' 
-                  : "You've already allowed location access — show your state's emergency number now?"}
+                  : "You've already allowed location access — show your state's emergency contacts now?"}
               </p>
               <p className="text-[10px] text-teal-800 mt-0.5">
                 {isHindi 
@@ -291,7 +311,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
               onClick={handleUserAcceptsGrantedLocation}
               className="px-3 py-1.5 rounded-lg bg-[#0F6E56] hover:bg-[#0B5441] text-white font-bold text-xs transition-colors flex items-center gap-1 cursor-pointer disabled:opacity-75 shadow-xs"
             >
-              <CheckCircle2 className="w-3.5 h-3.5" />
+              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
               <span>{isDetecting ? (isHindi ? 'पहचान रहे हैं...' : 'Detecting...') : (isHindi ? 'हाँ, दिखाएं' : 'Yes, show my state')}</span>
             </button>
             <button
@@ -305,22 +325,67 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
         </div>
       )}
 
+      {/* Defensive Cross-Browser / Cross-Device Location Fallback:
+          Shown when permission is prompt, denied, unsupported (Safari iOS), or when banner is not active */}
+      {!confirmedState && !showGrantedConfirmBanner && (
+        <div className="p-3 rounded-xl bg-[#FAF9F6] border border-[#E8E2DC] text-xs text-[#2D2D2D] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-6 h-6 rounded-md bg-[#8B6D5C]/15 text-[#8B6D5C] flex items-center justify-center shrink-0">
+              <MapPin className="w-3.5 h-3.5 text-[#8B6D5C] shrink-0" />
+            </div>
+            <div className="min-w-0">
+              <span className="font-bold text-[#1A1A1A] block">
+                {isHindi ? 'अपने राज्य का सत्यापित साइबर व पुलिस संपर्क जोड़ें' : 'Connect Your State Cyber & Police Contact'}
+              </span>
+              <p className="text-[11px] text-[#666]">
+                {isHindi 
+                  ? 'सीधे अपने राज्य का 24×7 महिला नंबर, WhatsApp व साइबर थाना प्राप्त करें।'
+                  : 'Surface your official state women desk, WhatsApp helpline, and cyber police station.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+            {typeof navigator !== 'undefined' && 'geolocation' in navigator && (
+              <button
+                type="button"
+                disabled={isDetecting}
+                onClick={handleUserAcceptsGrantedLocation}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0F6E56] hover:bg-[#0A4E3D] text-white font-bold text-xs transition-colors cursor-pointer disabled:opacity-75"
+              >
+                <Compass className="w-3.5 h-3.5 shrink-0" />
+                <span>{isDetecting ? (isHindi ? 'पहचान रहे हैं...' : 'Detecting...') : (isHindi ? 'स्थान पहचानें' : 'Detect On-Device')}</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setManualSelectOpen(prev => !prev)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#D8CFCE] text-[#1A1A1A] hover:bg-[#F3EFEA] font-semibold text-xs transition-colors cursor-pointer"
+            >
+              <MapPin className="w-3.5 h-3.5 text-[#8B6D5C] shrink-0" />
+              <span>{isHindi ? 'राज्य चुनें (36 राज्य/UT)' : 'Choose State / UT'}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Manual State Select Quick Dropdown if opened */}
       {manualSelectOpen && !confirmedState && (
         <div className="p-3 bg-white border border-[#E8E2DC] rounded-xl space-y-2 text-xs">
           <div className="flex items-center justify-between">
             <span className="font-semibold text-[#1A1A1A]">
-              {isHindi ? 'अपना राज्य या केंद्रशासित प्रदेश चुनें:' : 'Select your State or Union Territory:'}
+              {isHindi ? 'अपना राज्य या केंद्रशासित प्रदेश चुनें (36 राज्य/UT उपलब्ध):' : 'Select your State or Union Territory (all 36 States/UTs):'}
             </span>
             <button 
               type="button"
               onClick={() => setManualSelectOpen(false)}
-              className="p-1 text-[#888] hover:text-[#111]"
+              className="p-1 text-[#888] hover:text-[#111] cursor-pointer"
+              aria-label="Close state selector"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-3.5 h-3.5 shrink-0" />
             </button>
           </div>
-          <div className="max-h-40 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 gap-1.5 pr-1">
+          <div className="max-h-48 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 gap-1.5 pr-1">
             {cellsList.map((cell) => (
               <button
                 key={cell.id}
@@ -335,7 +400,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
         </div>
       )}
 
-      {/* DIRECTLY RELEVANT ACTIONS: Compiled, never replaced */}
+      {/* DIRECTLY RELEVANT ACTIONS GRID */}
       <div className={`grid grid-cols-1 sm:grid-cols-2 ${stateCell ? 'lg:grid-cols-2 xl:grid-cols-4' : 'lg:grid-cols-3'} gap-3`}>
         {/* ACTION 1: SCENARIO-DRIVEN PRIMARY CALL */}
         {isPhysicalDanger ? (
@@ -360,7 +425,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
               href="tel:112"
               className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors shadow-xs cursor-pointer"
             >
-              <PhoneCall className="w-3.5 h-3.5" />
+              <PhoneCall className="w-3.5 h-3.5 shrink-0" />
               <span>{isHindi ? '112 डायल करें' : 'Call 112 Now'}</span>
             </a>
           </div>
@@ -386,7 +451,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
               href="tel:1930"
               className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#0F6E56] hover:bg-[#0B5441] text-white text-xs font-bold transition-colors shadow-xs cursor-pointer"
             >
-              <PhoneCall className="w-3.5 h-3.5" />
+              <PhoneCall className="w-3.5 h-3.5 shrink-0" />
               <span>{isHindi ? '1930 डायल करें' : 'Call 1930 Now'}</span>
             </a>
           </div>
@@ -413,7 +478,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
               onClick={() => onNavigateToTab('takedown')}
               className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#26215C] hover:bg-[#1A1644] text-white text-xs font-bold transition-colors shadow-xs cursor-pointer"
             >
-              <Lock className="w-3.5 h-3.5" />
+              <Lock className="w-3.5 h-3.5 shrink-0" />
               <span>{isHindi ? 'टेकडाउन पोर्टल खोलें' : 'Open Takedown Hub'}</span>
             </button>
           </div>
@@ -439,7 +504,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
               href="tel:1930"
               className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#0F6E56] hover:bg-[#0B5441] text-white text-xs font-bold transition-colors shadow-xs cursor-pointer"
             >
-              <PhoneCall className="w-3.5 h-3.5" />
+              <PhoneCall className="w-3.5 h-3.5 shrink-0" />
               <span>{isHindi ? '1930 डायल करें' : 'Call 1930'}</span>
             </a>
           </div>
@@ -476,7 +541,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
                   href="tel:1091"
                   className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#26215C] hover:bg-[#1A1644] text-white text-xs font-bold transition-colors cursor-pointer"
                 >
-                  <PhoneCall className="w-3.5 h-3.5" />
+                  <PhoneCall className="w-3.5 h-3.5 shrink-0" />
                   <span>{isHindi ? 'कॉल 1091 (WB)' : 'Call 1091 (WB)'}</span>
                 </a>
                 <a
@@ -492,7 +557,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
                 href="tel:181"
                 className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#26215C] text-xs font-bold transition-colors cursor-pointer"
               >
-                <PhoneCall className="w-3.5 h-3.5 text-[#26215C]" />
+                <PhoneCall className="w-3.5 h-3.5 text-[#26215C] shrink-0" />
                 <span>{isHindi ? '181 कॉल करें' : 'Call 181'}</span>
               </a>
             )}
@@ -525,66 +590,126 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
             href={isMinor ? "tel:1098" : "tel:14416"}
             className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#1A1A1A] text-xs font-bold transition-colors cursor-pointer"
           >
-            <PhoneCall className="w-3.5 h-3.5 text-[#0F6E56]" />
+            <PhoneCall className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
             <span>{isMinor ? (isHindi ? '1098 कॉल करें' : 'Call 1098') : (isHindi ? '14416 कॉल करें' : 'Call 14416')}</span>
           </a>
         </div>
 
-        {/* ACTION 4: STATE-SPECIFIC INTERVENTION (ADDED ALONGSIDE, NEVER REPLACING) */}
+        {/* ACTION 4: RICH STATE-SPECIFIC DATA (TAILORED DIRECTLY TO SCENARIO & REUSING CANONICAL SCHEMA) */}
         {stateCell && (
-          <div className="p-3.5 rounded-xl bg-white border border-[#E8E2DC] flex flex-col justify-between space-y-3">
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
+          <div className="p-3.5 rounded-xl bg-white border border-[#E8E2DC] flex flex-col justify-between space-y-3 shadow-2xs">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between gap-1 flex-wrap">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#0F6E56] bg-teal-50 px-2 py-0.5 rounded border border-teal-100">
-                  {confirmedState}
+                  {stateCell.stateName[language]}
                 </span>
-                <span className="text-[10px] text-[#777] font-semibold">{stateCell.region}</span>
+                <span className="text-[10px] font-medium text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100">
+                  {stateCell.coverage}
+                </span>
               </div>
-              <h4 className="text-sm font-bold text-[#1A1A1A]">
-                {stateCell.stateName[language]} {isHindi ? 'साइबर व आपातकालीन सेल' : 'Cyber & Emergency'}
+
+              <h4 className="text-sm font-bold text-[#1A1A1A] leading-tight">
+                {stateCell.stateName[language]} {isHindi ? 'साइबर व आपातकालीन सहायता' : 'Cyber & Emergency Contacts'}
               </h4>
+
               <p className="text-[11px] text-[#555] line-clamp-2 leading-snug">
                 {stateCell.specialWomenCell[language] || stateCell.headquarters}
               </p>
-              <p className="text-[10px] text-[#777]">
-                {isHindi ? 'कवरेज:' : 'Coverage:'} <span className="font-semibold text-[#444]">{stateCell.coverage}</span>
-              </p>
+
+              {/* Surface Verification Date & Source from Canonical Schema */}
+              <div className="flex items-center gap-2 text-[10px] text-[#777] flex-wrap">
+                {stateCell.last_verified && (
+                  <span className="inline-flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                    <span>{isHindi ? `सत्यापित: ${stateCell.last_verified}` : `Verified: ${stateCell.last_verified}`}</span>
+                  </span>
+                )}
+                {stateCell.source_url && (
+                  <a
+                    href={stateCell.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-0.5 text-[#0F6E56] hover:underline"
+                    title={isHindi ? 'आधिकारिक स्रोत देखें' : 'View official source portal'}
+                  >
+                    <span>{isHindi ? 'स्रोत' : 'Source'}</span>
+                    <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                  </a>
+                )}
+              </div>
             </div>
 
-            {/* Separate, Clearly Labeled Call Buttons for Every Distinct Number */}
-            <div className="space-y-1.5 pt-1">
+            {/* Scenario-Prioritized Contact Buttons Straight from Canonical State Directory */}
+            <div className="space-y-1.5 pt-1 border-t border-[#F0EBE6]">
+              {/* If Physical Danger: Prioritize Police Emergency PCR & Local Women Helpline */}
+              {isPhysicalDanger && stateCell.police_emergency && (
+                <a
+                  href={`tel:${stateCell.police_emergency.replace(/\s+/g, '')}`}
+                  className="w-full inline-flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100/80 border border-rose-200 text-rose-950 text-xs font-bold transition-colors cursor-pointer"
+                  aria-label={`Call ${stateCell.stateName.en} Police Emergency ${stateCell.police_emergency}`}
+                >
+                  <span className="flex items-center gap-1.5 truncate">
+                    <PhoneCall className="w-3.5 h-3.5 text-rose-700 shrink-0" />
+                    <span className="truncate">{stateCell.police_emergency}</span>
+                  </span>
+                  <span className="text-[10px] text-rose-800 shrink-0 font-medium">
+                    {stateCell.police_coverage || (isHindi ? 'पुलिस आपातकालीन' : 'Police Emergency')}
+                  </span>
+                </a>
+              )}
+
+              {/* If Minor: Prioritize Child Helpline */}
+              {isMinor && stateCell.child_helpline && (
+                <a
+                  href={`tel:${stateCell.child_helpline.replace(/\s+/g, '')}`}
+                  className="w-full inline-flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100/80 border border-amber-200 text-amber-950 text-xs font-bold transition-colors cursor-pointer"
+                  aria-label={`Call Child Helpline ${stateCell.child_helpline}`}
+                >
+                  <span className="flex items-center gap-1.5 truncate">
+                    <Baby className="w-3.5 h-3.5 text-amber-800 shrink-0" />
+                    <span className="truncate">{stateCell.child_helpline}</span>
+                  </span>
+                  <span className="text-[10px] text-amber-800 shrink-0 font-medium">
+                    {stateCell.child_helpline_coverage || (isHindi ? 'बाल हेल्पलाइन' : 'Child Helpline')}
+                  </span>
+                </a>
+              )}
+
+              {/* State Cyber Police Station / Alternate Contact */}
               {stateCell.alternate_number && (
                 <a
                   href={`tel:${stateCell.alternate_number.replace(/\s+/g, '')}`}
                   className="w-full inline-flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#1A1A1A] text-xs font-bold transition-colors cursor-pointer"
-                  aria-label={`${isHindi ? 'साइबर थाना कॉल करें' : 'Call Cyber Police Station'} ${stateCell.alternate_number}`}
+                  aria-label={`Call ${stateCell.alternate_number_label || 'Cyber Police Station'} ${stateCell.alternate_number}`}
                 >
                   <span className="flex items-center gap-1.5 truncate">
                     <PhoneCall className="w-3.5 h-3.5 text-[#0F6E56] shrink-0" />
                     <span className="truncate">{stateCell.alternate_number}</span>
                   </span>
                   <span className="text-[10px] text-[#666] shrink-0 font-medium">
-                    {isHindi ? 'साइबर थाना' : 'Cyber PS'}
+                    {stateCell.alternate_number_label || (isHindi ? 'साइबर थाना' : 'Cyber PS')}
                   </span>
                 </a>
               )}
 
+              {/* Women Mobile Helpline */}
               {stateCell.women_mobile && (
                 <a
                   href={`tel:${stateCell.women_mobile.replace(/\s+/g, '')}`}
                   className="w-full inline-flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#1A1A1A] text-xs font-bold transition-colors cursor-pointer"
-                  aria-label={`${isHindi ? 'मोबाइल हेल्पलाइन कॉल करें' : 'Call Mobile Helpline'} ${stateCell.women_mobile}`}
+                  aria-label={`Call Women Mobile Helpline ${stateCell.women_mobile}`}
                 >
                   <span className="flex items-center gap-1.5 truncate">
                     <PhoneCall className="w-3.5 h-3.5 text-[#26215C] shrink-0" />
                     <span className="truncate">{stateCell.women_mobile}</span>
                   </span>
                   <span className="text-[10px] text-[#666] shrink-0 font-medium">
-                    {isHindi ? 'मोबाइल' : 'Mobile'}
+                    {stateCell.women_mobile_coverage || (isHindi ? 'मोबाइल' : 'Mobile')}
                   </span>
                 </a>
               )}
 
+              {/* WhatsApp Support Desk if available */}
               {stateCell.women_whatsapp && (() => {
                 const cleanDigits = stateCell.women_whatsapp.replace(/\D/g, '');
                 const waNum = cleanDigits.startsWith('91') && cleanDigits.length > 10 ? cleanDigits : `91${cleanDigits}`;
@@ -601,33 +726,69 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
                       <span className="font-mono">{stateCell.women_whatsapp}</span>
                     </span>
                     <span className="text-[10px] text-emerald-800 shrink-0 font-medium">
-                      WhatsApp
+                      {stateCell.women_whatsapp_coverage || 'WhatsApp'}
                     </span>
                   </a>
                 );
               })()}
 
-              <div className="flex flex-wrap items-center gap-2">
-                {stateCell.police_emergency && (
+              {/* Official Nodal Cyber Email if available */}
+              {stateCell.email && (
+                <a
+                  href={`mailto:${stateCell.email}?subject=${encodeURIComponent(isHindi ? 'साइबर ब्लैकमेल / उत्पीड़न आपातकालीन रिपोर्ट' : 'Cyber Extortion / Intimate Harassment Emergency Report')}`}
+                  className="w-full inline-flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-[#FAF8F3] border border-[#E8E2DC] text-[#26215C] text-xs font-medium transition-colors cursor-pointer"
+                  title={stateCell.email}
+                >
+                  <span className="flex items-center gap-1.5 truncate">
+                    <Mail className="w-3.5 h-3.5 text-[#26215C] shrink-0" />
+                    <span className="truncate font-mono text-[11px]">{stateCell.email}</span>
+                  </span>
+                  <span className="text-[10px] text-[#666] shrink-0 font-medium">
+                    {isHindi ? 'ईमेल' : 'Email'}
+                  </span>
+                </a>
+              )}
+
+              {/* External Police and Child Web Portals */}
+              <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                {stateCell.police_emergency && !isPhysicalDanger && (
                   <a
                     href={`tel:${stateCell.police_emergency.replace(/\s+/g, '')}`}
-                    className="flex-1 min-w-[100px] inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#8B6D5C] text-xs font-bold transition-colors cursor-pointer shrink-0 whitespace-nowrap"
+                    className="flex-1 min-w-[90px] inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#8B6D5C] text-xs font-bold transition-colors cursor-pointer shrink-0 whitespace-nowrap"
                     aria-label={`Call Police ${stateCell.police_emergency}`}
                   >
                     <PhoneCall className="w-3 h-3 text-[#8B6D5C] shrink-0" />
-                    <span>{isHindi ? 'पुलिस 112' : `Police ${stateCell.police_emergency}`}</span>
+                    <span>{`Police ${stateCell.police_emergency}`}</span>
                   </a>
                 )}
+
                 {stateCell.police_website && (
                   <a
                     href={stateCell.police_website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#555] transition-colors cursor-pointer shrink-0"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#555] text-xs font-medium transition-colors cursor-pointer shrink-0"
                     title={`${stateCell.stateName.en} Police Portal`}
                     aria-label={`${stateCell.stateName.en} Police Portal`}
                   >
-                    <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                    <Globe className="w-3 h-3 shrink-0" />
+                    <span className="text-[10px]">{isHindi ? 'पुलिस पोर्टल' : 'Police Portal'}</span>
+                    <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                  </a>
+                )}
+
+                {stateCell.women_child_website && (
+                  <a
+                    href={stateCell.women_child_website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] text-[#555] text-xs font-medium transition-colors cursor-pointer shrink-0"
+                    title={`${stateCell.stateName.en} Women & Child Department`}
+                    aria-label={`${stateCell.stateName.en} Women & Child Department`}
+                  >
+                    <Globe className="w-3 h-3 shrink-0" />
+                    <span className="text-[10px]">{isHindi ? 'WCD पोर्टल' : 'WCD Portal'}</span>
+                    <ExternalLink className="w-2.5 h-2.5 shrink-0" />
                   </a>
                 )}
               </div>
@@ -649,7 +810,7 @@ export const RecommendedSituationCard: React.FC<RecommendedSituationCardProps> =
           className="inline-flex items-center gap-1 font-bold text-[#0F6E56] hover:underline cursor-pointer"
         >
           <span>{isHindi ? 'राज्य व UT सुरक्षा सेवाएं देखें' : 'Browse State / UT Services'}</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+          <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
         </button>
       </div>
     </div>

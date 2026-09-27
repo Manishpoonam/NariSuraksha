@@ -17,7 +17,8 @@ import {
   Lock,
   Building2,
   ArrowRight,
-  Smartphone
+  Smartphone,
+  ExternalLink
 } from 'lucide-react';
 import { Language, IncidentCategory } from '../types';
 import { hapticAction } from '../utils/haptics';
@@ -301,13 +302,25 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                     <span className="text-[10px] font-bold uppercase text-amber-900">{isHindi ? 'नाबालिग / POCSO' : 'Minors / Under 18'}</span>
                     <span className="text-[9px] font-mono text-amber-800">1098</span>
                   </div>
-                  <a
-                    href="tel:1098"
-                    className="p-2 rounded-lg bg-white border border-amber-200 flex items-center justify-between gap-1.5"
-                  >
-                    <span className="font-mono font-bold text-xs text-amber-950">CHILDLINE 1098</span>
-                    <PhoneCall className="w-3 h-3 text-amber-800 shrink-0" />
-                  </a>
+                  <div className="flex flex-col gap-1.5">
+                    <a
+                      href="tel:1098"
+                      className="p-2 rounded-lg bg-white border border-amber-200 flex items-center justify-between gap-1.5 hover:bg-amber-50/50 transition-colors"
+                    >
+                      <span className="font-mono font-bold text-xs text-amber-950">CHILDLINE 1098</span>
+                      <PhoneCall className="w-3 h-3 text-amber-800 shrink-0" />
+                    </a>
+                    <a
+                      href="https://ebaalnidan.nic.in"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded-lg bg-white border border-amber-200 flex items-center justify-between gap-1.5 text-xs font-semibold text-amber-950 hover:bg-amber-100/60 transition-all"
+                      title={isHindi ? 'NCPCR POCSO ई-बॉक्स आधिकारिक पोर्टल' : 'NCPCR POCSO e-Box Official Portal'}
+                    >
+                      <span className="truncate">{isHindi ? 'POCSO ई-बॉक्स (NCPCR)' : 'POCSO e-Box (NCPCR)'}</span>
+                      <ExternalLink className="w-3 h-3 min-w-[12px] min-h-[12px] text-amber-800 shrink-0 self-center" />
+                    </a>
+                  </div>
                 </div>
 
                 <div className="p-2.5 rounded-xl bg-teal-50/60 border border-teal-200/80 space-y-1.5">
@@ -330,7 +343,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                       title={isHindi ? '2 मिनट की 4-7-8 शांत श्वास क्रिया' : '2-minute 4-7-8 calming breathing exercise'}
                     >
                       <span className="truncate">{isHindi ? '♡ 2 मिनट श्वास पेसर' : '♡ 2-Min Breathing Pacer'}</span>
-                      <ArrowRight className="w-3 h-3 text-[#0F6E56] shrink-0" />
+                      <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] text-[#0F6E56] shrink-0 self-center" />
                     </button>
                   </div>
                 </div>
@@ -349,7 +362,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
               <span className="truncate">
                 {isHindi ? 'राज्य व UT सुरक्षा डायरेक्टरी (36)' : 'State & UT Safety & Support (36)'}
               </span>
-              <ArrowRight className="w-3 h-3 text-[#888] ml-auto sm:ml-0 shrink-0" />
+              <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] text-[#888] ml-auto sm:ml-0 shrink-0 self-center" />
             </button>
 
             <button
@@ -359,13 +372,16 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
             >
               <PhoneCall className="w-3.5 h-3.5 text-[#26215C]" />
               <span>{isHindi ? 'पूरी हेल्पलाइन सूची' : 'Full Helpline Guide'}</span>
-              <ArrowRight className="w-3 h-3 text-[#888] ml-auto sm:ml-0" />
+              <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] text-[#888] ml-auto sm:ml-0 shrink-0 self-center" />
             </button>
           </div>
         </div>
 
         {/* CARD 2: OFFLINE DISCRETION & ZERO-TRACE UTILITIES */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E8E2DC] shadow-xs flex flex-col justify-between space-y-4 hover:border-[#D8CFCE] transition-colors">
+        <div 
+          id="offline-privacy-safety-utilities"
+          className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E8E2DC] shadow-xs flex flex-col justify-between space-y-4 hover:border-[#D8CFCE] transition-colors"
+        >
           <div className="space-y-3">
             {/* Card Header */}
             <div className="flex items-start justify-between gap-3">

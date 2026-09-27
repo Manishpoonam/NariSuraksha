@@ -162,7 +162,7 @@ export const ZeroShameLegalShield: React.FC<ZeroShameLegalShieldProps> = ({
                   >
                     <ShieldAlert className="w-3 h-3 text-[#993556]" />
                     <span>{isHindi ? 'नाबालिग / POCSO गाइड देखें' : 'Minor / POCSO Guide'}</span>
-                    <ArrowRight className="w-3 h-3" />
+                    <ArrowRight className="w-3 h-3 min-w-[12px] min-h-[12px] shrink-0 self-center" />
                   </button>
                 </div>
               )}

@@ -36,7 +36,7 @@ import { Language } from '../types';
 import { hapticAction, hapticPanic } from '../utils/haptics';
 import { PrivacyLockdownGuide } from './PrivacyLockdownGuide';
 import { PLATFORM_CANONICAL_NOTICES } from '../data/statutoryNotices';
-import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
+import { LEGAL_DISCLAIMER, dispatchOpenDisclaimer } from '../data/legalDisclaimer';
 
 interface PlatformTakedownPortalProps {
   language: Language;
@@ -610,9 +610,9 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
                 }}
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#26215C] hover:bg-[#1C1844] text-white font-bold text-xs sm:text-sm transition-all shadow-xs active:scale-97 cursor-pointer"
               >
-                <FileText className="w-4 h-4 text-white/80" />
+                <FileText className="w-4 h-4 text-white/80 shrink-0" />
                 <span>{isHindi ? 'निर्देशित ई-एफआईआर ड्राफ्टर खोलें' : 'Open Guided e-FIR Generator'}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
               </button>
             )}
           </div>
@@ -789,6 +789,18 @@ export const PlatformTakedownPortal: React.FC<PlatformTakedownPortalProps> = ({
           <p className="leading-relaxed">
             {isHindi ? LEGAL_DISCLAIMER.full.hi : LEGAL_DISCLAIMER.full.en}
           </p>
+          <div className="pt-1.5">
+            <button
+              type="button"
+              onClick={() => {
+                hapticAction();
+                dispatchOpenDisclaimer();
+              }}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0F6E56] hover:underline cursor-pointer"
+            >
+              <span>{isHindi ? 'पूर्ण वैधानिक अस्वीकरण पृष्ठ देखें →' : 'Read Full Legal Disclaimer & Transparency Page →'}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

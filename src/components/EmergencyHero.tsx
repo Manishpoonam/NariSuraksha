@@ -217,7 +217,7 @@ export const EmergencyHero: React.FC<EmergencyHeroProps> = ({
                 {isHindi ? 'कानूनी जवाब व उपाय' : 'Power Reply & Plan'}
               </span>
             </div>
-            <ArrowRight className="w-4 h-4 text-[#8B6D5C] group-hover:translate-x-1 transition-transform shrink-0" />
+            <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] text-[#8B6D5C] group-hover:translate-x-1 transition-transform shrink-0 self-center" />
           </button>
 
           {/* Action 2: Stop The Leak */}
@@ -233,7 +233,7 @@ export const EmergencyHero: React.FC<EmergencyHeroProps> = ({
                 {isHindi ? 'फोटो हटाएं (StopNCII)' : 'StopNCII & Takedowns'}
               </span>
             </div>
-            <ArrowRight className="w-4 h-4 text-[#8B6D5C] group-hover:translate-x-1 transition-transform shrink-0" />
+            <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] text-[#8B6D5C] group-hover:translate-x-1 transition-transform shrink-0 self-center" />
           </button>
 
           {/* Action 3: e-FIR Complaint Draft */}
@@ -249,7 +249,7 @@ export const EmergencyHero: React.FC<EmergencyHeroProps> = ({
                 {isHindi ? 'e-FIR ड्राफ्ट व PDF' : 'Ready e-FIR Draft'}
               </span>
             </div>
-            <ArrowRight className="w-4 h-4 text-[#8B6D5C] group-hover:translate-x-1 transition-transform shrink-0" />
+            <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] text-[#8B6D5C] group-hover:translate-x-1 transition-transform shrink-0 self-center" />
           </button>
 
           {/* Action 4: Call 1930 Helpline */}

@@ -125,7 +125,7 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
                 <span className="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-200/80 px-2.5 py-0.5 rounded-full">
                   {isHindi ? 'सुरक्षित विकल्प' : 'Best Position'}
                 </span>
-                <ArrowRight className="w-5 h-5 text-emerald-700 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 min-w-[20px] min-h-[20px] shrink-0 self-center text-emerald-700 group-hover:translate-x-1 transition-transform" />
               </div>
               <div>
                 <span className="text-lg sm:text-xl font-black text-emerald-950 block">
@@ -147,7 +147,7 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
                 <span className="text-xs font-black uppercase tracking-wider text-rose-800 bg-rose-200/80 px-2.5 py-0.5 rounded-full">
                   {isHindi ? 'तुरंत रोकें' : 'Stop Immediately'}
                 </span>
-                <ArrowRight className="w-5 h-5 text-rose-700 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 min-w-[20px] min-h-[20px] shrink-0 self-center text-rose-700 group-hover:translate-x-1 transition-transform" />
               </div>
               <div>
                 <span className="text-lg sm:text-xl font-black text-rose-950 block">
@@ -248,7 +248,7 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
                 <span className="text-xs font-black uppercase tracking-wider text-[#8B6D5C] bg-[#8B6D5C]/15 px-2.5 py-0.5 rounded-full">
                   {isHindi ? '18 वर्ष या अधिक' : '18 Years or Older'}
                 </span>
-                <ArrowRight className="w-5 h-5 text-[#8B6D5C] group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 min-w-[20px] min-h-[20px] shrink-0 self-center text-[#8B6D5C] group-hover:translate-x-1 transition-transform" />
               </div>
               <div>
                 <span className="text-lg font-bold text-[#111827] block">
@@ -269,7 +269,7 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
                 <span className="text-xs font-bold tracking-wider text-[#26215C] bg-[#E8E6F3] px-2.5 py-0.5 rounded-full">
                   {isHindi ? '18 से कम (स्कूल / कॉलेज)' : 'Under 18 (Minor)'}
                 </span>
-                <ArrowRight className="w-5 h-5 text-[#26215C] group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 min-w-[20px] min-h-[20px] shrink-0 self-center text-[#26215C] group-hover:translate-x-1 transition-transform" />
               </div>
               <div>
                 <span className="text-lg font-bold text-[#1A1A1A] block">
@@ -423,7 +423,7 @@ export const TremblingHandsTriage: React.FC<TremblingHandsTriageProps> = ({
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#111827] hover:bg-black text-white rounded-full font-black text-xs transition-transform active:scale-95 shadow-md cursor-pointer"
             >
               <span>{isHindi ? 'e-FIR ड्राफ्ट जनरेटर खोलें' : 'Open e-FIR Draft Generator'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
             </button>
           </div>
         </div>

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Scale, Info, ExternalLink } from 'lucide-react';
 import { Language } from '../types';
-import { LEGAL_DISCLAIMER } from '../data/legalDisclaimer';
+import { LEGAL_DISCLAIMER, dispatchOpenDisclaimer } from '../data/legalDisclaimer';
+import { hapticAction } from '../utils/haptics';
 
 interface LegalDisclaimerNoticeProps {
   language: Language;
@@ -14,18 +15,10 @@ export const LegalDisclaimerNotice: React.FC<LegalDisclaimerNoticeProps> = ({
 }) => {
   const isHindi = language === 'hi';
 
-  const handleScrollToCanonical = (e: React.MouseEvent) => {
+  const handleOpenDisclaimer = (e: React.MouseEvent) => {
     e.preventDefault();
-    const el = document.getElementById(LEGAL_DISCLAIMER.anchorId);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.dispatchEvent(
-        new CustomEvent('navigate-tab', {
-          detail: { tab: 'support', elementId: LEGAL_DISCLAIMER.anchorId },
-        })
-      );
-    }
+    hapticAction();
+    dispatchOpenDisclaimer();
   };
 
   if (compact) {
@@ -40,13 +33,13 @@ export const LegalDisclaimerNotice: React.FC<LegalDisclaimerNoticeProps> = ({
             {isHindi ? 'कानूनी सूचना व परामर्श:' : 'Legal & Procedural Notice:'}
           </span>{' '}
           <span>{LEGAL_DISCLAIMER.short[language]} — </span>
-          <a
-            href={`#${LEGAL_DISCLAIMER.anchorId}`}
-            onClick={handleScrollToCanonical}
-            className="text-[#26215C] font-semibold hover:underline underline-offset-2"
+          <button
+            type="button"
+            onClick={handleOpenDisclaimer}
+            className="text-[#26215C] font-semibold hover:underline underline-offset-2 cursor-pointer inline-flex items-center"
           >
             {LEGAL_DISCLAIMER.linkText[language]}
-          </a>
+          </button>
           <span>. </span>
           {isHindi
             ? 'यह प्लेटफॉर्म तथ्यात्मक साक्ष्य संकलन व शिकायत का प्रारूप तैयार करने में सहायता करता है। यह औपचारिक कानूनी सलाह या अधिवक्ता प्रतिनिधित्व नहीं है। न्यायालयीन प्रक्रिया हेतु राज्य विधिक सेवा प्राधिकरण (NALSA 15100) या पंजीकृत अधिवक्ता की सलाह लें।'
@@ -72,13 +65,13 @@ export const LegalDisclaimerNotice: React.FC<LegalDisclaimerNoticeProps> = ({
 
       <p className="leading-relaxed">
         <span>{LEGAL_DISCLAIMER.short[language]} — </span>
-        <a
-          href={`#${LEGAL_DISCLAIMER.anchorId}`}
-          onClick={handleScrollToCanonical}
-          className="text-[#26215C] font-semibold hover:underline underline-offset-2"
+        <button
+          type="button"
+          onClick={handleOpenDisclaimer}
+          className="text-[#26215C] font-semibold hover:underline underline-offset-2 cursor-pointer inline-flex items-center"
         >
           {LEGAL_DISCLAIMER.linkText[language]}
-        </a>
+        </button>
         <span>. </span>
         {isHindi
           ? 'यहाँ उत्पन्न शिकायत पत्रक (Draft Complaint) उपयोगकर्ता द्वारा दी गई जानकारी पर आधारित एक प्रारूप है, जिसे आधिकारिक राष्ट्रीय साइबर अपराध पोर्टल (cybercrime.gov.in / 1930) या स्थानीय थाने में जमा करने में सहायता हेतु तैयार किया गया है। यह कोई न्यायिक प्रमाण-पत्र या वकील का औपचारिक कानूनी परामर्श नहीं है।'
@@ -103,3 +96,4 @@ export const LegalDisclaimerNotice: React.FC<LegalDisclaimerNoticeProps> = ({
     </aside>
   );
 };
+

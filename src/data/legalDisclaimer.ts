@@ -51,5 +51,9 @@ export const LEGAL_DISCLAIMER: DisclaimerCopy = {
     en: 'Independent, not government-affiliated — full disclaimer',
     hi: 'स्वतंत्र साधन, सरकार या पुलिस से संबद्ध नहीं — पूर्ण अस्वीकरण'
   },
-  anchorId: 'about-trust-section'
+  anchorId: 'canonical-legal-disclaimer'
+};
+
+export const dispatchOpenDisclaimer = () => {
+  window.dispatchEvent(new CustomEvent('open-disclaimer'));
 };

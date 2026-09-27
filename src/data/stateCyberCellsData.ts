@@ -478,34 +478,34 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Uttar Pradesh', hi: 'उत्तर प्रदेश' },
     region: 'North',
     isUnionTerritory: false,
-    headquarters: 'UP Cyber Police HQ (Lucknow)',
-    nodalOfficer: 'ADG / SP Cyber Crime UP Police',
+    headquarters: 'Cyber Crime Headquarters, Uttar Pradesh Police Headquarters, Lucknow',
+    nodalOfficer: 'SP Cyber Crime Headquarters, Uttar Pradesh Police',
     email: 'sp-cyber.lu@up.gov.in',
-    address: 'Cyber Crime Police Station, Gomti Nagar Extension, Lucknow - 226010',
+    address: 'Police Headquarters, Gomti Nagar Extension, Lucknow, Uttar Pradesh',
     specialWomenCell: {
-      en: 'Women Powerline 1090 & Dedicated Cyber Crime PS in 75 Districts',
-      hi: 'विमेन पावरलाइन 1090 एवं 75 जिलों में समर्पित साइबर पुलिस थाने'
+      en: 'Women & Child Security Organization (WCSO), Uttar Pradesh Police',
+      hi: 'महिला एवं बाल सुरक्षा संगठन (WCSO), उत्तर प्रदेश पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
     women_helpline: '1090',
-    women_helpline_coverage: 'Statewide (UP Women Power Line 1090 / 181)',
+    women_helpline_coverage: 'Statewide (UP Police Women Power Line 1090)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: null,
+    women_mobile: '9454401149',
     women_whatsapp: null,
-    alternate_number: '0522-2209867',
-    alternate_number_label: 'State Cyber Crime Police Station, Lucknow',
-    alternate_number_coverage: 'Statewide (Gomti Nagar Extension HQ)',
+    alternate_number: '0522-2325200',
+    alternate_number_label: 'Mahila Samman Prakoshtha',
+    alternate_number_coverage: 'Statewide (Uttar Pradesh Police WCSO)',
     coverage: 'Statewide',
     police_website: 'https://uppolice.gov.in',
-    women_child_website: 'https://mahilakalyan.up.gov.in',
-    source_url: 'https://uppolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0522-2209867',
+    women_child_website: 'https://uppolice.gov.in/article/en-about-us-mahila-samman-prakostha',
+    source_url: 'https://uppolice.gov.in/article/en-about-us-mahila-samman-prakostha',
+    last_verified: '2026-09-25',
+    helplinePhone: '1090',
     websiteUrl: 'https://uppolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    isVerified: true,
+    verifiedDate: '2026-09-25'
   },
   {
     id: 'rajasthan',
@@ -514,34 +514,47 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Rajasthan', hi: 'राजस्थान' },
     region: 'North',
     isUnionTerritory: false,
-    headquarters: 'State Cyber Crime Police Station, SCRB (Jaipur)',
-    nodalOfficer: 'SP SCRB / Cyber Crime Rajasthan',
+
+    headquarters: 'Director General of Police, SCRB & Cyber Crime and Technical Services, Police Headquarters, Lal Kothi, Jaipur, Rajasthan - 302015',
+    nodalOfficer: 'IGP SCRB, Rajasthan Police',
     email: 'sp.cybercrime@rajpolice.gov.in',
-    address: 'SCRB Campus, Ghat Gate, Jaipur, Rajasthan - 302003',
+    address: 'Police Headquarters, Lal Kothi, Jaipur, Rajasthan - 302015',
+
     specialWomenCell: {
-      en: 'G-Security Desk for Women Digital Safety',
-      hi: 'महिला डिजिटल सुरक्षा जी-हेल्पडेस्क'
+      en: 'Special Investigation Unit for Crimes Against Women (SIUCAW), Rajasthan Police',
+      hi: 'महिलाओं के विरुद्ध अपराधों के लिए विशेष जांच इकाई (SIUCAW), राजस्थान पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+
+    women_helpline: '1090',
+    women_helpline_coverage: 'Statewide (Rajasthan Police Women & Senior Citizens / Garima Helpline)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
+
     women_mobile: null,
-    women_whatsapp: null,
-    alternate_number: '0141-2609040',
-    alternate_number_label: 'State Cyber Crime PS, Jaipur',
-    alternate_number_coverage: 'Statewide (SCRB Jaipur)',
+    women_whatsapp: '8764866090',
+
+    alternate_number: '0141-2821288',
+    alternate_number_label: 'SCRB & Cyber Crime and Technical Services Office',
+    alternate_number_coverage: 'Statewide (Rajasthan Police Headquarters, Lal Kothi, Jaipur)',
+
     coverage: 'Statewide',
+
     police_website: 'https://police.rajasthan.gov.in',
     women_child_website: 'https://wcd.rajasthan.gov.in',
-    source_url: 'https://police.rajasthan.gov.in',
-    last_verified: null,
-    helplinePhone: '0141-2609040',
+
+    source_url: 'https://police.rajasthan.gov.in/portal/contactInformation',
+
+    last_verified: '2026-09-25',
+
+    helplinePhone: '1090',
     websiteUrl: 'https://police.rajasthan.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    isVerified: true,
+    verifiedDate: '2026-09-25'
   },
   {
     id: 'haryana',

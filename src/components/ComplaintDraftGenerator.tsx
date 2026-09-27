@@ -727,7 +727,7 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-[#26215C] hover:bg-[#1E1949] text-white transition-all shadow-soft cursor-pointer min-h-[44px] active:scale-98"
                   >
                     <span>{isHindi ? 'तैयार होने पर आगे बढ़ें' : "Continue when you're ready"}</span>
-                    <ArrowRight className="w-4 h-4 text-[#F3C5D6]" />
+                    <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center text-[#F3C5D6]" />
                   </button>
                 </div>
               </motion.div>
@@ -853,7 +853,7 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-[#26215C] hover:bg-[#1E1949] text-white transition-all shadow-soft cursor-pointer min-h-[44px] active:scale-98"
                   >
                     <span>{isHindi ? 'तैयार होने पर आगे बढ़ें' : "Continue when you're ready"}</span>
-                    <ArrowRight className="w-4 h-4 text-[#F3C5D6]" />
+                    <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center text-[#F3C5D6]" />
                   </button>
                 </div>
               </motion.div>
@@ -945,7 +945,7 @@ ${formData.victimAlias || '[Victim / Petitioner]'}`;
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-[#26215C] hover:bg-[#1E1949] text-white transition-all shadow-soft cursor-pointer min-h-[44px] active:scale-98"
                   >
                     <span>{isHindi ? 'तैयार होने पर आगे बढ़ें' : "Continue when you're ready"}</span>
-                    <ArrowRight className="w-4 h-4 text-[#F3C5D6]" />
+                    <ArrowRight className="w-4 h-4 min-w-[16px] min-h-[16px] shrink-0 self-center text-[#F3C5D6]" />
                   </button>
                 </div>
               </motion.div>
