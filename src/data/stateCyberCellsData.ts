@@ -478,34 +478,47 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Uttar Pradesh', hi: 'उत्तर प्रदेश' },
     region: 'North',
     isUnionTerritory: false,
+
     headquarters: 'Cyber Crime Headquarters, Uttar Pradesh Police Headquarters, Lucknow',
     nodalOfficer: 'SP Cyber Crime Headquarters, Uttar Pradesh Police',
     email: 'sp-cyber.lu@up.gov.in',
     address: 'Police Headquarters, Gomti Nagar Extension, Lucknow, Uttar Pradesh',
+
     specialWomenCell: {
       en: 'Women & Child Security Organization (WCSO), Uttar Pradesh Police',
       hi: 'महिला एवं बाल सुरक्षा संगठन (WCSO), उत्तर प्रदेश पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
+
     women_helpline: '1090',
     women_helpline_coverage: 'Statewide (UP Police Women Power Line 1090)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
+
     women_mobile: '9454401149',
     women_whatsapp: null,
+
     alternate_number: '0522-2325200',
     alternate_number_label: 'Mahila Samman Prakoshtha',
     alternate_number_coverage: 'Statewide (Uttar Pradesh Police WCSO)',
+
     coverage: 'Statewide',
+
     police_website: 'https://uppolice.gov.in',
     women_child_website: 'https://uppolice.gov.in/article/en-about-us-mahila-samman-prakostha',
+
     source_url: 'https://uppolice.gov.in/article/en-about-us-mahila-samman-prakostha',
-    last_verified: '2026-09-25',
+
+    last_verified: '2026-09-27',
+
     helplinePhone: '1090',
     websiteUrl: 'https://uppolice.gov.in',
+
     isVerified: true,
-    verifiedDate: '2026-09-25'
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'rajasthan',
@@ -557,76 +570,92 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     verifiedDate: '2026-09-25'
   },
   {
+    id: 'punjab',
+    state: 'Punjab',
+    state_code: 'PB',
+    stateName: {
+      en: 'Punjab',
+      hi: 'पंजाब'
+    },
+    region: 'North',
+    isUnionTerritory: false,
+    headquarters: 'State Cyber Crime Branch, Phase 4, Sector 59, Sahibzada Ajit Singh Nagar (Mohali), Punjab - 160059',
+    nodalOfficer: 'SP / Cyber Crime, Punjab Police',
+    email: 'aigcc@punjabpolice.gov.in',
+    address: 'State Cyber Crime Branch, Phase 4, Sector 59, Sahibzada Ajit Singh Nagar (Mohali), Punjab - 160059',
+    specialWomenCell: {
+      en: 'Women Cell / Community Affairs Division, Punjab Police',
+      hi: 'महिला प्रकोष्ठ / सामुदायिक मामले प्रभाग, पंजाब पुलिस'
+    },
+    police_emergency: '112',
+    police_coverage: 'Statewide',
+    women_helpline: '1091 / 181',
+    women_helpline_coverage: 'Statewide (1091: Punjab Police Women Helpline; 181: Women Helpline / Punjab government support)',
+    child_helpline: '1098',
+    child_helpline_coverage: 'Statewide (Child Helpline under Mission Vatsalya)',
+    women_mobile: null,
+    women_whatsapp: null,
+    alternate_number: '0172-2226258',
+    alternate_number_label: 'State Cyber Crime Grievance Contact',
+    alternate_number_coverage: 'Statewide (Punjab Cyber Crime)',
+    coverage: 'Statewide',
+    police_website: 'https://www.punjabpolice.gov.in',
+    women_child_website: 'https://sswcd.punjab.gov.in/en',
+    source_url: 'https://www.cybercrime.gov.in/webform/Crime_NodalGrivanceList.aspx',
+    last_verified: '2026-09-27',
+    helplinePhone: '1091',
+    websiteUrl: 'https://www.punjabpolice.gov.in',
+    isVerified: true,
+    verifiedDate: '2026-09-27'
+  },
+  {
     id: 'haryana',
     state: 'Haryana',
     state_code: 'HR',
     stateName: { en: 'Haryana', hi: 'हरियाणा' },
     region: 'North',
     isUnionTerritory: false,
-    headquarters: 'State Cyber Crime Cell, State Crime Branch (Panchkula)',
-    nodalOfficer: 'SP Cyber Crime SCB Haryana',
-    email: 'cybercrime-scb.pol@hry.gov.in',
-    address: 'State Crime Branch, Sector 6, Panchkula, Haryana - 134109',
+
+    headquarters: 'State Police Headquarters, Sector 6, Panchkula, Haryana - 134109',
+    nodalOfficer: 'SP/Cyber, Haryana Police',
+    email: 'sp-cybercrimephq.pol@hry.gov.in',
+    address: 'State Police Headquarters, Sector 6, Panchkula, Haryana - 134109',
+
     specialWomenCell: {
-      en: 'Special Cyber Helpdesk for Crimes against Women',
-      hi: 'महिला साइबर अपराध विशेष हेल्पडेस्क'
+      en: 'Women Safety Cell, Haryana Police',
+      hi: 'महिला सुरक्षा प्रकोष्ठ, हरियाणा पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+
+    women_helpline: '1091',
+    women_helpline_coverage: 'Statewide (Haryana Police Women Helpline, 24x7)',
+
     child_helpline: '1098',
-    child_helpline_coverage: 'Statewide',
+    child_helpline_coverage: 'Statewide (Haryana Women & Child Development Department)',
+
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0172-2587532',
-    alternate_number_label: 'State Crime Branch Panchkula',
-    alternate_number_coverage: 'Statewide (SCB Panchkula)',
+
+    alternate_number: '0172-2583095',
+    alternate_number_label: 'SP / Women Safety, Haryana Police',
+    alternate_number_coverage: 'Statewide (Haryana Police Women Safety Cell)',
+
     coverage: 'Statewide',
+
     police_website: 'https://haryanapolice.gov.in',
     women_child_website: 'https://wcdhry.gov.in',
-    source_url: 'https://haryanapolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0172-2587532',
+
+    source_url: 'https://www.haryanapolice.gov.in/Women_Safety_Cell',
+
+    last_verified: '2026-09-27',
+
+    helplinePhone: '1091',
     websiteUrl: 'https://haryanapolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
-  },
-  {
-    id: 'punjab',
-    state: 'Punjab',
-    state_code: 'PB',
-    stateName: { en: 'Punjab', hi: 'पंजाब' },
-    region: 'North',
-    isUnionTerritory: false,
-    headquarters: 'State Cyber Crime Cell, Bureau of Investigation (SAS Nagar/Mohali)',
-    nodalOfficer: 'AIG / SP Cyber Crime Division',
-    email: 'cybercrime-pb@nic.in',
-    address: 'State Cyber Crime PS, Phase-4, SAS Nagar (Mohali), Punjab - 160059',
-    specialWomenCell: {
-      en: 'Women & Child Affairs Cyber Wing Punjab',
-      hi: 'महिला एवं बाल साइबर विंग पंजाब'
-    },
-    police_emergency: '112',
-    police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
-    child_helpline: '1098',
-    child_helpline_coverage: 'Statewide',
-    women_mobile: null,
-    women_whatsapp: null,
-    alternate_number: '0172-2298700',
-    alternate_number_label: 'State Cyber Crime PS Mohali',
-    alternate_number_coverage: 'Statewide (Phase-4 SAS Nagar)',
-    coverage: 'Statewide',
-    police_website: 'https://punjabpolice.gov.in',
-    women_child_website: 'https://sswcd.punjab.gov.in',
-    source_url: 'https://punjabpolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0172-2298700',
-    websiteUrl: 'https://punjabpolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'himachal_pradesh',
@@ -635,34 +664,34 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Himachal Pradesh', hi: 'हिमाचल प्रदेश' },
     region: 'North',
     isUnionTerritory: false,
-    headquarters: 'State Cyber Crime Police Station, CID (Shimla)',
-    nodalOfficer: 'SP Cyber Crime / DIG Crime CID HP',
+    headquarters: 'State CID, SDA Complex, Block No. 31, Kasumpti, Shimla, Himachal Pradesh - 171009',
+    nodalOfficer: 'SP Cyber Crime, Himachal Pradesh Police',
     email: 'sp-cybercr-hp@nic.in',
-    address: 'CID Cyber Crime Police Station, Chaura Maidan, Shimla, Himachal Pradesh - 171001',
+    address: 'State CID, SDA Complex, Block No. 31, Kasumpti, Shimla, Himachal Pradesh - 171009',
     specialWomenCell: {
-      en: 'Veerangana Mahila Cyber Helpdesk HP',
-      hi: 'वीरांगना महिला साइबर हेल्पडेस्क हिमाचल'
+      en: 'Women Crime Unit, State CID, Himachal Pradesh Police',
+      hi: 'महिला अपराध इकाई, राज्य सीआईडी, हिमाचल प्रदेश पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline: '1091',
+    women_helpline_coverage: 'Statewide (Himachal Pradesh Police Women Helpline)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0177-2621714',
-    alternate_number_label: 'CID Cyber Crime PS Shimla',
-    alternate_number_coverage: 'Statewide (Chaura Maidan, Shimla)',
+    alternate_number: '0177-2620331',
+    alternate_number_label: 'Cyber Crime Police Station, Shimla',
+    alternate_number_coverage: 'Statewide (State Cyber Crime Police Station, Shimla)',
     coverage: 'Statewide',
     police_website: 'https://citizenportal.hppolice.gov.in',
     women_child_website: 'https://wcd.hp.gov.in',
-    source_url: 'https://citizenportal.hppolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0177-2621714',
+    source_url: 'https://citizenportal.hppolice.gov.in/citizen/openTeleDir.htm',
+    last_verified: '2026-09-27',
+    helplinePhone: '1091',
     websiteUrl: 'https://citizenportal.hppolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'uttarakhand',
@@ -671,34 +700,49 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Uttarakhand', hi: 'उत्तराखंड' },
     region: 'North',
     isUnionTerritory: false,
-    headquarters: 'Special Task Force (STF) Cyber Crime Police Station (Dehradun)',
-    nodalOfficer: 'SP Cyber Crime STF Uttarakhand',
-    email: 'ccps.ddn@uttarakhandpolice.uk.gov.in',
-    address: 'Cyber Crime Police Station, 6 Gandhi Road, Near Clock Tower, Dehradun - 248001',
+
+    headquarters: 'Special Task Force / Cyber Crime Unit, Uttarakhand Police, 12 Subhash Road, Dehradun - 248001',
+    nodalOfficer: 'IG Cyber Crime / STF, Uttarakhand Police',
+    email: 'spstf-uk@nic.in',
+    address: 'Special Task Force, 12 Subhash Road, Dehradun, Uttarakhand - 248001',
+
     specialWomenCell: {
-      en: 'Gauri Cyber Suraksha Desk for Women',
-      hi: 'गौरी साइबर सुरक्षा महिला प्रकोष्ठ'
+      en: 'Women Safety Cell, Uttarakhand Police',
+      hi: 'महिला सुरक्षा प्रकोष्ठ, उत्तराखंड पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+
+    women_helpline: '1090',
+    women_helpline_coverage: 'Statewide (Uttarakhand Police Women Helpline)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: null,
-    women_whatsapp: null,
+
+    women_mobile: '9411112780',
+    women_mobile_coverage: 'Statewide (Uttarakhand Police Women Safety Cell)',
+
+    women_whatsapp: '9411112780',
+
     alternate_number: '0135-2655900',
-    alternate_number_label: 'STF Cyber Crime PS Dehradun',
-    alternate_number_coverage: 'Statewide (6 Gandhi Road, Dehradun)',
+    alternate_number_label: 'Cyber Crime Police Station / STF',
+    alternate_number_coverage: 'Statewide (Uttarakhand Cyber Crime / STF)',
+
     coverage: 'Statewide',
+
     police_website: 'https://uttarakhandpolice.uk.gov.in',
-    women_child_website: 'https://wecw.uk.gov.in',
-    source_url: 'https://uttarakhandpolice.uk.gov.in',
-    last_verified: null,
-    helplinePhone: '0135-2655900',
+    women_child_website: 'https://wecd.uk.gov.in',
+
+    source_url: 'https://uaoa.gov.in/sites/default/files/2025-09/Gaura%20Shakti_0.pdf',
+
+    last_verified: '2026-09-27',
+
+    helplinePhone: '1090',
     websiteUrl: 'https://uttarakhandpolice.uk.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
 
   // --- West Region ---
@@ -709,34 +753,34 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Maharashtra', hi: 'महाराष्ट्र' },
     region: 'West',
     isUnionTerritory: false,
-    headquarters: 'Maharashtra Cyber Crime Cell HQ (Mumbai)',
-    nodalOfficer: 'Special IG / SP Cyber Maharashtra',
-    email: 'cybercrime-mah@gov.in',
-    address: 'Maharashtra Cyber, 32nd Floor, Centre 1, World Trade Centre, Cuffe Parade, Mumbai - 400005',
+    headquarters: 'Maharashtra State Cyber Department, 102 & 103, Sector 2, Millennium Business Park, Mahape, Navi Mumbai - 400710',
+    nodalOfficer: 'Additional Director General of Police, Maharashtra State Cyber Department',
+    email: 'ig.cbr-mah@gov.in',
+    address: 'Maharashtra State Cyber Department, 102 & 103, Sector 2, Millennium Business Park, Mahape, Navi Mumbai - 400710',
     specialWomenCell: {
-      en: 'Maharashtra Cyber Security Project & Women Cyber Desk',
-      hi: 'महाराष्ट्र साइबर सुरक्षा प्रोजेक्ट एवं महिला साइबर हेल्पडेस्क'
+      en: 'Prevention of Crime Against Women & Children, Maharashtra Police',
+      hi: 'महिलाओं एवं बच्चों के विरुद्ध अपराध की रोकथाम, महाराष्ट्र पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline: '103 / 1091',
+    women_helpline_coverage: '103: Mumbai, Thane & Navi Mumbai; 1091: Rest of Maharashtra',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: null,
+    women_mobile: '8976004111, 8657222777',
     women_whatsapp: null,
-    alternate_number: '022-22160080',
-    alternate_number_label: 'Maharashtra Cyber HQ, World Trade Centre',
-    alternate_number_coverage: 'Statewide (Cuffe Parade, Mumbai)',
+    alternate_number: '022-45161635',
+    alternate_number_label: 'Women Safety Helpline',
+    alternate_number_coverage: 'Maharashtra Police Women Safety',
     coverage: 'Statewide',
-    police_website: 'https://mahacyber.gov.in',
+    police_website: 'https://www.mahapolice.gov.in',
     women_child_website: 'https://womenchild.maharashtra.gov.in',
-    source_url: 'https://mahacyber.gov.in',
-    last_verified: null,
-    helplinePhone: '022-22160080',
-    websiteUrl: 'https://mahacyber.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    source_url: 'https://www.mahapolice.gov.in/',
+    last_verified: '2026-09-27',
+    helplinePhone: '1091',
+    websiteUrl: 'https://www.mahapolice.gov.in',
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'gujarat',
@@ -745,34 +789,34 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Gujarat', hi: 'गुजरात' },
     region: 'West',
     isUnionTerritory: false,
-    headquarters: 'Gujarat CID Crime Cyber Cell (Gandhinagar)',
-    nodalOfficer: 'IGP / SP Cyber Crime CID',
-    email: 'sp-cyber-cid@gujarat.gov.in',
-    address: 'CID Crime, Police Bhavan, Sector 18, Gandhinagar, Gujarat - 382018',
+    headquarters: 'State Cyber Crime Cell, CID Crime, 7th Floor, C Wing, Block-2, Karmyogi Bhavan, Sector-10A, Gandhinagar - 382010',
+    nodalOfficer: 'SP, State Cyber Crime Cell, Gujarat Police',
+    email: 'cc-cid@gujarat.gov.in',
+    address: 'State Cyber Crime Cell, CID Crime, 7th Floor, C Wing, Block-2, Karmyogi Bhavan, Sector-10A, Gandhinagar - 382010',
     specialWomenCell: {
-      en: 'Cyber AASHVAST (Women & Citizen Cyber Protection Project)',
-      hi: 'साइबर आश्वस्त (महिला व नागरिक साइबर सुरक्षा पहल)'
+      en: 'Women Cell, CID Crime, Gujarat Police',
+      hi: 'महिला सेल, सीआईडी क्राइम, गुजरात पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
     women_helpline: '181',
-    women_helpline_coverage: 'Statewide (Abhayam 181)',
+    women_helpline_coverage: 'Statewide (Abhayam 181 Women Helpline, Gujarat Women & Child Development Department)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: null,
+    women_mobile: '9978405827',
     women_whatsapp: null,
-    alternate_number: '079-23250798',
-    alternate_number_label: 'CID Crime Cyber Cell Gandhinagar',
-    alternate_number_coverage: 'Statewide (Police Bhavan, Sector 18)',
+    alternate_number: '079-23254421',
+    alternate_number_label: 'Women Cell, Gujarat Police',
+    alternate_number_coverage: 'Statewide (Women Cell, CID Crime, Gandhinagar)',
     coverage: 'Statewide',
     police_website: 'https://police.gujarat.gov.in',
     women_child_website: 'https://wcd.gujarat.gov.in',
-    source_url: 'https://police.gujarat.gov.in',
-    last_verified: null,
-    helplinePhone: '079-23250798',
+    source_url: 'https://wcd.gujarat.gov.in/initiativedetails?id=280',
+    last_verified: '2026-09-27',
+    helplinePhone: '181',
     websiteUrl: 'https://police.gujarat.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'goa',
@@ -781,34 +825,49 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Goa', hi: 'गोवा' },
     region: 'West',
     isUnionTerritory: false,
-    headquarters: 'Cyber Crime Police Station (Ribandar/Panaji)',
-    nodalOfficer: 'SP Cyber Crime Goa Police',
-    email: 'pi-cyber.pol@goa.gov.in',
-    address: 'Cyber Crime Police Station, Old GMC Complex, Ribandar, Goa - 403006',
+
+    headquarters: 'Cyber Crime Police Station, Crime Branch, Ribandar, Goa - 403006',
+    nodalOfficer: 'Superintendent of Police - Cyber Crime, Goa Police',
+    email: 'spcyber@goapolice.gov.in',
+    address: 'Cyber Crime Police Station, Crime Branch, Ribandar, Goa - 403006',
+
     specialWomenCell: {
-      en: 'Goa Police Pink Force Cyber Support',
-      hi: 'गोवा पुलिस पिंक फोर्स साइबर सपोर्ट'
+      en: 'Women Police Station, Panaji, Goa Police',
+      hi: 'महिला पुलिस थाना, पणजी, गोवा पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+
+    women_helpline: '1091',
+    women_helpline_coverage: 'Statewide (Goa Police Women Helpline)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: null,
-    women_whatsapp: null,
-    alternate_number: '0832-2443214',
-    alternate_number_label: 'Cyber Crime Police Station Ribandar',
-    alternate_number_coverage: 'Statewide (Old GMC Complex, Ribandar)',
+
+    women_mobile: '7875756214',
+    women_mobile_coverage: 'Panaji (Women Police Station, Goa Police)',
+
+    women_whatsapp: '7875756177',
+
+    alternate_number: '0832-2428992',
+    alternate_number_label: 'Women Police Station, Panaji',
+    alternate_number_coverage: 'Panaji / Goa Police Women Police Station',
+
     coverage: 'Statewide',
+
     police_website: 'https://citizen.goapolice.gov.in',
     women_child_website: 'https://dwcd.goa.gov.in',
-    source_url: 'https://citizen.goapolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0832-2443214',
+
+    source_url: 'https://citizen.goapolice.gov.in/web/guest/phone',
+
+    last_verified: '2026-09-27',
+
+    helplinePhone: '1091',
     websiteUrl: 'https://citizen.goapolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
 
   // --- South Region ---
@@ -819,34 +878,34 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Karnataka', hi: 'कर्नाटक' },
     region: 'South',
     isUnionTerritory: false,
-    headquarters: 'CID Cyber Crime Police Station (Bengaluru)',
-    nodalOfficer: 'ADGP / SP Cyber Crime Division CID',
-    email: 'ccps.cid@ksp.gov.in',
-    address: 'CID Complex, Palace Road, High Grounds, Bengaluru, Karnataka - 560001',
+    headquarters: 'Karnataka State Police Headquarters, No. 2, Nrupathunga Road, Bengaluru - 560001',
+    nodalOfficer: 'DIG, Cyber Crimes, Narcotic, CID, Karnataka Police',
+    email: 'spctrcid@ksp.gov.in',
+    address: 'Karnataka State Police Headquarters, No. 2, Nrupathunga Road, Bengaluru - 560001',
     specialWomenCell: {
-      en: 'Karnataka CID Cyber Crime Wing for Women Safety',
-      hi: 'कर्नाटक सीआईडी महिला सुरक्षा साइबर सेल'
+      en: 'Women Police Stations, Karnataka Police',
+      hi: 'महिला पुलिस थाने, कर्नाटक पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline: '1091',
+    women_helpline_coverage: 'Statewide (Karnataka Police Women Helpline)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '080-22094498',
-    alternate_number_label: 'CID Cyber Crime PS Bengaluru',
-    alternate_number_coverage: 'Statewide (CID Complex, Palace Road)',
+    alternate_number: '080-22942475',
+    alternate_number_label: 'Cyber Crimes, Narcotic, CID',
+    alternate_number_coverage: 'Statewide (Karnataka Police CID Cyber Crime)',
     coverage: 'Statewide',
-    police_website: 'https://cid.karnataka.gov.in',
+    police_website: 'https://ksp.karnataka.gov.in',
     women_child_website: 'https://dwcd.karnataka.gov.in',
-    source_url: 'https://cid.karnataka.gov.in',
-    last_verified: null,
-    helplinePhone: '080-22094498',
-    websiteUrl: 'https://cid.karnataka.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    source_url: 'https://www.cybercrime.gov.in/webform/Crime_NodalGrivanceList.aspx',
+    last_verified: '2026-09-27',
+    helplinePhone: '1091',
+    websiteUrl: 'https://ksp.karnataka.gov.in',
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'tamil_nadu',
@@ -855,34 +914,52 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Tamil Nadu', hi: 'तमिलनाडु' },
     region: 'South',
     isUnionTerritory: false,
-    headquarters: 'Cyber Crime Wing HQ, CBCID (Chennai)',
-    nodalOfficer: 'ADGP / SP Cyber Crime Division',
-    email: 'sp-cybercrime.tn@nic.in',
-    address: 'CBCID Cyber Crime Wing, Old Commissioner Office, Pantheon Road, Egmore, Chennai - 600008',
+
+    headquarters: 'Tamil Nadu State Cyber Crime Coordination Centre (TN-S4C), Cyber Crime Wing Administrative Building, PTC Complex, Ashok Nagar, Chennai - 600083',
+
+    nodalOfficer: 'ADGP, Cyber Crime Wing, Tamil Nadu Police',
+
+    email: 'cbcyber@nic.in',
+
+    address: 'Cyber Crime Wing Administrative Building, PTC Complex, Ashok Nagar, Chennai - 600083',
+
     specialWomenCell: {
-      en: 'Dedicated Anti-Cyber Harassment Wing for Women',
-      hi: 'महिला विरोधी साइबर उत्पीड़न निवारण विंग'
+      en: 'Singapen Special Force (SSF), Tamil Nadu Police',
+      hi: 'सिंगप्पेन विशेष बल (SSF), तमिलनाडु पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+
+    women_helpline: '1091',
+    women_helpline_coverage: 'Statewide (Singapen Special Force / Tamil Nadu Police, 24x7)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
+
     women_mobile: null,
+
     women_whatsapp: null,
-    alternate_number: '044-28447701',
-    alternate_number_label: 'CBCID Cyber Crime Wing Chennai',
-    alternate_number_coverage: 'Statewide (Egmore, Chennai)',
+
+    alternate_number: '044-28447712',
+    alternate_number_label: 'Superintendent of Police, Cyber Crime Division-I',
+    alternate_number_coverage: 'Statewide (Tamil Nadu Police Cyber Crime Wing)',
+
     coverage: 'Statewide',
+
     police_website: 'https://eservices.tnpolice.gov.in',
     women_child_website: 'https://swwcd.tn.gov.in',
-    source_url: 'https://eservices.tnpolice.gov.in',
-    last_verified: null,
-    helplinePhone: '044-28447701',
+
+    source_url: 'https://www.stationeryprinting.tn.gov.in/gazette_list_details.php?date=MjAyNi0wOC0xMg%3D%3D&id=MzI%3D',
+
+    last_verified: '2026-09-27',
+
+    helplinePhone: '1091',
+
     websiteUrl: 'https://eservices.tnpolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'telangana',
@@ -891,35 +968,49 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Telangana', hi: 'तेलंगाना' },
     region: 'South',
     isUnionTerritory: false,
-    headquarters: 'TG Cyber Security Bureau (TGCSB), Hyderabad',
-    nodalOfficer: 'Director / SP TGCSB',
-    email: 'sp-cybercrimes-cid@telangana.gov.in',
-    address: 'TG Cyber Security Bureau, DGP Office Complex, Lakdikapool, Hyderabad, Telangana - 500004',
+
+    headquarters: 'Telangana Cyber Security Bureau (TGCSB), D Block, 3rd Floor, Secretariat, Government of Telangana, Hyderabad - 500022',
+    nodalOfficer: 'Director, Telangana Cyber Security Bureau (TGCSB)',
+    email: 'director-tscsb@tspolice.gov.in',
+    address: 'D Block, 3rd Floor, Secretariat, Government of Telangana, Hyderabad - 500022',
+
     specialWomenCell: {
-      en: 'SHE Teams Cyber Support Unit & TGCSB Women Cell',
-      hi: 'शी टीम्स साइबर सपोर्ट यूनिट एवं टीजीसीएसबी महिला सेल'
+      en: 'Women Safety Wing, Telangana Police',
+      hi: 'महिला सुरक्षा विंग, तेलंगाना पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
+
     women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline_coverage: 'Statewide (Telangana Women Safety / Women Helpline)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: null,
-    women_whatsapp: '9490616555',
-    women_whatsapp_coverage: 'Hyderabad City Police jurisdiction (SHE Teams)',
-    alternate_number: '040-27852435',
-    alternate_number_label: 'TG Cyber Security Bureau, Lakdikapool',
-    alternate_number_coverage: 'Statewide (TGCSB HQ, Hyderabad)',
+
+    women_mobile: '8712656858',
+    women_mobile_coverage: 'Statewide (Telangana Police Women Safety Wing)',
+
+    women_whatsapp: '8712656856',
+
+    alternate_number: '040-29320049',
+    alternate_number_label: 'Director, Telangana Cyber Security Bureau',
+    alternate_number_coverage: 'Statewide (TGCSB, Telangana Police)',
+
     coverage: 'Statewide',
-    police_website: 'https://tgcsb.tspolice.gov.in',
+
+    police_website: 'https://www.tspolice.gov.in',
     women_child_website: 'https://wdcw.tg.nic.in',
-    source_url: 'https://tspolice.gov.in',
-    last_verified: null,
-    helplinePhone: '040-27852435',
-    websiteUrl: 'https://tgcsb.tspolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    source_url: 'https://womensafetywing.telangana.gov.in/contact-us/',
+
+    last_verified: '2026-09-27',
+
+    helplinePhone: '181',
+    websiteUrl: 'https://www.tspolice.gov.in',
+
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'kerala',
@@ -928,34 +1019,35 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Kerala', hi: 'केरल' },
     region: 'South',
     isUnionTerritory: false,
-    headquarters: 'Cyber Crime Police HQ & Cyberdome (Thiruvananthapuram)',
-    nodalOfficer: 'ADGP / SP Cyber Operations Kerala',
-    email: 'cyberdome.pol@kerala.gov.in',
-    address: 'Cyberdome, Technopark Campus / Cyber Ops HQ, Police Training College, Thiruvananthapuram - 695014',
+    headquarters: 'Cyber Police Headquarters, Pattom, Thiruvananthapuram, Kerala - 695004',
+    nodalOfficer: 'ADGP, Cyber Operations, Kerala Police',
+    email: 'adgpcyberops.pol@kerala.gov.in',
+    address: 'Cyber Police Headquarters, Pattom, Thiruvananthapuram, Kerala - 695004',
     specialWomenCell: {
-      en: 'Aparajitha Online Complaint Portal for Women Harassment',
-      hi: 'अपराजिता महिला उत्पीड़न ऑनलाइन शिकायत डेस्क'
+      en: 'Women & Children Cell, Kerala Police',
+      hi: 'महिला एवं बाल प्रकोष्ठ, केरल पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide (Mithra 181)',
+    women_helpline: '1091',
+    women_helpline_coverage: 'Statewide (Kerala Police Women Helpline)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: null,
+    women_mobile: '9497996916',
+    women_mobile_coverage: 'Statewide (AIG Women & Children Cell, Kerala Police)',
     women_whatsapp: null,
-    alternate_number: '0471-2322090',
-    alternate_number_label: 'Cyber Operations HQ Thiruvananthapuram',
-    alternate_number_coverage: 'Statewide (Police Training College, TVM)',
+    alternate_number: '0471-2238100',
+    alternate_number_label: 'Women & Children Cell, Kerala Police',
+    alternate_number_coverage: 'Statewide (Kerala Police Women & Children Cell)',
     coverage: 'Statewide',
     police_website: 'https://keralapolice.gov.in',
     women_child_website: 'https://wcd.kerala.gov.in',
-    source_url: 'https://keralapolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0471-2322090',
+    source_url: 'https://keralapolice.gov.in/page/rank-wise-details',
+    last_verified: '2026-09-27',
+    helplinePhone: '1091',
     websiteUrl: 'https://keralapolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'andhra_pradesh',
@@ -964,34 +1056,35 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Andhra Pradesh', hi: 'आंध्र प्रदेश' },
     region: 'South',
     isUnionTerritory: false,
-    headquarters: 'CID Cyber Crime Police Station (Mangalagiri)',
-    nodalOfficer: 'SP Cyber Crime CID AP',
-    email: 'cid_cybercrime@ap.gov.in',
+    headquarters: 'CID Cyber Crime Police Station, Mangalagiri, Andhra Pradesh',
+    nodalOfficer: 'SP Cyber Crimes, CID, Andhra Pradesh Police',
+    email: 'cybercrimes1930@cid.appolice.gov.in',
     address: 'CID Headquarters, DGP Office Complex, Mangalagiri, Guntur, Andhra Pradesh - 522503',
     specialWomenCell: {
-      en: 'Disha Cyber Wing for Rapid Women Assistance',
-      hi: 'दिशा साइबर विंग त्वरित महिला सुरक्षा'
+      en: 'Women & Child Safety Wing (SHAKTHI), Andhra Pradesh Police',
+      hi: 'महिला एवं बाल सुरक्षा विंग (शक्ति), आंध्र प्रदेश पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
     women_helpline: '181',
-    women_helpline_coverage: 'Statewide (Disha 181)',
+    women_helpline_coverage: 'Statewide (Andhra Pradesh Police Women & Child Safety Wing / SHAKTHI)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: null,
+    women_mobile: '7993485111',
+    women_mobile_coverage: 'Statewide (AP Police Women & Child Safety Wing, 24x7)',
     women_whatsapp: null,
-    alternate_number: '0863-2340567',
-    alternate_number_label: 'CID Cyber Crime PS Mangalagiri',
-    alternate_number_coverage: 'Statewide (DGP Office Complex, Mangalagiri)',
+    alternate_number: '0863-2340559',
+    alternate_number_label: 'SP Cyber Crimes, CID',
+    alternate_number_coverage: 'Statewide (Andhra Pradesh Cyber Crime CID)',
     coverage: 'Statewide',
-    police_website: 'https://cid.appolice.gov.in',
-    women_child_website: 'https://wdcw.ap.gov.in',
-    source_url: 'https://cid.appolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0863-2340567',
-    websiteUrl: 'https://cid.appolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    police_website: 'https://appolice.gov.in',
+    women_child_website: 'https://womenandchildsafetywing.appolice.gov.in',
+    source_url: 'https://womenandchildsafetywing.appolice.gov.in/',
+    last_verified: '2026-09-27',
+    helplinePhone: '181',
+    websiteUrl: 'https://womenandchildsafetywing.appolice.gov.in',
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
 
   // --- East Region ---
@@ -1002,34 +1095,47 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'West Bengal', hi: 'पश्चिम बंगाल' },
     region: 'East',
     isUnionTerritory: false,
-    headquarters: 'Cyber Crime Police Station, CID WB (Kolkata)',
-    nodalOfficer: 'DIG / SP Cyber Crime CID',
-    email: 'cidwbcyber@gmail.com',
-    address: 'Bhabani Bhawan, 31 Belvedere Road, Alipore, Kolkata, West Bengal - 700027',
+
+    headquarters: 'West Bengal Cyber Crime Wing, Smart Connect, Action Area-II, 7th Rotary, New Town, West Bengal - 700161',
+    nodalOfficer: 'ADG & IGP, Cyber Crime Wing, West Bengal Police',
+    email: 'wbccw@policewb.gov.in',
+    address: 'West Bengal Cyber Crime Wing, Smart Connect, Action Area-II, 7th Rotary, New Town, West Bengal - 700161',
+
     specialWomenCell: {
-      en: 'CID WB Special Cell for Crimes Against Women Online',
-      hi: 'सीआईडी पश्चिम बंगाल महिला ऑनलाइन अपराध प्रकोष्ठ'
+      en: 'Women & Child Protection Cell (WCPC), West Bengal Cyber Crime Wing',
+      hi: 'महिला एवं बाल संरक्षण प्रकोष्ठ (WCPC), पश्चिम बंगाल साइबर क्राइम विंग'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
+
     women_helpline: '1091',
-    women_helpline_coverage: 'West Bengal (state-specific exception — no 181 line)',
+    women_helpline_coverage: 'Statewide (West Bengal Police Women Help Line)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
+
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '033-24795900',
-    alternate_number_label: 'CID Cyber Crime PS, Bhabani Bhawan, Kolkata',
-    alternate_number_coverage: 'Statewide (Alipore, Kolkata)',
+
+    alternate_number: '033-22021200',
+    alternate_number_label: 'West Bengal Cyber Crime Wing Office',
+    alternate_number_coverage: 'Statewide (WB Cyber Crime Wing, New Town)',
+
     coverage: 'Statewide',
-    police_website: 'https://policewb.gov.in',
-    women_child_website: 'https://wcd.wb.gov.in',
-    source_url: 'https://policewb.gov.in',
-    last_verified: null,
-    helplinePhone: '033-24795900',
-    websiteUrl: 'https://policewb.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    police_website: 'https://wbpolice.gov.in',
+    women_child_website: 'https://wcdsw.wb.gov.in',
+
+    source_url: 'https://cybercrimewing.wb.gov.in/ContactUs',
+
+    last_verified: '2026-09-27',
+
+    helplinePhone: '1091',
+    websiteUrl: 'https://wbpolice.gov.in',
+
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'bihar',
@@ -1038,34 +1144,47 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Bihar', hi: 'बिहार' },
     region: 'East',
     isUnionTerritory: false,
-    headquarters: 'Economic Offences Unit (EOU) Cyber Cell (Patna)',
-    nodalOfficer: 'DIG / SP Cyber Crime EOU Bihar',
+
+    headquarters: 'Bihar Police Headquarters, Sardar Patel Bhawan, Patna - 800023',
+    nodalOfficer: 'SP, Cyber Crime, Bihar Police',
     email: 'cybercell-bih@nic.in',
-    address: 'Economic Offences Unit, 3rd Floor, Technology Bhawan, Bailey Road, Patna, Bihar - 800001',
+    address: 'Bihar Police Headquarters, Sardar Patel Bhawan, Patna - 800023',
+
     specialWomenCell: {
-      en: 'EOU Women Cyber Harassment Response Wing',
-      hi: 'ईओयू महिला साइबर उत्पीड़न रिस्पॉन्स विंग'
+      en: 'Women Protection Helpline & Women Help Desks, Bihar Police',
+      hi: 'महिला सुरक्षा हेल्पलाइन एवं महिला सहायता डेस्क, बिहार पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+
+    women_helpline: '1091 / 181',
+    women_helpline_coverage: 'Statewide (1091: Bihar Police Women Protection Helpline; 181: Bihar WCDC Women Helpline, 24x7)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
+
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0612-2234044',
-    alternate_number_label: 'EOU Cyber Cell, Technology Bhawan, Patna',
-    alternate_number_coverage: 'Statewide (Bailey Road, Patna)',
+
+    alternate_number: '0612-2238098',
+    alternate_number_label: 'Cyber Crime / Grievance Contact, Bihar',
+    alternate_number_coverage: 'Statewide (Bihar Cyber Crime)',
+
     coverage: 'Statewide',
-    police_website: 'https://eou.bihar.gov.in',
+
+    police_website: 'https://police.bihar.gov.in',
     women_child_website: 'https://wcdc.bihar.gov.in',
-    source_url: 'https://eou.bihar.gov.in',
-    last_verified: null,
-    helplinePhone: '0612-2234044',
-    websiteUrl: 'https://eou.bihar.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    source_url: 'https://www.cybercrime.gov.in/Webform/Crime_NodalGrivanceList.aspx',
+
+    last_verified: '2026-09-27',
+
+    helplinePhone: '1091',
+    websiteUrl: 'https://police.bihar.gov.in',
+
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'odisha',
@@ -1074,34 +1193,47 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Odisha', hi: 'ओडिशा' },
     region: 'East',
     isUnionTerritory: false,
-    headquarters: 'CID Crime Branch Cyber Cell (Cuttack)',
-    nodalOfficer: 'SP Cyber Crime CID CB Odisha',
-    email: 'cyberps.cidcb.orpol@nic.in',
-    address: 'CID Crime Branch, Buxibazar, Cuttack, Odisha - 753001',
+
+    headquarters: 'Crime Against Women & Children Wing (CAW&CW), S.F.S.L Campus, Rasulgarh, Bhubaneswar - 751010',
+    nodalOfficer: 'ADGP, CIDCB, Odisha Police',
+    email: 'adgcaw.cw@odishapolice.gov.in',
+    address: 'S.F.S.L Campus, Rasulgarh, Bhubaneswar - 751010',
+
     specialWomenCell: {
-      en: 'Women & Child Crime Cyber Protection Unit',
-      hi: 'महिला व बाल अपराध साइबर सुरक्षा इकाई'
+      en: 'Crime Against Women & Children Wing (CAW&CW), Odisha Police',
+      hi: 'महिला एवं बाल अपराध विंग (CAW&CW), ओडिशा पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
+
     women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline_coverage: 'Statewide (Odisha Police / Women & Child Development Women Helpline)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
+
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0671-2305485',
-    alternate_number_label: 'CID Crime Branch Cyber Cell Cuttack',
-    alternate_number_coverage: 'Statewide (Buxibazar, Cuttack)',
+
+    alternate_number: '0674-2915790',
+    alternate_number_label: 'Crime Against Women & Children Wing Office',
+    alternate_number_coverage: 'Statewide (CAW&CW, Odisha Police)',
+
     coverage: 'Statewide',
-    police_website: 'https://odishapolice.gov.in',
+
+    police_website: 'https://police.odisha.gov.in',
     women_child_website: 'https://wcd.odisha.gov.in',
-    source_url: 'https://odishapolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0671-2305485',
-    websiteUrl: 'https://odishapolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    source_url: 'https://cawach.odisha.gov.in/',
+
+    last_verified: '2026-09-27',
+
+    helplinePhone: '181',
+    websiteUrl: 'https://police.odisha.gov.in',
+
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'jharkhand',
@@ -1110,35 +1242,49 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Jharkhand', hi: 'झारखंड' },
     region: 'East',
     isUnionTerritory: false,
-    headquarters: 'Cyber Crime Police Station, CID (Ranchi)',
-    nodalOfficer: 'SP Cyber Crime / IGP CID Jharkhand',
+
+    headquarters: 'Cyber Crime Police Station, Kutchery Chowk, Ranchi, Jharkhand',
+    nodalOfficer: 'S.P. Cyber Crime, CID, Jharkhand Police',
     email: 'cyberps@jhpolice.gov.in',
-    address: 'Cyber Crime Police Station, Kutchery Chowk, Old Judicial Complex, Ranchi, Jharkhand - 834001',
+    address: 'Cyber Crime Police Station, Kutchery Chowk, Ranchi, Jharkhand',
+
     specialWomenCell: {
-      en: 'Jharkhand Cyber Desk for Women Safety',
-      hi: 'झारखंड महिला सुरक्षा साइबर डेस्क'
+      en: 'Mahila Help Line, Jharkhand Police',
+      hi: 'महिला हेल्प लाइन, झारखंड पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
+
     women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline_coverage: 'Statewide (Jharkhand Women Helpline / Mahila Help Line)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: '9771432133',
-    women_mobile_coverage: 'CID Cyber Crime Police Station Mobile, Ranchi',
+
+    women_mobile: '9771432103, 9431542379',
+    women_mobile_coverage: 'Statewide (Jharkhand Police Mahila Help Line)',
+
     women_whatsapp: null,
-    alternate_number: '0651-2490044',
-    alternate_number_label: 'State Cyber Crime Police Station, Ranchi',
-    alternate_number_coverage: 'Statewide (Kutchery Chowk, Ranchi)',
+
+    alternate_number: '0651-2220060',
+    alternate_number_label: 'Cyber Crime Police Station, CID',
+    alternate_number_coverage: 'Statewide (Jharkhand Police Cyber Crime)',
+
     coverage: 'Statewide',
+
     police_website: 'https://jhpolice.gov.in',
-    women_child_website: 'https://wcdjharkhand.gov.in',
-    source_url: 'https://jhpolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0651-2490044',
+    women_child_website: 'https://www.jharkhand.gov.in/wcd',
+
+    source_url: 'https://www.jhpolice.gov.in/contact-us',
+
+    last_verified: '2026-09-27',
+
+    helplinePhone: '181',
     websiteUrl: 'https://jhpolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
 
   // --- Central Region ---
@@ -1149,34 +1295,34 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Madhya Pradesh', hi: 'मध्य प्रदेश' },
     region: 'Central',
     isUnionTerritory: false,
-    headquarters: 'State Cyber Crime Police Station HQ (Bhopal)',
-    nodalOfficer: 'ADG / SP Cyber Crime Police MP',
-    email: 'mpcyberpolice@mp.gov.in',
-    address: 'State Cyber Police HQ, Bhadbhada Road, Near Suraj Nagar, Bhopal, MP - 462003',
+    headquarters: 'MP Police Headquarters, Bhopal, Madhya Pradesh',
+    nodalOfficer: 'IG Cyber, Madhya Pradesh Police',
+    email: 'dig2-cybercell@mppolice.gov.in',
+    address: 'MP Police Headquarters, Bhopal, Madhya Pradesh',
     specialWomenCell: {
-      en: 'C-Safety Women Digital Shield & Urja Desks',
-      hi: 'सी-सेफ्टी महिला डिजिटल सुरक्षा एवं ऊर्जा डेस्क'
+      en: 'Crime Against Women Branch / URJA Help Desks, Madhya Pradesh Police',
+      hi: 'महिलाओं के विरुद्ध अपराध शाखा / ऊर्जा सहायता डेस्क, मध्य प्रदेश पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline: '1090',
+    women_helpline_coverage: 'Statewide (Madhya Pradesh Police Women Helpline)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0755-2770248',
-    alternate_number_label: 'State Cyber Police HQ Bhopal',
-    alternate_number_coverage: 'Statewide (Bhadbhada Road, Bhopal)',
+    alternate_number: '0755-2677339',
+    alternate_number_label: 'Cyber Help Line, Bhopal Police',
+    alternate_number_coverage: 'Bhopal / Madhya Pradesh Cyber Support',
     coverage: 'Statewide',
-    police_website: 'https://cyberpolice.mp.gov.in',
+    police_website: 'https://mppolice.gov.in',
     women_child_website: 'https://mpwcdmis.gov.in',
-    source_url: 'https://cyberpolice.mp.gov.in',
-    last_verified: null,
-    helplinePhone: '0755-2770248',
-    websiteUrl: 'https://cyberpolice.mp.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    source_url: 'https://dial112.mppolice.gov.in/about.php',
+    last_verified: '2026-09-27',
+    helplinePhone: '1090',
+    websiteUrl: 'https://mppolice.gov.in',
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'chhattisgarh',
@@ -1185,35 +1331,34 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Chhattisgarh', hi: 'छत्तीसगढ़' },
     region: 'Central',
     isUnionTerritory: false,
-    headquarters: 'State Cyber Police Station, PHQ (Nava Raipur)',
-    nodalOfficer: 'DIG / AIG Cyber Technical Services',
-    email: 'cybercell-phq.cg@gov.in',
-    address: 'State Cyber Police Station, Police Headquarters, Sector 19, Nava Raipur, Atal Nagar - 492002',
+    headquarters: 'Police Headquarters, Atal Nagar, Nava Raipur, Chhattisgarh - 492002',
+    nodalOfficer: 'AIG, Cyber Technical Services, Chhattisgarh Police',
+    email: 'aigtech-phq.cg@gov.in',
+    address: 'Police Headquarters, Atal Nagar, Nava Raipur, Chhattisgarh - 492002',
     specialWomenCell: {
-      en: 'Abhivyakti Women Cyber Safety Cell',
-      hi: 'अभिव्यक्ति महिला साइबर सुरक्षा प्रकोष्ठ'
+      en: 'Women Cell & Child Rights Cell, Chhattisgarh Police',
+      hi: 'महिला प्रकोष्ठ एवं बाल अधिकार प्रकोष्ठ, छत्तीसगढ़ पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline: '1091',
+    women_helpline_coverage: 'Statewide (Chhattisgarh Police Women Helpline)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: '9479191785',
-    women_mobile_coverage: 'State Cyber Police Station Mobile, Nava Raipur',
+    women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0771-2428383',
-    alternate_number_label: 'State Cyber Police Station, Nava Raipur',
-    alternate_number_coverage: 'Statewide (Sector 19, Nava Raipur)',
+    alternate_number: '0771-2511989',
+    alternate_number_label: 'DIG (Technical Services), Chhattisgarh Police',
+    alternate_number_coverage: 'Statewide (Chhattisgarh Police Cyber Technical Services)',
     coverage: 'Statewide',
     police_website: 'https://cgpolice.gov.in',
     women_child_website: 'https://cgwcd.gov.in',
-    source_url: 'https://cgpolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0771-2428383',
+    source_url: 'https://www.cybercrime.gov.in/webform/Crime_NodalGrivanceList.aspx',
+    last_verified: '2026-09-27',
+    helplinePhone: '1091',
     websiteUrl: 'https://cgpolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
 
   // --- North-East Region (8 States) ---
@@ -1224,34 +1369,49 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Assam', hi: 'असम' },
     region: 'North-East',
     isUnionTerritory: false,
-    headquarters: 'CID Cyber Police Station (Guwahati)',
-    nodalOfficer: 'SP Cyber Crime Cell CID Assam',
-    email: 'spp-cid@assampolice.gov.in',
-    address: 'CID HQ, Ulubari, Guwahati, Assam - 781007',
+
+    headquarters: 'CID Headquarters, Ulubari, Guwahati, Assam - 781007',
+    nodalOfficer: 'SP Cyber Crime-2, CID, Assam Police',
+    email: 'sp-cid-cyber2@assampolice.gov.in',
+    address: 'CID Headquarters, Ulubari, Guwahati, Assam - 781007',
+
     specialWomenCell: {
-      en: 'Assam CID Women Cyber Safety Cell',
-      hi: 'असम सीआईडी महिला साइबर सुरक्षा प्रकोष्ठ'
+      en: 'Crime Against Women & Children, CID, Assam Police',
+      hi: 'महिलाओं एवं बच्चों के विरुद्ध अपराध, सीआईडी, असम पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+
+    women_helpline: '9345215029 / 0361-2521242',
+    women_helpline_coverage: 'Statewide (Assam Police Women Helpline)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: null,
+
+    women_mobile: '9345215029',
+    women_mobile_coverage: 'Statewide (Assam Police Women Helpline)',
+
     women_whatsapp: null,
-    alternate_number: '0361-2462444',
-    alternate_number_label: 'CID Cyber Police Station Guwahati',
-    alternate_number_coverage: 'Statewide (Ulubari, Guwahati)',
+
+    alternate_number: '0361-2521618',
+    alternate_number_label: 'IGP, CID / Cyber Crime Grievance Contact',
+    alternate_number_coverage: 'Statewide (Assam Police CID Cyber Crime)',
+
     coverage: 'Statewide',
+
     police_website: 'https://police.assam.gov.in',
-    women_child_website: 'https://wcd.assam.gov.in',
-    source_url: 'https://police.assam.gov.in',
-    last_verified: null,
-    helplinePhone: '0361-2462444',
+    women_child_website: 'https://womenandchild.assam.gov.in',
+
+    source_url: 'https://police.assam.gov.in/frontimpotentdata/womens-rights-and-helpline',
+
+    last_verified: '2026-09-27',
+
+    helplinePhone: '9345215029',
     websiteUrl: 'https://police.assam.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'arunachal_pradesh',
@@ -1260,34 +1420,34 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Arunachal Pradesh', hi: 'अरुणाचल प्रदेश' },
     region: 'North-East',
     isUnionTerritory: false,
-    headquarters: 'Cyber Crime Police Station, PHQ (Itanagar)',
-    nodalOfficer: 'SP Crime / SIT Arunachal Police',
+    headquarters: 'Police Headquarters, Itanagar, Arunachal Pradesh - 791111',
+    nodalOfficer: 'SP SIT / Cyber Crime, Arunachal Pradesh Police',
     email: 'spsit@arunpol.nic.in',
-    address: 'Police Headquarters, Cyber Crime Branch, Itanagar, Arunachal Pradesh - 791113',
+    address: 'Police Headquarters, Itanagar, Arunachal Pradesh - 791111',
     specialWomenCell: {
-      en: 'Special SIT Cyber Crime Cell for Women',
-      hi: 'महिला सुरक्षा विशेष साइबर एसआईटी'
+      en: 'Women Help Desks & Women Police Stations, Arunachal Pradesh Police',
+      hi: 'महिला सहायता डेस्क एवं महिला पुलिस थाने, अरुणाचल प्रदेश पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline: '1091',
+    women_helpline_coverage: 'Statewide (Arunachal Pradesh Police Women Helpline)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0360-2291065',
-    alternate_number_label: 'PHQ Cyber Crime Branch Itanagar',
-    alternate_number_coverage: 'Statewide (PHQ Itanagar)',
+    alternate_number: '9436040703',
+    alternate_number_label: 'IGP (Crime) / Cyber Crime Grievance Contact',
+    alternate_number_coverage: 'Statewide (Arunachal Pradesh Police)',
     coverage: 'Statewide',
     police_website: 'https://arunpol.nic.in',
-    women_child_website: 'https://wcdarunachal.gov.in',
-    source_url: 'https://arunpol.nic.in',
-    last_verified: null,
-    helplinePhone: '0360-2291065',
+    women_child_website: 'http://arunachalswwcd.gov.in',
+    source_url: 'https://www.cybercrime.gov.in/webform/Crime_NodalGrivanceList.aspx',
+    last_verified: '2026-09-27',
+    helplinePhone: '1091',
     websiteUrl: 'https://arunpol.nic.in',
-    isVerified: false,
-    verifiedDate: undefined
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'manipur',
@@ -1296,34 +1456,34 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Manipur', hi: 'मणिपुर' },
     region: 'North-East',
     isUnionTerritory: false,
-    headquarters: 'Cyber Crime Police Station, CID Crime Branch (Imphal)',
-    nodalOfficer: 'SP CID (CB) / Cyber Crime Manipur',
-    email: 'cybercrime-mn@gov.in',
-    address: 'CID (Crime Branch) Police Station, Babupara, Imphal, Manipur - 795001',
+    headquarters: 'Manipur Police Headquarters, Mantripukhri, Imphal East, Manipur - 795002',
+    nodalOfficer: 'SP Cyber Crime, Manipur Police',
+    email: 'sp-cybercrime.mn@manipur.gov.in',
+    address: 'Manipur Police Headquarters, Mantripukhri, Imphal East, Manipur - 795002',
     specialWomenCell: {
-      en: 'Manipur Women Cyber Support Desk',
-      hi: 'मणिपुर महिला साइबर सहायता डेस्क'
+      en: 'Crime Against Women & Children (CAW & C), Manipur Police',
+      hi: 'महिलाओं एवं बच्चों के विरुद्ध अपराध (CAW & C), मणिपुर पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
     women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline_coverage: 'Statewide (Manipur Police Women Helpline)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
     women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0385-2451375',
-    alternate_number_label: 'CID Crime Branch Cyber PS Imphal',
-    alternate_number_coverage: 'Statewide (Babupara, Imphal)',
+    alternate_number: '0385-2810210',
+    alternate_number_label: 'SP Cyber Crime, Manipur Police',
+    alternate_number_coverage: 'Statewide (Manipur Police Cyber Crime)',
     coverage: 'Statewide',
     police_website: 'https://manipurpolice.gov.in',
-    women_child_website: 'https://socialwelfare.mn.gov.in',
-    source_url: 'https://manipurpolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0385-2451375',
+    women_child_website: 'https://www.socialwelfare.mn.gov.in',
+    source_url: 'https://manipurpolice.gov.in/?page_id=3261',
+    last_verified: '2026-09-27',
+    helplinePhone: '181',
     websiteUrl: 'https://manipurpolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'meghalaya',
@@ -1332,35 +1492,34 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Meghalaya', hi: 'मेघालय' },
     region: 'North-East',
     isUnionTerritory: false,
-    headquarters: 'Cyber Crime Wing CID (Shillong)',
-    nodalOfficer: 'SP / In-charge Cyber Crime Wing',
+    headquarters: 'Police Headquarters, Secretariat Hills, Shillong - 793001, Meghalaya',
+    nodalOfficer: 'DSP, Cyber Crime Wing, Meghalaya Police',
     email: 'ccw-meg@gov.in',
-    address: 'Cyber Crime Wing CID, Police Headquarters, Secretariat Hills, Shillong, Meghalaya - 793001',
+    address: 'Police Headquarters, Secretariat Hills, Shillong - 793001, Meghalaya',
     specialWomenCell: {
-      en: 'Meghalaya Cyber Assistance Cell for Women',
-      hi: 'मेघालय महिला साइबर सहायता प्रकोष्ठ'
+      en: 'Women Police Stations & Crime Against Women (CAW) Cell, Meghalaya Police',
+      hi: 'महिला पुलिस थाने एवं महिलाओं के विरुद्ध अपराध (CAW) प्रकोष्ठ, मेघालय पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline: '1091 / 181',
+    women_helpline_coverage: 'Statewide (1091: Police women helpline; 181: Meghalaya Social Welfare Women Helpline)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: '9402519391',
-    women_mobile_coverage: 'Cyber Crime Wing CID Mobile, Shillong',
+    women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0364-2503259',
-    alternate_number_label: 'Cyber Crime Wing CID Shillong',
-    alternate_number_coverage: 'Statewide (Secretariat Hills, Shillong)',
+    alternate_number: '9402519391',
+    alternate_number_label: 'SP (Cyber), Meghalaya Police / Cyber Crime Grievance Contact',
+    alternate_number_coverage: 'Statewide (Meghalaya Police Cyber Crime)',
     coverage: 'Statewide',
     police_website: 'https://megpolice.gov.in',
     women_child_website: 'https://megsocialwelfare.gov.in',
-    source_url: 'https://megpolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0364-2503259',
+    source_url: 'https://www.cybercrime.gov.in/webform/Crime_NodalGrivanceList.aspx',
+    last_verified: '2026-09-27',
+    helplinePhone: '1091',
     websiteUrl: 'https://megpolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'mizoram',
@@ -1369,36 +1528,35 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Mizoram', hi: 'मिजोरम' },
     region: 'North-East',
     isUnionTerritory: false,
-    headquarters: 'Cyber Crime Police Station, CID Crime (Aizawl)',
-    nodalOfficer: 'SP CID (Crime) Mizoram',
-    email: 'cidcrime-mz@nic.in',
-    address: 'CID Crime Complex, Khatla, Aizawl, Mizoram - 796001',
+    headquarters: 'Police Headquarters, Khatla, Aizawl, Mizoram - 796001',
+    nodalOfficer: 'SP Cyber Crime, Mizoram Police',
+    email: 'cybercrime.sp@mizoram.gov.in',
+    address: 'Police Headquarters, Khatla, Aizawl, Mizoram - 796001',
     specialWomenCell: {
-      en: 'Mizoram Cyber Crime Women Assistance Unit',
-      hi: 'मिजोरम साइबर अपराध महिला सहायता इकाई'
+      en: 'All Women Police Station, Aizawl, Mizoram Police',
+      hi: 'अखिल महिला पुलिस थाना, आइजोल, मिजोरम पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline: '1091',
+    women_helpline_coverage: 'Statewide (Mizoram Police Women Helpline)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: '8119935420',
-    women_mobile_coverage: 'CID Crime Cyber PS Mobile, Aizawl',
+    women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '0389-2320416',
-    alternate_number_label: 'CID Crime Cyber PS Aizawl',
-    alternate_number_coverage: 'Statewide (Khatla, Aizawl)',
+    alternate_number: '0389-2334682',
+    alternate_number_label: 'DGP / Cyber Crime Grievance Contact',
+    alternate_number_coverage: 'Statewide (Mizoram Police)',
     coverage: 'Statewide',
     police_website: 'https://police.mizoram.gov.in',
-    women_child_website: 'https://swd.mizoram.gov.in',
-    source_url: 'https://police.mizoram.gov.in',
-    last_verified: null,
-    helplinePhone: '0389-2320416',
+    women_child_website: 'https://socialwelfare.mizoram.gov.in',
+    source_url: 'https://www.cybercrime.gov.in/webform/Crime_NodalGrivanceList.aspx',
+    last_verified: '2026-09-27',
+    helplinePhone: '1091',
     websiteUrl: 'https://police.mizoram.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
-  },
+    isVerified: true,
+    verifiedDate: '2026-09-27'
+    },
   {
     id: 'nagaland',
     state: 'Nagaland',
@@ -1406,34 +1564,35 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Nagaland', hi: 'नागालैंड' },
     region: 'North-East',
     isUnionTerritory: false,
-    headquarters: 'State Cyber Crime Police Station, PHQ (Kohima)',
-    nodalOfficer: 'DIG CID / SP Cyber Crime Nagaland',
-    email: 'scrb-ngl@nic.in',
-    address: 'Police Headquarters, P.R. Hill, Kohima, Nagaland - 797001',
+    headquarters: 'Nagaland Police Headquarters, P.R. Hill, Kohima - 797001, Nagaland',
+    nodalOfficer: 'IGP CID, Nagaland Police',
+    email: 'spcyber-ngl@gov.in',
+    address: 'Nagaland Police Headquarters, P.R. Hill, Kohima - 797001, Nagaland',
     specialWomenCell: {
-      en: 'Women & Child Cyber Protection Desk Nagaland',
-      hi: 'महिला एवं बाल साइबर सुरक्षा डेस्क नागालैंड'
+      en: 'Women Police Stations, Nagaland Police',
+      hi: 'महिला पुलिस थाने, नागालैंड पुलिस'
     },
     police_emergency: '112',
     police_coverage: 'Statewide',
     women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline_coverage: 'Statewide (Nagaland Women Helpline, 24x7)',
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: null,
+    women_mobile: '9485239098',
+    women_mobile_coverage: 'Statewide (Nagaland Women Helpline alternate mobile)',
     women_whatsapp: null,
-    alternate_number: '0370-2243711',
-    alternate_number_label: 'State Cyber Crime PS Kohima',
-    alternate_number_coverage: 'Statewide (P.R. Hill, Kohima)',
+    alternate_number: '6009308003',
+    alternate_number_label: 'ADGP (L&O) / Cyber Crime Grievance Contact',
+    alternate_number_coverage: 'Statewide (Nagaland Police Cyber Crime)',
     coverage: 'Statewide',
     police_website: 'https://police.nagaland.gov.in',
-    women_child_website: 'https://socialwelfare.nagaland.gov.in',
-    source_url: 'https://police.nagaland.gov.in',
-    last_verified: null,
-    helplinePhone: '0370-2243711',
+    women_child_website: 'https://dsw.nagaland.gov.in',
+    source_url: 'https://www.cybercrime.gov.in/Webform/Crime_NodalGrivanceList.aspx',
+    last_verified: '2026-09-27',
+    helplinePhone: '181',
     websiteUrl: 'https://police.nagaland.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
     id: 'sikkim',
@@ -1442,73 +1601,84 @@ export const RAW_STATE_CYBER_CELLS: StateCyberCell[] = [
     stateName: { en: 'Sikkim', hi: 'सिक्किम' },
     region: 'North-East',
     isUnionTerritory: false,
-    headquarters: 'Cyber Crime Cell, Criminal Investigation Dept. (Gangtok)',
-    nodalOfficer: 'SP CID / In-charge Cyber Crime PS',
-    email: 'oc-cidpolice@sikkimpolice.nic.in',
-    address: 'CID Cyber Police Station, PHQ Gangtok, East Sikkim - 737101',
+
+    headquarters: 'Police Headquarters, Gangtok, Sikkim',
+    nodalOfficer: 'DIGP, CB-CID, Sikkim Police',
+    email: 'spcid@sikkimpolice.nic.in',
+    address: 'Police Headquarters, Gangtok, Sikkim',
+
     specialWomenCell: {
-      en: 'Sikkim Police Women & Child Cyber Cell',
-      hi: 'सिक्किम पुलिस महिला व बाल साइबर सेल'
+      en: 'Crime Against Women, Weaker Sections & PCR Cell, CB-CID, Sikkim Police',
+      hi: 'महिलाओं, कमजोर वर्गों के विरुद्ध अपराध एवं पीसीआर प्रकोष्ठ, सीबी-सीआईडी, सिक्किम पुलिस'
     },
+
     police_emergency: '112',
     police_coverage: 'Statewide',
+
     women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
+    women_helpline_coverage: 'Statewide (Sikkim Police Women Helpline)',
+
     child_helpline: '1098',
     child_helpline_coverage: 'Statewide',
-    women_mobile: '6294550027',
-    women_mobile_coverage: 'CID Cyber Police Station Mobile, Gangtok',
+
+    women_mobile: null,
     women_whatsapp: null,
-    alternate_number: '03592-202087',
-    alternate_number_label: 'CID Cyber Police Station Gangtok',
-    alternate_number_coverage: 'Statewide (PHQ Gangtok)',
+
+    alternate_number: '9046245066',
+    alternate_number_label: 'Police Inspector / CID Cyber Crime Grievance Contact',
+    alternate_number_coverage: 'Statewide (Sikkim Police Cyber Crime / CID)',
+
     coverage: 'Statewide',
-    police_website: 'https://sikkimpolice.nic.in',
-    women_child_website: 'https://sikkimsocialwelfare.gov.in',
-    source_url: 'https://sikkimpolice.nic.in',
-    last_verified: null,
-    helplinePhone: '03592-202087',
-    websiteUrl: 'https://sikkimpolice.nic.in',
-    isVerified: false,
-    verifiedDate: undefined
+
+    police_website: 'https://police.sikkim.gov.in',
+    women_child_website: 'https://www.womenandchild.sikkim.gov.in',
+
+    source_url: 'https://police.sikkim.gov.in/visitor/telephonepolice',
+
+    last_verified: '2026-09-27',
+
+    helplinePhone: '181',
+    websiteUrl: 'https://police.sikkim.gov.in',
+
+    isVerified: true,
+    verifiedDate: '2026-09-27'
   },
   {
-    id: 'tripura',
-    state: 'Tripura',
-    state_code: 'TR',
-    stateName: { en: 'Tripura', hi: 'त्रिपुरा' },
-    region: 'North-East',
-    isUnionTerritory: false,
-    headquarters: 'Cyber Crime Police Station, CID Complex (Agartala)',
-    nodalOfficer: 'SP CID / Cyber Crime Officer Tripura',
-    email: 'spcid-tri@nic.in',
-    address: 'Cyber Crime Police Station, A.D. Nagar (Arundhati Nagar), Agartala, Tripura - 799003',
-    specialWomenCell: {
-      en: 'Tripura CID Women Cyber Safety Helpline',
-      hi: 'त्रिपुरा सीआईडी महिला साइबर सुरक्षा हेल्पलाइन'
-    },
-    police_emergency: '112',
-    police_coverage: 'Statewide',
-    women_helpline: '181',
-    women_helpline_coverage: 'Statewide',
-    child_helpline: '1098',
-    child_helpline_coverage: 'Statewide',
-    women_mobile: '9436123828',
-    women_mobile_coverage: 'CID Cyber Crime PS Mobile, Agartala',
-    women_whatsapp: null,
-    alternate_number: '0381-2376963',
-    alternate_number_label: 'Cyber Crime Police Station Agartala',
-    alternate_number_coverage: 'Statewide (A.D. Nagar, Agartala)',
-    coverage: 'Statewide',
-    police_website: 'https://tripurapolice.gov.in',
-    women_child_website: 'https://socialwelfare.tripura.gov.in',
-    source_url: 'https://tripurapolice.gov.in',
-    last_verified: null,
-    helplinePhone: '0381-2376963',
-    websiteUrl: 'https://tripurapolice.gov.in',
-    isVerified: false,
-    verifiedDate: undefined
-  }
+  id: 'tripura',
+  state: 'Tripura',
+  state_code: 'TR',
+  stateName: { en: 'Tripura', hi: 'त्रिपुरा' },
+  region: 'North-East',
+  isUnionTerritory: false,
+  headquarters: 'Old Secretariat Complex, Agartala, Tripura - 799001',
+  nodalOfficer: 'SP Cyber Crime, Tripura Police',
+  email: 'spcybercrime@tripurapolice.nic.in',
+  address: 'Old Secretariat Complex, Agartala, Tripura - 799001',
+  specialWomenCell: {
+    en: 'Women Police Stations & Crime Against Women Unit, Tripura Police',
+    hi: 'महिला पुलिस थाने एवं महिलाओं के विरुद्ध अपराध इकाई, त्रिपुरा पुलिस'
+  },
+  police_emergency: '112',
+  police_coverage: 'Statewide',
+  women_helpline: '1091 / 181',
+  women_helpline_coverage: 'Statewide (1091: Women Helpline; 181: Tripura Women Helpline under Social Welfare / WCD)',
+  child_helpline: '1098',
+  child_helpline_coverage: 'Statewide',
+  women_mobile: null,
+  women_whatsapp: null,
+  alternate_number: '0381-2376979',
+  alternate_number_label: 'SP (SCRB) / Cyber Crime Grievance Contact',
+  alternate_number_coverage: 'Statewide (Tripura Police Cyber Crime / SCRB)',
+  coverage: 'Statewide',
+  police_website: 'https://police.tripura.gov.in',
+  women_child_website: 'https://socialwelfare.tripura.gov.in',
+  source_url: 'https://www.cybercrime.gov.in/webform/Crime_NodalGrivanceList.aspx',
+  last_verified: '2026-09-27',
+  helplinePhone: '1091',
+  websiteUrl: 'https://police.tripura.gov.in',
+  isVerified: true,
+  verifiedDate: '2026-09-27'
+ }
 ];
 
 /**
