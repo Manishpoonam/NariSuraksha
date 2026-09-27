@@ -195,6 +195,23 @@ export const EmergencyCockpit: React.FC<EmergencyCockpitProps> = ({
     goToStep(nextStep);
   };
 
+  const handleResetRescuePath = () => {
+    hapticAction();
+    setCompletedSteps([]);
+    setEvidenceChecks({
+      item1: false,
+      item2: false,
+      item3: false,
+    });
+    try {
+      sessionStorage.removeItem(RESCUE_COMPLETED_STEPS_KEY);
+      sessionStorage.removeItem(RESCUE_STEP_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+    goToStep(1);
+  };
+
   const handleSelectScenario = (key: CrisisScenarioKey) => {
     if (key === selectedScenario) return;
     hapticAction();
@@ -437,6 +454,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
         currentStep={currentStep}
         completedStepNumbers={completedSteps}
         onStepClick={goToStep}
+        onReset={handleResetRescuePath}
         language={language}
         theme="dark"
         className="rounded-none border-x-0 border-t-0 border-b border-white/10 px-3 sm:px-6 md:px-8 py-3.5 sm:py-4 bg-[#201B52]"
@@ -1488,8 +1506,8 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                           ? 'साक्ष्य सुरक्षित हैं और खतरे की रोकथाम की जा चुकी है। नीचे दिए गए विधिक उपायों में से आवश्यक कार्रवाई चुनें:' 
                           : 'Evidence is secured and threat containment is active. Execute your prioritized immediate remedy below:')
                       : (isHindi 
-                          ? 'अनुशंसित तैयारी चरण अभी खुले हैं। आप सीधे नीचे दिए गए विधिक उपाय चुन सकती हैं, या किसी भी समय खतरे की पहचान (चरण 2) व साक्ष्य सुरक्षा (चरण 3) पर वापस जा सकती हैं।' 
-                          : 'Recommended preparation steps are open. You can execute direct remedies below, or revisit threat containment (Step 2) and evidence preservation (Step 3) at any time.')}
+                          ? 'पूर्ण साक्ष्य सुरक्षा के लिए चरण 2 और 3 पूरे करें, या यदि आपको अभी कार्रवाई करनी है तो नीचे आगे बढ़ें:' 
+                          : 'Complete Steps 2-3 for full evidence protection, or proceed if you need to act now:')}
                   </p>
                 </div>
 
@@ -1620,7 +1638,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                     <div className="space-y-1.5">
                       <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
                         <FileCheck2 className="w-4 h-4" />
-                        <span>{isHindi ? '24-घंटे Takedown नोटिस' : '24-Hour Intermediando Takedown'}</span>
+                        <span>{isHindi ? '24-घंटे Takedown नोटिस' : '24-Hour Intermediary Takedown'}</span>
                       </div>
                       <p className="text-xs text-[#D2CCE7] leading-relaxed">
                         {isHindi
@@ -1728,7 +1746,7 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
 
                     <button
                       type="button"
-                      onClick={() => goToStep(1)}
+                      onClick={handleResetRescuePath}
                       className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-[#FAF8F3] text-xs sm:text-sm font-medium transition-colors border border-white/20 min-h-[44px]"
                     >
                       <RefreshCw className="w-3.5 h-3.5 text-[#F3C5D6]" />
