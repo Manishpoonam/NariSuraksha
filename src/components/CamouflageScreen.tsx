@@ -1,16 +1,62 @@
-import React, { useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { BookOpen, Search, Sun, CloudRain, CheckSquare, Clock, FileText } from 'lucide-react';
+import { BookOpen, Search, Sun, CloudRain, CheckSquare, Square, FileText } from 'lucide-react';
 
 interface CamouflageScreenProps {
   onRestore: () => void;
+}
+
+interface ScheduleTask {
+  id: string;
+  time: string;
+  title: string;
+  completed: boolean;
 }
 
 export const CamouflageScreen: React.FC<CamouflageScreenProps> = ({ onRestore }) => {
   const tapCountRef = useRef(0);
   const tapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Covert triple-tap on the top-left academic book icon for mobile restoration
+  // 1. Dynamic live date computed entirely client-side with zero external network requests
+  const [currentDate, setCurrentDate] = useState<Date>(() => new Date());
+
+  useEffect(() => {
+    // Keep date updated dynamically so it is never stale
+    const timer = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 30000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formattedFullDate = currentDate.toLocaleDateString('en-IN', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+
+  const formattedHeaderDate = currentDate.toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+
+  // 2. Genuinely interactive Today's Schedule checkbox items (client-side only)
+  const [tasks, setTasks] = useState<ScheduleTask[]>([
+    { id: '1', time: '09:30 AM', title: 'Chapter 4 Revision', completed: true },
+    { id: '2', time: '11:00 AM', title: 'Economics Notes', completed: true },
+    { id: '3', time: '03:30 PM', title: 'Library Assignment', completed: false },
+  ]);
+
+  const handleToggleTask = (id: string) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
+  };
+
+  // Covert backup triple-tap on the top-left academic book icon for mobile restoration
   const handleSecretTap = () => {
     tapCountRef.current += 1;
     if (tapTimeoutRef.current) {
@@ -46,7 +92,7 @@ export const CamouflageScreen: React.FC<CamouflageScreenProps> = ({ onRestore })
         {/* Header with authentic study camouflage */}
         <div className="flex items-center justify-between border-b border-[#E8E2DC] pb-4 mb-6">
           <div className="flex items-center gap-3">
-            {/* Secret triple-tap target on the static book icon (no cursor or visual tell) */}
+            {/* Secret target on the static book icon (no visual tell) */}
             <div 
               onClick={handleSecretTap}
               className="w-10 h-10 bg-[#F3EFEC] text-[#8B6D5C] rounded-2xl flex items-center justify-center shrink-0 select-none"
@@ -55,13 +101,18 @@ export const CamouflageScreen: React.FC<CamouflageScreenProps> = ({ onRestore })
             </div>
             <div>
               <h1 className="text-lg sm:text-xl font-bold text-[#1A1A1A] tracking-tight">Study Notes & Daily Planner</h1>
-              <p className="text-xs sm:text-sm text-[#666]">General Studies Revision & Academic Project Tasks</p>
+              <p className="text-xs sm:text-sm text-[#666]">
+                <span className="sm:hidden font-medium text-[#444]">{formattedHeaderDate} • </span>
+                General Studies Revision & Academic Project Tasks
+              </p>
             </div>
           </div>
           
-          {/* Authentic academic semester status badge replacing the previous Resume button */}
-          <span className="hidden sm:inline-block text-xs text-[#888] font-medium bg-[#FAF9F6] border border-[#E8E2DC] px-3.5 py-1.5 rounded-full">
-            Semester 2 • Syllabus Tracker
+          {/* Authentic academic semester status badge with live client-side date */}
+          <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-[#888] font-medium bg-[#FAF9F6] border border-[#E8E2DC] px-3.5 py-1.5 rounded-full">
+            <span>{formattedFullDate}</span>
+            <span className="text-[#CCC]">•</span>
+            <span>Semester 2</span>
           </span>
         </div>
 
@@ -73,26 +124,40 @@ export const CamouflageScreen: React.FC<CamouflageScreenProps> = ({ onRestore })
             transition={{ duration: 0.25, delay: 0.05 }}
             className="p-5 bg-[#FAF9F6] rounded-2xl border border-[#E8E2DC]"
           >
-            <div className="flex items-center gap-2 text-[#8B6D5C] font-bold text-xs uppercase tracking-wider mb-2.5">
-              <Sun className="w-4 h-4" />
-              <span>Today's Schedule</span>
+            <div className="flex items-center justify-between text-[#8B6D5C] font-bold text-xs uppercase tracking-wider mb-2.5">
+              <div className="flex items-center gap-2">
+                <Sun className="w-4 h-4" />
+                <span>Today's Schedule</span>
+              </div>
+              <span className="text-[10px] font-medium text-[#888] normal-case tracking-normal">
+                {formattedHeaderDate}
+              </span>
             </div>
-            <ul className="text-xs sm:text-sm text-[#444] space-y-2.5">
-              <li className="flex items-center gap-2">
-                <CheckSquare className="w-4 h-4 text-[#8B6D5C] shrink-0" />
-                <span>09:30 AM - Chapter 4 Revision</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckSquare className="w-4 h-4 text-[#8B6D5C] shrink-0" />
-                <span>11:00 AM - Economics Notes</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#AAA] shrink-0" />
-                <span>03:30 PM - Library Assignment</span>
-              </li>
+            {/* Interactive checkboxes for Schedule Tasks */}
+            <ul className="text-xs sm:text-sm text-[#444] space-y-2.5" role="list">
+              {tasks.map((task) => (
+                <li key={task.id}>
+                  <button
+                    type="button"
+                    onClick={() => handleToggleTask(task.id)}
+                    className="w-full flex items-center gap-2 text-left cursor-pointer p-1 -m-1 rounded-lg hover:bg-black/5 transition-colors group select-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#8B6D5C]"
+                    aria-label={`Toggle ${task.title}`}
+                  >
+                    {task.completed ? (
+                      <CheckSquare className="w-4 h-4 text-[#8B6D5C] shrink-0" />
+                    ) : (
+                      <Square className="w-4 h-4 text-[#AAA] group-hover:text-[#8B6D5C] shrink-0" />
+                    )}
+                    <span className={task.completed ? 'line-through text-[#888] transition-all' : 'text-[#333] transition-all'}>
+                      {task.time} - {task.title}
+                    </span>
+                  </button>
+                </li>
+              ))}
             </ul>
           </motion.div>
 
+          {/* Static, plausible weather value - NO external API call to preserve 100% on-device privacy */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}

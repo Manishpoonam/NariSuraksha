@@ -348,10 +348,19 @@ export const LegalDisclaimerPage: React.FC<LegalDisclaimerPageProps> = ({
 
       {/* 3. MINIMAL FOOTER */}
       <footer className="w-full px-4 sm:px-6 py-4 text-center border-t border-[#26215C]/10 text-xs text-[#5A5672]">
-        <p>
-          {isHindi 
-            ? 'नारीसुरक्षा • शून्य डेटा ट्रैकिंग • आपकी सुरक्षा हमारी प्राथमिकता है' 
-            : 'NariSuraksha • Zero Data Tracking • Your Safety & Agency First'}
+        <p className="flex items-center justify-center gap-2 flex-wrap">
+          <span>
+            {isHindi 
+              ? 'नारीसुरक्षा • शून्य डेटा ट्रैकिंग • आपकी सुरक्षा हमारी प्राथमिकता है' 
+              : 'NariSuraksha • Zero Data Tracking • Your Safety & Agency First'}
+          </span>
+          <span className="text-[#26215C]/20">•</span>
+          <a
+            href="mailto:manishpoonamkashyap@gmail.com?subject=NariSuraksha%20Feedback%20/%20Issue"
+            className="hover:text-[#26215C] underline underline-offset-2 transition-colors cursor-pointer"
+          >
+            {isHindi ? 'समस्या रिपोर्ट करें / फीडबैक' : 'Report an issue / Feedback'}
+          </a>
         </p>
       </footer>
     </div>

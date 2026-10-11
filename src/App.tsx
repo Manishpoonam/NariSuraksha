@@ -595,7 +595,7 @@ export default function App() {
       return;
     }
     if (isCamouflage) {
-      setIsCamouflage(false);
+      // While in camouflage, trap back navigation - disguise cannot be dismissed via back button
       return;
     }
     if (showDeepScenarios) {
@@ -674,7 +674,9 @@ export default function App() {
         return;
       }
       if (isCamouflage) {
-        setIsCamouflage(false);
+        // CRITICAL: TRAP BACK-NAVIGATION WHILE DISGUISED
+        // Pushing a new disguise history entry traps the browser so repeated back presses never expose the real app
+        window.history.pushState({ isCamouflage: true, disguiseTrap: true }, '');
         return;
       }
       if (showDeepScenarios) {
@@ -752,6 +754,9 @@ export default function App() {
         setIsCamouflage((prev) => {
           const next = !prev;
           hapticCamouflage(next);
+          if (next) {
+            window.history.pushState({ isCamouflage: true, disguiseTrap: true }, '');
+          }
           return next;
         });
       }
@@ -760,14 +765,24 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // 3-Finger Touch Emergency Gesture Hook (blocks Chrome reload gesture, triggers haptic + camouflage)
+  // 3-Finger Touch Emergency Gesture Hook (bidirectional swipe toggle: real app <-> disguise)
   useThreeFingerEmergencyGesture(() => {
-    setIsCamouflage(true);
+    setIsCamouflage((prev) => {
+      const next = !prev;
+      hapticCamouflage(next);
+      if (next) {
+        window.history.pushState({ isCamouflage: true, disguiseTrap: true }, '');
+      }
+      return next;
+    });
   });
 
   const handleTriggerCamouflage = (entering: boolean = true) => {
     hapticCamouflage(entering);
     setIsCamouflage(entering);
+    if (entering) {
+      window.history.pushState({ isCamouflage: true, disguiseTrap: true }, '');
+    }
   };
 
   const handleTriggerSOS = () => {

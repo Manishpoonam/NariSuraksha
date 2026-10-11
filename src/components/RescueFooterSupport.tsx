@@ -608,6 +608,16 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Anonymous Project Feedback / Issue Link */}
+      <div className="pt-2 text-center text-xs text-[#85819C]">
+        <a
+          href="mailto:manishpoonamkashyap@gmail.com?subject=NariSuraksha%20Feedback%20/%20Issue"
+          className="hover:text-[#26215C] underline underline-offset-2 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+        >
+          <span>{isHindi ? 'समस्या रिपोर्ट करें / सुझाव' : 'Report an issue / Feedback'}</span>
+        </a>
+      </div>
     </div>
   );
 };

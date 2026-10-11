@@ -296,10 +296,19 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
             </span>
           </div>
 
-          <div className="text-[11px] text-[#5A5672] font-medium">
-            {isHindi
-              ? 'भारतीय कानून के तहत सुरक्षित।'
-              : 'Protected under Indian law.'}
+          <div className="flex items-center gap-2 text-[11px] text-[#5A5672] flex-wrap justify-center sm:justify-end">
+            <span>
+              {isHindi
+                ? 'भारतीय कानून के तहत सुरक्षित।'
+                : 'Protected under Indian law.'}
+            </span>
+            <span className="text-[#26215C]/20">•</span>
+            <a
+              href="mailto:manishpoonamkashyap@gmail.com?subject=NariSuraksha%20Feedback%20/%20Issue"
+              className="text-[#85819C] hover:text-[#26215C] underline underline-offset-2 transition-colors cursor-pointer"
+            >
+              {isHindi ? 'समस्या रिपोर्ट करें' : 'Report an issue'}
+            </a>
           </div>
         </div>
 
