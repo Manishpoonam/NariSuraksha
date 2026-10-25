@@ -319,4 +319,269 @@ export const exportComplaintDraftPDF = async (
 
 // Backwards-compatible alias for existing imports
 export const exportCourtReadyPDF = exportComplaintDraftPDF;
+export const exportTutorialGuidePDF = async (
+  _languageOrOptions?: any,
+  options?: PDFExportOptions
+): Promise<{ blobUrl: string; defaultFileName: string }> => {
+  const opts = (options || (typeof _languageOrOptions === 'object' ? _languageOrOptions : undefined)) || { action: 'download_file' };
+  return exportFieldGuidePDF(opts);
+};
+
+export const exportFieldGuidePDF = async (
+  options: PDFExportOptions = { action: 'download_file' }
+): Promise<{ blobUrl: string; defaultFileName: string }> => {
+  const { default: jsPDFClass } = await import('jspdf');
+  const doc = new jsPDFClass({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 18;
+  const contentWidth = pageWidth - margin * 2;
+  let y = 18;
+
+  const checkAddPage = (neededSpace: number = 20) => {
+    if (y + neededSpace > pageHeight - margin) {
+      doc.addPage();
+      y = margin;
+      drawPageFooter();
+    }
+  };
+
+  const drawPageFooter = () => {
+    const pageCount = (doc.internal as any).getNumberOfPages();
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8);
+    doc.setTextColor(130, 130, 130);
+    doc.text(
+      'NARISURAKSHA COMMUNITY FIELD GUIDE — 100% ON-DEVICE PRIVACY & LEGAL EMPOWERMENT',
+      margin,
+      pageHeight - 10
+    );
+    doc.text(`Page ${pageCount}`, pageWidth - margin - 15, pageHeight - 10);
+    doc.setFont('helvetica', 'normal');
+  };
+
+  // Header Banner
+  doc.setFillColor(38, 33, 92); // #26215C
+  doc.rect(margin, y, contentWidth, 22, 'F');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(255, 255, 255);
+  doc.text('NARISURAKSHA — COMMUNITY FIELD GUIDE & HANDBOOK', margin + 5, y + 9);
+
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(230, 230, 230);
+  doc.text('How This Website Works • Decision Flowcharts • Technical Privacy • NGO Workshop Guide', margin + 5, y + 16);
+
+  y += 28;
+
+  // Intro Callout
+  doc.setFillColor(250, 248, 243);
+  doc.setDrawColor(222, 217, 212);
+  doc.roundedRect(margin, y, contentWidth, 18, 2, 2, 'FD');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(153, 53, 86); // #993556
+  doc.text('CORE MESSAGE FOR GIRLS & WOMEN:', margin + 4, y + 6);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(50, 50, 50);
+  doc.text(
+    'If you or someone you know is facing online blackmail, you are not alone and you did nothing wrong.\nPaying never stops extortion. Indian law guarantees strict anonymity and provides complete legal protection.',
+    margin + 4,
+    y + 11
+  );
+
+  y += 24;
+
+  // Section 1: The Three Golden Rules
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10.5);
+  doc.setTextColor(30, 30, 30);
+  doc.text('1. THE THREE GOLDEN RULES OF CYBER RESCUE', margin, y);
+  y += 6;
+
+  const rules = [
+    { title: 'RULE 1: DO NOT PAY MONEY', desc: '97% of victims who pay are extorted again within 48 hours for higher amounts. Refusing to pay breaks their leverage.' },
+    { title: 'RULE 2: DO NOT BLOCK IMMEDIATELY', desc: 'Preserve evidence first (screenshots with status bar & timestamps, UPI IDs, profile URLs). Blocking deletes key evidence.' },
+    { title: 'RULE 3: YOU HAVE STATUTORY LEGAL IMMUNITY', desc: 'Under Section 73 BNS 2023, disclosing a victim\'s identity is a criminal offense (up to 2 yrs prison). Statements are recorded by female officers.' },
+  ];
+
+  rules.forEach((r) => {
+    checkAddPage(15);
+    doc.setFillColor(243, 239, 236);
+    doc.rect(margin, y, contentWidth, 12, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(38, 33, 92);
+    doc.text(r.title, margin + 3, y + 4.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(60, 60, 60);
+    doc.text(r.desc, margin + 3, y + 9.5);
+    y += 15;
+  });
+
+  y += 2;
+  checkAddPage(30);
+
+  // Section 2: Step-by-Step Emergency Flowcharts
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10.5);
+  doc.setTextColor(30, 30, 30);
+  doc.text('2. STEP-BY-STEP WORKFLOWS & DECISION TREES', margin, y);
+  y += 6;
+
+  const flows = [
+    {
+      num: 'FLOW A',
+      name: 'The 60-Minute Extortion Countdown Flow',
+      steps: [
+        '1. Recognize Artificial Panic: Extortionists set fake countdown timers to force panic reactions.',
+        '2. Freeze Communication: Stop replying to threats; do not plead, do not send funds.',
+        '3. Capture Evidence Trail: Full-screen screenshots (battery, time, date, full chat, profile link, payment QR).',
+        '4. StopNCII Registration: Create cryptographic hashes to pre-emptively block image uploads.',
+        '5. Official Reporting: Dial National Cyber Helpline 1930 and file formal complaint at cybercrime.gov.in.'
+      ]
+    },
+    {
+      num: 'FLOW B',
+      name: 'StopNCII & Platform Takedown Flow (Perceptual Hashing)',
+      steps: [
+        '1. Device-Only Hash: StopNCII converts visual pixels into a 64-character mathematical fingerprint.',
+        '2. Zero Image Transmission: THE RAW PHOTO NEVER LEAVES YOUR DEVICE. No human ever sees it.',
+        '3. Global Platform Shield: Only the mathematical hash is added to Meta, Instagram, and partner databases.',
+        '4. Automatic Upload Block: If an extortionist attempts to upload the image, the platform blocks it instantly.'
+      ]
+    },
+    {
+      num: 'FLOW C',
+      name: 'Legal Reporting & e-FIR Flow (BNSS 173 & Section 73 BNS)',
+      steps: [
+        '1. Free e-FIR Draft Tool: Use NariSuraksha to generate structured legal drafts formatted for police/courts.',
+        '2. Statutory Confidentiality: Section 73 BNS makes victim identity leakage a non-bailable offense.',
+        '3. Female Officer Mandate: BNSS Section 173 guarantees statement recording by a woman police officer.',
+        '4. Free Legal Aid: Access National Legal Services Authority (NALSA) defense lawyers via Helpline 15100.'
+      ]
+    }
+  ];
+
+  flows.forEach((flow) => {
+    checkAddPage(35);
+    doc.setFillColor(245, 241, 235);
+    doc.roundedRect(margin, y, contentWidth, 7, 1, 1, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(15, 110, 86); // #0F6E56
+    doc.text(`${flow.num}: ${flow.name}`, margin + 3, y + 4.8);
+    y += 9;
+
+    flow.steps.forEach((step) => {
+      checkAddPage(6);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(40, 40, 40);
+      const splitStep = doc.splitTextToSize(`• ${step}`, contentWidth - 4);
+      doc.text(splitStep, margin + 2, y);
+      y += splitStep.length * 4;
+    });
+    y += 4;
+  });
+
+  checkAddPage(40);
+
+  // Section 3: Technical Privacy Explained Simply
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10.5);
+  doc.setTextColor(30, 30, 30);
+  doc.text('3. TECHNICAL PRIVACY ARCHITECTURE (IN PLAIN ENGLISH)', margin, y);
+  y += 6;
+
+  const techFeatures = [
+    { title: '100% On-Device (Zero Servers):', text: 'NariSuraksha operates solely inside the web browser. No databases, accounts, or telemetry exist to capture or store user data.' },
+    { title: 'Emergency Stealth Camouflage:', text: 'Press ESC on desktop or swipe with 3 fingers on mobile to switch instantly to authentic UPSC Study Notes. Back-button navigation is trapped.' },
+    { title: 'Perceptual Image Hashing:', text: 'Transforms intimate images into non-reversible mathematical codes right on your device so photos never touch the web.' },
+    { title: 'Instant Footprint Purge:', text: 'One tap clears all session storage, form drafts, clipboard, and browser cache—leaving zero traces on shared devices.' }
+  ];
+
+  techFeatures.forEach((tf) => {
+    checkAddPage(12);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(38, 33, 92);
+    doc.text(`• ${tf.title}`, margin, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(60, 60, 60);
+    const splitTf = doc.splitTextToSize(tf.text, contentWidth - 6);
+    doc.text(splitTf, margin + 4, y + 4);
+    y += splitTf.length * 4 + 3;
+  });
+
+  checkAddPage(40);
+
+  // Section 4: Emergency Helplines & NGO Directory
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10.5);
+  doc.setTextColor(30, 30, 30);
+  doc.text('4. VERIFIED 24/7 ALL-INDIA HELPLINES CHEAT-SHEET', margin, y);
+  y += 6;
+
+  const helplines = [
+    { name: 'National Cybercrime Helpline', num: '1930', desc: 'Immediate cyber extortion, blackmail & fraud' },
+    { name: 'National Police Emergency', num: '112', desc: 'All-India 24x7 police response & physical protection' },
+    { name: 'Women Police Helpline', num: '1091 / 181', desc: 'Dedicated women desks and state helplines' },
+    { name: 'National Commission for Women (NCW)', num: '7827-170-170', desc: 'Legal counseling, complaint escalation & support' },
+    { name: 'Childline & POCSO Protection', num: '1098', desc: 'Strict statutory minor protection under 18' },
+    { name: 'Tele-MANAS Mental Health', num: '14416', desc: 'Free government psychological crisis counseling' },
+    { name: 'National Legal Services Authority (NALSA)', num: '15100', desc: 'Free legal defense lawyers and legal aid' }
+  ];
+
+  doc.setFillColor(250, 249, 246);
+  doc.setDrawColor(222, 217, 212);
+  doc.rect(margin, y, contentWidth, helplines.length * 7 + 6, 'FD');
+  y += 4;
+
+  helplines.forEach((h) => {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(20, 20, 20);
+    doc.text(h.name, margin + 3, y + 2);
+    doc.setTextColor(153, 53, 86);
+    doc.text(h.num, margin + 85, y + 2);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.setFontSize(7.5);
+    doc.text(h.desc, margin + 115, y + 2);
+    y += 7;
+  });
+
+  drawPageFooter();
+
+  const fileName = `NariSuraksha_Community_Field_Guide_${new Date().toISOString().slice(0, 10)}.pdf`;
+
+  if (options.action === 'download_file') {
+    doc.save(fileName);
+  }
+
+  const blob = doc.output('blob');
+  const blobUrl = URL.createObjectURL(blob);
+
+  if (options.action === 'view_print') {
+    const newWindow = window.open(blobUrl, '_blank');
+    if (!newWindow) {
+      console.warn('Popup window blocked, provided blob URL');
+    }
+  }
+
+  return { blobUrl, defaultFileName: fileName };
+};
+
 

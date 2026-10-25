@@ -72,6 +72,8 @@ interface EmergencyCockpitProps {
 const RESCUE_STEP_STORAGE_KEY = 'suraksha_rescue_step_v1';
 const RESCUE_SCENARIO_STORAGE_KEY = 'suraksha_rescue_scenario_v1';
 const RESCUE_COMPLETED_STEPS_KEY = 'suraksha_rescue_completed_steps_v1';
+const RESCUE_CONFIDENTIAL_FIR_KEY = 'suraksha_confidential_fir_priority_v1';
+const RESCUE_POCSO_MINOR_KEY = 'suraksha_pocso_minor_active_v1';
 
 /**
  * Unified Linear Rescue Path Stepper
@@ -122,17 +124,35 @@ export const EmergencyCockpit: React.FC<EmergencyCockpitProps> = ({
     return [];
   });
 
-  // Selected threat scenario
+  // Independent persistent priority toggle: 100% Confidential Police FIR (Sec 73 BNS)
+  const [isConfidentialFirPriority, setIsConfidentialFirPriority] = useState<boolean>(() => {
+    try {
+      const saved = sessionStorage.getItem(RESCUE_CONFIDENTIAL_FIR_KEY);
+      if (saved !== null) return saved === 'true';
+    } catch {}
+    return initialScenario === 'police';
+  });
+
+  // Persistent POCSO Minor (<18) state across entire session
+  const [isPocsoMinorActive, setIsPocsoMinorActive] = useState<boolean>(() => {
+    try {
+      const saved = sessionStorage.getItem(RESCUE_POCSO_MINOR_KEY);
+      if (saved !== null) return saved === 'true';
+    } catch {}
+    return false;
+  });
+
+  // Selected threat scenario (strictly 5 threat behaviors, decoupled from remedy options)
   const [selectedScenario, setSelectedScenario] = useState<CrisisScenarioKey>(() => {
     try {
       const saved = sessionStorage.getItem(RESCUE_SCENARIO_STORAGE_KEY);
-      if (saved && ['countdown', 'paid', 'leaked', 'deepfake', 'danger_stalking', 'police'].includes(saved)) {
+      if (saved && ['countdown', 'paid', 'leaked', 'deepfake', 'danger_stalking'].includes(saved)) {
         return saved as CrisisScenarioKey;
       }
     } catch {
       // ignore
     }
-    return initialScenario;
+    return initialScenario === 'police' ? 'countdown' : initialScenario;
   });
 
   // Evidence checkboxes in Step 3
@@ -179,6 +199,18 @@ export const EmergencyCockpit: React.FC<EmergencyCockpitProps> = ({
       // ignore
     }
   }, [selectedScenario]);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(RESCUE_CONFIDENTIAL_FIR_KEY, String(isConfidentialFirPriority));
+    } catch {}
+  }, [isConfidentialFirPriority]);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(RESCUE_POCSO_MINOR_KEY, String(isPocsoMinorActive));
+    } catch {}
+  }, [isPocsoMinorActive]);
 
   // Handle direct step change (Always allowed, never gated)
   const goToStep = (step: RescueStep) => {
@@ -394,19 +426,6 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
       badge: { en: 'High Priority', hi: 'आपातकाल' },
       icon: <AlertTriangle className="w-5 h-5 text-rose-400" />,
     },
-    {
-      key: 'police',
-      title: {
-        en: 'Filing Confidential Police FIR',
-        hi: 'गोपनीय पुलिस शिकायत (FIR)',
-      },
-      desc: {
-        en: 'Need to file a formal complaint without parents, friends, or college knowing (Sec 73 BNS anonymity).',
-        hi: 'परिवार या समाज को बताए बिना साइबर सेल में गुप्त FIR दर्ज कराने की प्रक्रिया (BNS धारा 73)।',
-      },
-      badge: { en: 'Legal Shield', hi: 'पहचान सील' },
-      icon: <Scale className="w-5 h-5 text-teal-300" />,
-    },
   ];
 
   return (
@@ -583,16 +602,36 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                     </div>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    hapticAction();
-                    setShowPocsoModal(true);
-                  }}
-                  className="px-3.5 py-1.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-semibold shrink-0 cursor-pointer transition-colors"
-                >
-                  {isHindi ? 'POCSO सुरक्षा देखें' : 'Minor / POCSO Guide'}
-                </button>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      hapticAction();
+                      setIsPocsoMinorActive((prev) => !prev);
+                    }}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 cursor-pointer transition-colors border flex items-center gap-1.5 ${
+                      isPocsoMinorActive 
+                        ? 'bg-amber-500/20 text-amber-200 border-amber-400/40 shadow-xs' 
+                        : 'bg-white/10 text-white/80 border-white/20 hover:bg-white/15'
+                    }`}
+                  >
+                    <div className={`w-3.5 h-3.5 rounded flex items-center justify-center border ${isPocsoMinorActive ? 'bg-amber-400 border-amber-400 text-black' : 'border-white/40'}`}>
+                      {isPocsoMinorActive && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                    </div>
+                    <span>{isHindi ? 'नाबालिग (<18) मामला' : 'Minor (<18) Case'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      hapticAction();
+                      setIsPocsoMinorActive(true);
+                      setShowPocsoModal(true);
+                    }}
+                    className="px-3.5 py-1.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-semibold shrink-0 cursor-pointer transition-colors"
+                  >
+                    {isHindi ? 'POCSO सुरक्षा देखें' : 'Minor / POCSO Guide'}
+                  </button>
+                </div>
               </div>
 
               {/* The 3 Cardinal Stabilization Pillars */}
@@ -728,6 +767,50 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                 })}
               </div>
 
+              {/* Independent Confidential Police FIR Toggle Card (Sec 73 BNS) */}
+              <div 
+                onClick={() => {
+                  hapticAction();
+                  setIsConfidentialFirPriority((prev) => !prev);
+                }}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                  isConfidentialFirPriority 
+                    ? 'bg-emerald-950/40 border-emerald-400 ring-1 ring-emerald-400 shadow-soft' 
+                    : 'bg-white/6 border-white/10 hover:bg-white/10'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`p-2.5 rounded-xl shrink-0 ${isConfidentialFirPriority ? 'bg-emerald-500/20 text-emerald-300' : 'bg-white/10 text-white/80'}`}>
+                    <Scale className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-bold text-white">
+                        {isHindi ? '100% गोपनीय पुलिस FIR (धारा 73 BNS)' : 'Need 100% Confidential Police FIR (Sec 73 BNS)'}
+                      </span>
+                      {isConfidentialFirPriority && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                          {isHindi ? 'चरण 4 में प्राथमिकता' : 'Prioritized in Step 4 Action Grid'}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                      {isHindi 
+                        ? 'कानूनी पहचान पूरी तरह सील ("सुश्री X")। BNSS 173 के तहत केवल महिला अधिकारी बयान दर्ज करेगी।'
+                        : 'Identity strictly sealed as "Ms. X" under BNS 73. Mandatory woman officer statement under BNSS 173.'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="shrink-0">
+                  <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
+                    isConfidentialFirPriority ? 'bg-emerald-500 border-emerald-400 text-black' : 'border-white/30'
+                  }`}>
+                    {isConfidentialFirPriority && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                  </div>
+                </div>
+              </div>
+
               {/* TAILORED CONTAINMENT ACTION BOX (ACCORDING TO CHOSEN SCENARIO) */}
               <div className="p-5 rounded-2xl bg-[#1E1949] border border-white/15 space-y-4">
                 {/* SCENARIO 1: COUNTDOWN EXTORTION */}
@@ -767,15 +850,14 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                       </div>
                     </div>
 
-                    {/* Script Display */}
+                    {/* Script Display: Stall Line ONLY in Step 2 to avoid premature evidence destruction */}
                     {perpetratorType === 'anonymous_scammer' ? (
                       <div className="space-y-3.5">
-                        {/* Phase 1: Calm Stalling Script (If active timer) */}
                         <div className="p-3 bg-white/5 rounded-xl border border-amber-300/20 space-y-2">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
                               <Clock className="w-3.5 h-3.5" />
-                              <span>{isHindi ? 'कदम 1: समय हासिल करें (यदि टाइमर चल रहा हो)' : 'Step 1: Buy Breathing Room (If Countdown Active)'}</span>
+                              <span>{isHindi ? 'समय हासिल करें (यदि टाइमर चल रहा हो)' : 'Buy Breathing Room (If Countdown Active)'}</span>
                             </span>
                             <button
                               type="button"
@@ -788,59 +870,63 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                           </div>
                           <p className="text-[11px] text-[#D2CCE7] leading-relaxed">
                             {isHindi
-                              ? 'ब्लैकमेलर को उत्तेजित किए बिना 2-4 घंटे का समय लें ताकि आप चैट के स्क्रीनशॉट ले सकें और StopNCII पर हैश बना सकें।'
-                              : 'Send this once only if a deadline is ticking. Neutralizes panic while you screenshot uncropped proof and submit StopNCII hashes. Withhold all payment.'}
+                              ? 'ब्लैकमेलर को उत्तेजित किए बिना 2-4 घंटे का समय लें ताकि आप चैट के बिना-क्रॉप स्क्रीनशॉट ले सकें। अभी ब्लॉक न करें और पैसे बिल्कुल न दें।'
+                              : 'Send this once only if a deadline is ticking. Neutralizes panic while you screenshot uncropped proof. Withhold all payment.'}
                           </p>
                           <p className="text-xs text-[#FAF8F3]/90 font-mono bg-black/30 p-2.5 rounded-lg border border-white/10 leading-relaxed whitespace-pre-wrap">
                             {stallScript}
                           </p>
                         </div>
 
-                        {/* Phase 2: Statutory Legal Warning Notice */}
-                        <div className="p-3 bg-white/5 rounded-xl border border-teal-300/20 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-teal-300 flex items-center gap-1.5">
-                              <Scale className="w-3.5 h-3.5" />
-                              <span>{isHindi ? 'कदम 2: वैधानिक कानूनी नोटिस (सबूत सुरक्षित होने पर भेजें)' : 'Step 2: Statutory Legal Warning Notice (Send Once, Then Block)'}</span>
+                        {/* Critical Sequence Banner */}
+                        <div className="p-3 rounded-xl bg-teal-950/40 border border-teal-400/30 text-xs text-teal-200 flex items-start gap-2.5">
+                          <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0 mt-0.5" />
+                          <div className="space-y-0.5">
+                            <span className="font-bold text-teal-100 block">
+                              {isHindi ? 'महत्वपूर्ण अनुक्रम नियम: अभी ब्लॉक न करें' : 'Sequence Rule: Do Not Block Yet'}
                             </span>
-                            <button
-                              type="button"
-                              onClick={() => copyToClipboard(freezeScript, setCopiedScript)}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
-                            >
-                              {copiedScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                              <span>{copiedScript ? (isHindi ? 'कॉपी हो गया' : 'Copied') : (isHindi ? 'नोटिस कॉपी करें' : 'Copy Notice')}</span>
-                            </button>
+                            <p className="text-[11px] text-[#D2CCE7] leading-relaxed">
+                              {isHindi
+                                ? 'ब्लॉक करने से पहले चरण 3 में 3 साक्ष्य स्क्रीनशॉट लें। कानूनी नोटिस व अंतिम ब्लॉक स्क्रिप्ट आपको चरण 4 में मिलेगी।'
+                                : 'Take 3 uncropped proof screenshots in Step 3 first. You will receive the Statutory Warning Notice & Block script in Step 4.'}
+                            </p>
                           </div>
-                          <p className="text-[11px] text-[#D2CCE7] leading-relaxed">
-                            {isHindi
-                              ? 'BNS धारा 308 (जबरन वसूली) व IT Act 67A के तहत आधिकारिक नोटिस। इसे भेजते ही नंबर तुरंत ब्लॉक कर दें।'
-                              : 'Cites BNS Section 308 (Extortion) & IT Act 67A. Send once after screenshots are saved, turn off read receipts, and block immediately.'}
-                          </p>
-                          <p className="text-xs text-[#FAF8F3]/90 font-mono bg-black/30 p-2.5 rounded-lg border border-white/10 leading-relaxed whitespace-pre-wrap max-h-36 overflow-y-auto">
-                            {freezeScript}
-                          </p>
                         </div>
                       </div>
                     ) : (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-teal-300 flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5" />
-                            <span>{isHindi ? 'समय बढ़ाने वाला संदेश (ग्रे-रॉक डिले)' : 'Gray-Rock Delay Script (Buys Until Morning)'}</span>
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => copyToClipboard(grayRockScript, setCopiedDelayScript)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
-                          >
-                            {copiedDelayScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                            <span>{copiedDelayScript ? (isHindi ? 'कॉपी हो गया' : 'Copied') : (isHindi ? 'संदेश कॉपी करें' : 'Copy Script')}</span>
-                          </button>
+                      <div className="space-y-3">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-teal-300 flex items-center gap-1.5">
+                              <Clock className="w-3.5 h-3.5" />
+                              <span>{isHindi ? 'समय बढ़ाने वाला संदेश (ग्रे-रॉक डिले)' : 'Gray-Rock Delay Script (Buys Until Morning)'}</span>
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard(grayRockScript, setCopiedDelayScript)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
+                            >
+                              {copiedDelayScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                              <span>{copiedDelayScript ? (isHindi ? 'कॉपी हो गया' : 'Copied') : (isHindi ? 'संदेश कॉपी करें' : 'Copy Script')}</span>
+                            </button>
+                          </div>
+                          <p className="text-xs text-[#FAF8F3]/90 font-mono bg-black/30 p-3 rounded-xl border border-white/10 leading-relaxed whitespace-pre-wrap">
+                            {grayRockScript}
+                          </p>
                         </div>
-                        <p className="text-xs text-[#FAF8F3]/90 font-mono bg-black/30 p-3 rounded-xl border border-white/10 leading-relaxed whitespace-pre-wrap">
-                          {grayRockScript}
-                        </p>
+                        <div className="p-3 rounded-xl bg-teal-950/40 border border-teal-400/30 text-xs text-teal-200 flex items-start gap-2.5">
+                          <ShieldCheck className="w-4 h-4 text-teal-300 shrink-0 mt-0.5" />
+                          <div className="space-y-0.5">
+                            <span className="font-bold text-teal-100 block">
+                              {isHindi ? 'साक्ष्य सुरक्षा पहले' : 'Secure Evidence in Step 3 First'}
+                            </span>
+                            <p className="text-[11px] text-[#D2CCE7] leading-relaxed">
+                              {isHindi
+                                ? 'चैट का स्क्रीनशॉट लिए बिना बात बंद न करें। चरण 3 में साक्ष्य सुरक्षित करने के बाद ही अगला कदम उठाएं।'
+                                : 'Do not delete or block without preserving uncropped chats in Step 3.'}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -881,122 +967,89 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                   </div>
                 )}
 
-                {/* SCENARIO 3: LEAKED MEDIA */}
+                {/* SCENARIO 3: LEAKED MEDIA - EVIDENCE FIRST CONTAINMENT */}
                 {selectedScenario === 'leaked' && (
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-red-300 flex items-center gap-1.5">
-                        <FileCheck2 className="w-3.5 h-3.5" />
-                        <span>{isHindi ? 'प्लेटफॉर्म/ग्रुप एडमिन हेतु 24-घंटे लीगल नोटिस' : '24-Hour Intermediary Takedown Notice (IT Rules)'}</span>
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => copyToClipboard(takedownNoticeScript, setCopiedTakedownScript)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
-                      >
-                        {copiedTakedownScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                        <span>{copiedTakedownScript ? (isHindi ? 'कॉपी हो गया' : 'Copied') : (isHindi ? 'नोटिस कॉपी करें' : 'Copy Notice')}</span>
-                      </button>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                      <h3 className="text-sm sm:text-base font-bold text-white">
+                        {isHindi ? 'तत्काल रोकथाम: पहले इलेक्ट्रॉनिक साक्ष्य सुरक्षित करें' : 'Containment Protocol: Secure Electronic Proof First'}
+                      </h3>
                     </div>
-                    <p className="text-xs text-[#FAF8F3]/90 font-mono bg-black/30 p-3 rounded-xl border border-white/10 leading-relaxed whitespace-pre-wrap max-h-36 overflow-y-auto">
-                      {takedownNoticeScript}
+                    <p className="text-xs sm:text-sm text-[#D2CCE7] leading-relaxed">
+                      {isHindi
+                        ? 'अति आवश्यक: ग्रुप या चैनल एडमिन को सूचना देने से पहले चरण 3 में पोस्ट और वेब लिंक (URL) का स्क्रीनशॉट लें। यदि आप पहले संदेश भेजेंगी, तो वे पोस्ट डिलीट करके सबूत मिटा सकते हैं। चरण 4 में आपको 24-घंटे का कानूनी Takedown नोटिस और सीधे नोडल पोर्टल मिलेंगे।'
+                        : 'Critical sequence: Do not alert channel admins or post in groups before capturing uncropped screenshots and exact URLs in Step 3. Alerting them prematurely allows perpetrators to delete channels and destroy digital forensics. Step 4 will equip you with the direct IT Rule 3(2)(b) 24-Hour Statutory Takedown Notice.'}
                     </p>
-                    <div className="flex flex-wrap gap-2.5 pt-1">
-                      <button
-                        onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold"
-                      >
-                        <ShieldCheck className="w-3.5 h-3.5" />
-                        <span>{isHindi ? 'StopNCII हैश जनरेटर' : 'Open StopNCII Hub'}</span>
-                      </button>
+                    <div className="p-3 rounded-xl bg-red-950/30 border border-red-500/30 text-xs text-red-200">
+                      <span>{isHindi ? 'नीचे "चरण 3" पर जाएं और चैनल लिंक व पोस्ट का स्क्रीनशॉट लें।' : 'Proceed below to Step 3 to capture the channel link, uncropped status bar, and post metadata.'}</span>
                     </div>
                   </div>
                 )}
 
-                {/* SCENARIO 4: AI DEEPFAKE */}
+                {/* SCENARIO 4: AI DEEPFAKE - FORENSICS FIRST */}
                 {selectedScenario === 'deepfake' && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-teal-300 flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>{isHindi ? 'डीपफेक कानूनी सूचना (IT Act 66D/67A & BNS 77)' : 'AI Deepfake Statutory Notice'}</span>
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => copyToClipboard(deepfakeNoticeScript, setCopiedDeepfakeScript)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
-                      >
-                        {copiedDeepfakeScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                        <span>{copiedDeepfakeScript ? (isHindi ? 'कॉपी हो गया' : 'Copied') : (isHindi ? 'नोटिस कॉपी करें' : 'Copy Notice')}</span>
-                      </button>
-                    </div>
-                    <p className="text-xs text-[#FAF8F3]/90 font-mono bg-black/30 p-3 rounded-xl border border-white/10 leading-relaxed whitespace-pre-wrap max-h-36 overflow-y-auto">
-                      {deepfakeNoticeScript}
-                    </p>
-                  </div>
-                )}
-
-                {/* SCENARIO 5: STALKING / PHYSICAL THREAT */}
-                {selectedScenario === 'danger_stalking' && (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-rose-300 flex items-center gap-1.5">
-                        <Radio className="w-3.5 h-3.5" />
-                        <span>{isHindi ? 'अंतिम कानूनी चेतावनी संदेश (BNS 78/79)' : 'Cease & Desist Warning (Sec 78/79 BNS)'}</span>
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => copyToClipboard(stalkingCeaseScript, setCopiedStalkingScript)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-700 hover:bg-rose-800 text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
-                      >
-                        {copiedStalkingScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                        <span>{copiedStalkingScript ? (isHindi ? 'कॉपी हो गया' : 'Copied') : (isHindi ? 'चेतावनी कॉपी करें' : 'Copy Warning')}</span>
-                      </button>
-                    </div>
-                    <p className="text-xs text-[#FAF8F3]/90 font-mono bg-black/30 p-3 rounded-xl border border-white/10 leading-relaxed whitespace-pre-wrap max-h-36 overflow-y-auto">
-                      {stalkingCeaseScript}
-                    </p>
-                    <div className="flex flex-wrap gap-2.5 pt-1">
-                      <a
-                        href="tel:112"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold"
-                      >
-                        <PhoneCall className="w-3.5 h-3.5" />
-                        <span>{isHindi ? 'पुलिस 112' : 'Police 112'}</span>
-                      </a>
-                      <a
-                        href="tel:1090"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-bold"
-                      >
-                        <PhoneCall className="w-3.5 h-3.5" />
-                        <span>{isHindi ? 'महिला हेल्पलाइन 1090' : 'Women Helpline 1090'}</span>
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                {/* SCENARIO 6: POLICE FIR */}
-                {selectedScenario === 'police' && (
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full bg-teal-400" />
                       <h3 className="text-sm sm:text-base font-bold text-white">
-                        {isHindi ? 'पहचान सुरक्षा: BNS धारा 73 के तहत पूर्ण गोपनीयता' : 'Identity Protection: Strictly Sealed under Sec 73 BNS'}
+                        {isHindi ? 'तत्काल रोकथाम: बॉट व चैनल साक्ष्य पहले सुरक्षित करें' : 'Containment Protocol: Preserve Bot & Channel Proof First'}
                       </h3>
                     </div>
-                    <p className="text-xs sm:text-sm text-[#D2CCE7]">
+                    <p className="text-xs sm:text-sm text-[#D2CCE7] leading-relaxed">
                       {isHindi
-                        ? 'पुलिस या मीडिया में पीड़िता का नाम, पता या कॉलेज उजागर करना गैर-कानूनी है (2 साल कारावास)। आप "सुश्री X" के नाम से शिकायत दर्ज करा सकती हैं और BNSS धारा 173 के तहत बयान केवल महिला अधिकारी दर्ज करेगी।'
-                        : 'Disclosing the identity of a victim of intimate harassment is punishable by up to 2 years imprisonment. You have the statutory right to be addressed as Ms. X in all filings and have statements recorded by a woman officer.'}
+                        ? 'टेलीग्राम AI बॉट या फर्जी प्रोफाइल को ब्लॉक करने से पहले चरण 3 में बॉट हैंडल और मनगढ़ंत फोटो का स्क्रीनशॉट सुरक्षित करें। चरण 4 में आपको IT Act 66D/67A व BNS 77 के तहत 24-घंटे का वैधानिक नोटिस और प्लेटफॉर्म रिपोर्टिंग टूल मिलेगा।'
+                        : 'Secure the Telegram bot username, originating channel, and message timestamps in Step 3 before the bot is deleted or revoked. Step 4 will provide the exact IT Rule 3(2)(b) & BNS Section 77 Synthetic Media Takedown Notice.'}
                     </p>
+                    <div className="p-3 rounded-xl bg-teal-950/30 border border-teal-500/30 text-xs text-teal-200">
+                      <span>{isHindi ? 'चरण 3 में जाकर फॉरेंसिक साक्ष्य सहेजें।' : 'Advance to Step 3 to document the AI bot handle and fabricated content before it is revoked.'}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* SCENARIO 5: STALKING / PHYSICAL THREAT - ZERO CONFRONTATION SAFETY FIRST */}
+                {selectedScenario === 'danger_stalking' && (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-400 animate-pulse" />
+                      <h3 className="text-sm sm:text-base font-bold text-white">
+                        {isHindi ? 'शारीरिक सुरक्षा चेकलिस्ट (शून्य टकराव)' : 'Immediate Physical Safety Checklist (Zero Confrontation)'}
+                      </h3>
+                    </div>
+                    
+                    <div className="p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/40 space-y-2 text-xs">
+                      <div className="font-bold text-rose-200 uppercase tracking-wide flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+                        <span>{isHindi ? 'सुरक्षा नियम: आमने-सामने बहस न करें' : 'Safety Priority: Do Not Provoke or Confront'}</span>
+                      </div>
+                      <ul className="space-y-1.5 text-[#D2CCE7] list-disc list-inside">
+                        <li>
+                          {isHindi ? 'तुरंत किसी सुरक्षित, रोशनी वाले सार्वजनिक स्थान या नजदीकी पुलिस स्टेशन पहुंचें।' : 'Move immediately to a well-lit, public location or trusted friend/family space.'}
+                        </li>
+                        <li>
+                          {isHindi ? 'अपने किसी विश्वसनीय परिजन के साथ लाइव GPS लोकेशन शेयर करें।' : 'Share your live GPS location with a trusted contact.'}
+                        </li>
+                        <li>
+                          {isHindi ? 'यदि पीछा करने वाला आपके आसपास है, तो उससे संदेश पर बहस या धमकी न दें।' : 'DO NOT confront, text, or provoke the stalker if they know your physical location.'}
+                        </li>
+                      </ul>
+                    </div>
+
                     <div className="flex flex-wrap gap-2.5 pt-1">
-                      <button
-                        onClick={() => onNavigateToTab('report', 'complaint-draft-generator')}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-[#26215C] hover:bg-[#FAF8F3] text-xs font-bold"
+                      <a
+                        href="tel:112"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs sm:text-sm shadow-soft"
                       >
-                        <Scale className="w-3.5 h-3.5" />
-                        <span>{isHindi ? 'FIR डोजियर जनरेटर' : 'Open FIR Generator'}</span>
-                      </button>
+                        <PhoneCall className="w-4 h-4" />
+                        <span>{isHindi ? 'आपातकालीन पुलिस 112' : 'Police Dispatch 112'}</span>
+                      </a>
+                      <a
+                        href="tel:1090"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white font-bold text-xs sm:text-sm"
+                      >
+                        <PhoneCall className="w-4 h-4" />
+                        <span>{isHindi ? 'महिला हेल्पलाइन 1090' : 'Women Helpline 1090'}</span>
+                      </a>
                     </div>
                   </div>
                 )}
@@ -1143,12 +1196,12 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                   {
                     key: 'profile',
                     title: {
-                      en: 'Screenshot 1: Bank Transaction SMS / UPI Debit Receipt',
-                      hi: 'स्क्रीनशॉट 1: बैंक ट्रांसफर SMS / UPI डेबिट रसीद (UTR नंबर सहित)'
+                      en: 'Screenshot 1: Extorter UPI Handle, QR Code, or Bank Account Provided',
+                      hi: 'स्क्रीनशॉट 1: अपराधी द्वारा दिया गया UPI ID, QR कोड या बैंक खाता'
                     },
                     detail: {
-                      en: 'Must clearly show 12-digit UTR / UPI Ref ID, recipient UPI VPA, date, time, and debited amount.',
-                      hi: '12 अंकों का UTR / UPI संदर्भ नंबर, लाभार्थी की UPI ID, समय व राशि स्पष्ट दिखनी चाहिए।'
+                      en: 'The exact payment QR image, UPI VPA (name@bank), or bank details sent in chat. Helpline 1930 flags this beneficiary identifier.',
+                      hi: 'चैट में भेजा गया मूल QR कोड, UPI ID या बैंक खाता। साइबर सेल 1930 इसी खाते के खिलाफ अंतरिम रोक लगाती है।'
                     },
                     iconColor: 'text-amber-300'
                   },
@@ -1167,12 +1220,12 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                   {
                     key: 'paymentHandle',
                     title: {
-                      en: 'Screenshot 3: Extorter UPI Handle, QR Code, or Bank Account Provided',
-                      hi: 'स्क्रीनशॉट 3: अपराधी द्वारा दिया गया UPI ID, QR कोड या बैंक खाता'
+                      en: 'Screenshot 3: Payment Receipt showing 12-Digit UTR / UPI Transaction ID & Bank Debit Timestamp',
+                      hi: 'स्क्रीनशॉट 3: भुगतान रसीद - 12 अंकों का UTR / UPI संदर्भ ID व बैंक डेबिट समय'
                     },
                     detail: {
-                      en: 'The exact payment QR image or UPI VPA he sent in chat. Helpline 1930 uses this to halt outbound fund transfers.',
-                      hi: 'चैट में भेजा गया मूल QR कोड या बैंक खाता। साइबर सेल 1930 इसी खाते के खिलाफ अंतरिम रोक लगाती है।'
+                      en: 'The banking transaction receipt or passbook debit SMS displaying the mandatory 12-digit UTR (Unique Transaction Reference) / UPI Ref No. and bank debit timestamp required by 1930 to trigger an emergency lien.',
+                      hi: 'बैंक ट्रांसफर SMS या रसीद जिसमें 12 अंकों का UTR / UPI संदर्भ ID और पैसे कटने का सटीक समय दिखे, जो 1930 पर खाता फ्रीज (Lien) कराने के लिए अनिवार्य है।'
                     },
                     iconColor: 'text-teal-300'
                   }
@@ -1552,13 +1605,14 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                 <StateEmergencyHighlightCard
                   language={language}
                   selectedScenario={selectedScenario}
+                  isMinor={isPocsoMinorActive}
                   onNavigateToTab={onNavigateToTab}
                   onBrowseStateServices={() => onNavigateToTab('directory', 'state-directory-section')}
                 />
 
                 {/* Scenario-Tailored Action Cards Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {/* CARD 1: Prioritized by Scenario */}
+                  {/* CARD 1: Prioritized strictly by Scenario (Scenario Sanctity) */}
                   {selectedScenario === 'danger_stalking' ? (
                     <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/50 space-y-3 flex flex-col justify-between">
                       <div className="space-y-1.5">
@@ -1610,7 +1664,74 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                         <span>{isHindi ? '1930 पर तुरंत कॉल करें' : 'Call 1930 Immediately'}</span>
                       </a>
                     </div>
+                  ) : selectedScenario === 'leaked' ? (
+                    /* Path 3: Media Already Leaked -> Promoted to Card 1 */
+                    <div className="p-4 rounded-2xl bg-red-950/40 border border-red-500/50 space-y-3 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-red-300 font-bold text-sm">
+                          <FileCheck2 className="w-4 h-4" />
+                          <span>{isHindi ? '24-घंटे मध्यवर्ती Takedown नोटिस' : '24-Hour Intermediary Takedown'}</span>
+                        </div>
+                        <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                          {isHindi
+                            ? 'IT Rules के नियम 3(2)(b) के तहत प्लेटफॉर्म (टेलीग्राम, मेटा, एक्स) को 24 घंटे के भीतर गैर-सहमति वाली अंतरंग सामग्री हटाने का वैधानिक नोटिस भेजें।'
+                            : 'Rule 3(2)(b) of IT Rules 2021 mandates platforms remove intimate imagery within 24 hours of notification, revoking Section 79 safe harbor if ignored.'}
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(takedownNoticeScript, setCopiedTakedownScript)}
+                          className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
+                        >
+                          {copiedTakedownScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                          <span>{copiedTakedownScript ? (isHindi ? 'नोटिस कॉपी हो गया' : 'Notice Copied') : (isHindi ? 'IT Rule 3(2)(b) नोटिस कॉपी करें' : 'Copy IT Rule 3(2)(b) Notice')}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')}
+                          className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-all cursor-pointer border border-white/20"
+                        >
+                          <span>{isHindi ? 'प्लेटफॉर्म शिकायत नोडल पोर्टल' : 'Platform Grievance Portals'}</span>
+                          <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
+                        </button>
+                      </div>
+                    </div>
+                  ) : selectedScenario === 'deepfake' ? (
+                    /* Path 4: AI Deepfake -> Promoted to Card 1 (NOT StopNCII) */
+                    <div className="p-4 rounded-2xl bg-teal-950/40 border border-teal-400/50 space-y-3 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-teal-300 font-bold text-sm">
+                          <Sparkles className="w-4 h-4" />
+                          <span>{isHindi ? 'AI डीपफेक 24-घंटे Takedown' : '24-Hour Synthetic Media Takedown'}</span>
+                        </div>
+                        <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                          {isHindi
+                            ? 'IT Rules नियम 3(2)(b) व BNS धारा 77 के तहत मनगढ़ंत/मॉर्फ्ड फोटो हटाने का नोटिस। (ध्यान दें: StopNCII केवल असली वयस्क फोटो पर काम करता है, नकली डीपफेक पर नहीं)।'
+                            : 'Statutory takedown under IT Rules 2021 Rule 3(2)(b) & BNS Sec 77 for digitally fabricated media. (Note: StopNCII only hashes authentic adult photos, not deepfakes).'}
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <button
+                          type="button"
+                          onClick={() => copyToClipboard(deepfakeNoticeScript, setCopiedDeepfakeScript)}
+                          className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
+                        >
+                          {copiedDeepfakeScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                          <span>{copiedDeepfakeScript ? (isHindi ? 'डीपफेक नोटिस कॉपी हो गया' : 'Notice Copied') : (isHindi ? 'डीपफेक वैधानिक नोटिस कॉपी करें' : 'Copy Deepfake Legal Notice')}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')}
+                          className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-all cursor-pointer border border-white/20"
+                        >
+                          <span>{isHindi ? 'प्लेटफॉर्म Takedown खोलें' : 'Platform Grievance Portals'}</span>
+                          <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
+                        </button>
+                      </div>
+                    </div>
                   ) : (
+                    /* Default countdown extortion -> StopNCII Pre-emptive Hashing */
                     <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
                       <div className="space-y-1.5">
                         <div className="flex items-center gap-2 text-emerald-300 font-bold text-sm">
@@ -1633,34 +1754,147 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                     </div>
                   )}
 
-                  {/* CARD 2: 24-Hour Takedown or Security Hardening */}
-                  <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
-                        <FileCheck2 className="w-4 h-4" />
-                        <span>{isHindi ? '24-घंटे Takedown नोटिस' : '24-Hour Intermediary Takedown'}</span>
+                  {/* CARD 2: Contextual Secondary Action / Legal Warning Notice */}
+                  {selectedScenario === 'countdown' ? (
+                    /* Statutory Legal Warning Notice ("Send Once, Then Block") - Moved from Step 2 to Step 4 after proof capture */
+                    <div className="p-4 rounded-2xl bg-teal-950/40 border border-teal-400/50 space-y-3 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-teal-300 font-bold text-sm">
+                          <Scale className="w-4 h-4" />
+                          <span>{isHindi ? 'वैधानिक कानूनी नोटिस (एक बार भेजें, फिर ब्लॉक करें)' : 'Statutory Legal Warning (Send Once, Then Block)'}</span>
+                        </div>
+                        <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                          {isHindi
+                            ? 'BNS धारा 308 (जबरन वसूली) व IT Act 67A के तहत आधिकारिक नोटिस। चूंकि साक्ष्य स्क्रीनशॉट चरण 3 में सुरक्षित हैं, इसे एक बार भेजें और तुरंत ब्लॉक करें।'
+                            : 'Cites BNS Section 308 & IT Act 67A. Now that uncropped evidence is secured in Step 3, send this official warning once and block immediately.'}
+                        </p>
                       </div>
-                      <p className="text-xs text-[#D2CCE7] leading-relaxed">
-                        {isHindi
-                          ? 'IT Rules के नियम 3(2)(b) के तहत टेलीग्राम, मेटा, व्हाट्सएप के शिकायत अधिकारी को 24 घंटे के अंदर अश्लील सामग्री हटाने का कानूनी नोटिस भेजें।'
-                          : 'Rule 3(2)(b) of IT Rules 2021 mandates platforms remove intimate imagery within 24 hours of receiving notice.'}
-                      </p>
+                      <button
+                        type="button"
+                        onClick={() => copyToClipboard(freezeScript, setCopiedScript)}
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
+                      >
+                        {copiedScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copiedScript ? (isHindi ? 'नोटिस कॉपी हो गया' : 'Notice Copied') : (isHindi ? 'वैधानिक नोटिस कॉपी करें' : 'Copy Warning Notice')}</span>
+                      </button>
                     </div>
-                    <button
-                      onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')}
-                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-bold transition-all cursor-pointer"
-                    >
-                      <span>{isHindi ? 'प्लेटफॉर्म Takedown खोलें' : 'Platform Grievance Portals'}</span>
-                      <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
-                    </button>
-                  </div>
+                  ) : selectedScenario === 'danger_stalking' ? (
+                    /* Stalking Cease & Desist Warning - Safety-gated behind explicit warning badge */
+                    <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
+                          <Radio className="w-4 h-4" />
+                          <span>{isHindi ? 'अंतिम कानूनी चेतावनी (BNS 78/79)' : 'Cease & Desist Warning (Sec 78/79 BNS)'}</span>
+                        </div>
+                        {/* Mandatory Physical Safety Badge */}
+                        <div className="p-2.5 rounded-xl bg-rose-950/60 border border-rose-500/50 text-[11px] text-rose-200 flex items-start gap-2">
+                          <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                          <span>
+                            {isHindi
+                              ? 'केवल साइबर उत्पीड़न हेतु — यदि स्टॉकर आपके आसपास है या उसे आपका वर्तमान पता मालूम है, तो यह संदेश बिल्कुल न भेजें।'
+                              : 'Cyber-harassment only — DO NOT send if the stalker is physically near you or knows your current location.'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                          {isHindi
+                            ? 'सुरक्षित दूरी पर होने पर ही BNS 78 (स्टॉकिंग) के तहत यह अंतिम चेतावनी भेजें और तुरंत ब्लॉक करें।'
+                            : 'Send this statutory cease-and-desist only from a secure location, then block and report to police.'}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => copyToClipboard(stalkingCeaseScript, setCopiedStalkingScript)}
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-rose-700 hover:bg-rose-800 text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
+                      >
+                        {copiedStalkingScript ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copiedStalkingScript ? (isHindi ? 'चेतावनी कॉपी हो गई' : 'Warning Copied') : (isHindi ? 'चेतावनी संदेश कॉपी करें' : 'Copy Cease & Desist')}</span>
+                      </button>
+                    </div>
+                  ) : selectedScenario === 'leaked' ? (
+                    /* Leaked scenario secondary: StopNCII Hub to hash authentic intimate images and block further spread */
+                    <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-emerald-300 font-bold text-sm">
+                          <ShieldCheck className="w-4 h-4" />
+                          <span>{isHindi ? 'StopNCII हैश सुरक्षा हब' : 'StopNCII Pre-emptive Hashing'}</span>
+                        </div>
+                        <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                          {isHindi
+                            ? 'मूल वास्तविक तस्वीरों का डिजिटल हैश बनाएं ताकि वे अन्य सोशल मीडिया प्लेटफॉर्म्स पर दोबारा अपलोड न हो सकें।'
+                            : 'Hash authentic intimate photos to pre-emptively block subsequent re-uploads across partner tech platforms.'}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')}
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#0F6E56] hover:bg-[#0A4E3D] text-white text-xs font-bold transition-all cursor-pointer"
+                      >
+                        <span>{isHindi ? 'StopNCII पोर्टल खोलें' : 'Open StopNCII Hub'}</span>
+                        <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
+                      </button>
+                    </div>
+                  ) : selectedScenario === 'deepfake' ? (
+                    /* Deepfake scenario secondary: Bot & Platform Reporting Portals */
+                    <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
+                          <FileCheck2 className="w-4 h-4" />
+                          <span>{isHindi ? 'प्लेटफॉर्म व बॉट रिपोर्टिंग' : 'Platform & Bot Escalation'}</span>
+                        </div>
+                        <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                          {isHindi
+                            ? 'टेलीग्राम, एक्स व अन्य साइट्स के मुख्य अनुपालन अधिकारियों को फॉरेंसिक रिपोर्ट भेजें और अवैध बॉट को बंद करवाएं।'
+                            : 'Escalate to grievance officers and telecom cyber teams to seize the AI bot server and remove synthetic content.'}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')}
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-bold transition-all cursor-pointer"
+                      >
+                        <span>{isHindi ? 'प्लेटफॉर्म Takedown खोलें' : 'Platform Grievance Portals'}</span>
+                        <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
+                      </button>
+                    </div>
+                  ) : (
+                    /* Paid scenario secondary: 24h Takedown Notice */
+                    <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
+                          <FileCheck2 className="w-4 h-4" />
+                          <span>{isHindi ? '24-घंटे Takedown नोटिस' : '24-Hour Intermediary Takedown'}</span>
+                        </div>
+                        <p className="text-xs text-[#D2CCE7] leading-relaxed">
+                          {isHindi
+                            ? 'IT Rules के नियम 3(2)(b) के तहत टेलीग्राम, मेटा, व्हाट्सएप के शिकायत अधिकारी को 24 घंटे के अंदर अश्लील सामग्री हटाने का कानूनी नोटिस भेजें।'
+                            : 'Rule 3(2)(b) of IT Rules 2021 mandates platforms remove intimate imagery within 24 hours of receiving notice.'}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => onNavigateToTab('takedown', 'platform-takedown-portal')}
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#993556] hover:bg-[#7A2843] text-white text-xs font-bold transition-all cursor-pointer"
+                      >
+                        <span>{isHindi ? 'प्लेटफॉर्म Takedown खोलें' : 'Platform Grievance Portals'}</span>
+                        <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />
+                      </button>
+                    </div>
+                  )}
 
-                  {/* CARD 3: Police FIR Generator */}
-                  <div className="p-4 rounded-2xl bg-white/6 border border-white/12 space-y-3 flex flex-col justify-between">
+                  {/* CARD 3: Police FIR Generator (Highlighted in place if isConfidentialFirPriority is true, never displacing Card 1) */}
+                  <div className={`p-4 rounded-2xl border space-y-3 flex flex-col justify-between transition-all ${
+                    isConfidentialFirPriority 
+                      ? 'bg-emerald-950/40 border-emerald-400 ring-2 ring-emerald-400 shadow-soft' 
+                      : 'bg-white/6 border-white/12'
+                  }`}>
                     <div className="space-y-1.5">
-                      <div className="flex items-center gap-2 text-teal-300 font-bold text-sm">
-                        <Scale className="w-4 h-4" />
-                        <span>{isHindi ? 'गोपनीय साइबर FIR ड्राफ्ट' : 'Confidential Police FIR Dossier'}</span>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 text-teal-300 font-bold text-sm">
+                          <Scale className="w-4 h-4" />
+                          <span>{isHindi ? 'गोपनीय साइबर FIR ड्राफ्ट' : 'Confidential Police FIR Dossier'}</span>
+                        </div>
+                        {isConfidentialFirPriority && (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                            {isHindi ? 'प्राथमिकता सक्रिय' : 'PRIORITIZED BY YOU'}
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-[#D2CCE7] leading-relaxed">
                         {isHindi
@@ -1670,7 +1904,11 @@ Your persistent messaging, online surveillance, and harassment constitute cogniz
                     </div>
                     <button
                       onClick={() => onNavigateToTab('report', 'complaint-draft-generator')}
-                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-white text-[#26215C] hover:bg-[#FAF8F3] text-xs font-bold transition-all cursor-pointer"
+                      className={`w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                        isConfidentialFirPriority 
+                          ? 'bg-emerald-500 hover:bg-emerald-600 text-black shadow-xs' 
+                          : 'bg-white text-[#26215C] hover:bg-[#FAF8F3]'
+                      }`}
                     >
                       <span>{isHindi ? 'शिकायत ड्राफ्ट तैयार करें' : 'Generate FIR Complaint'}</span>
                       <ArrowRight className="w-3.5 h-3.5 min-w-[14px] min-h-[14px] shrink-0 self-center" />

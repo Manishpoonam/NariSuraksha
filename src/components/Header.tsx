@@ -36,6 +36,7 @@ interface HeaderProps {
   onTriggerSOS?: () => void;
   onOpenPrintCard?: () => void;
   onOpenPurgeModal?: () => void;
+  onOpenTutorialGuide?: () => void;
   isStealthTitle?: boolean;
   onToggleStealthTitle?: () => void;
   isNightDimmer?: boolean;
@@ -63,6 +64,7 @@ export const Header: React.FC<HeaderProps> = ({
   onTriggerSOS,
   onOpenPrintCard,
   onOpenPurgeModal,
+  onOpenTutorialGuide,
   isStealthTitle = true,
   onToggleStealthTitle,
   isNightDimmer = false,
@@ -236,6 +238,24 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="hidden lg:inline">{isHindi ? 'मिटाएं' : 'Purge'}</span>
               </button>
             )}
+
+            {/* Tutorial & Guide PDF Button */}
+            <button
+              id="header-open-tutorial-guide"
+              onClick={() => {
+                hapticAction();
+                if (onOpenTutorialGuide) {
+                  onOpenTutorialGuide();
+                } else {
+                  window.dispatchEvent(new CustomEvent('open-tutorial-guide'));
+                }
+              }}
+              className="inline-flex items-center gap-1 px-2.5 py-1 bg-white/10 hover:bg-white/20 text-[#FAF8F3] text-xs font-medium rounded-full transition-colors cursor-pointer"
+              title={isHindi ? 'उपयोग गाइड व ट्यूटोरियल PDF' : 'How to Use & Tutorial Guide PDF'}
+            >
+              <FileText className="w-3 h-3 text-[#F3C5D6] shrink-0" />
+              <span className="hidden md:inline">{isHindi ? 'गाइड PDF' : 'Guide PDF'}</span>
+            </button>
 
             {/* QUICK EXIT (DISCREET, INSTANT ESCAPE) */}
             <button

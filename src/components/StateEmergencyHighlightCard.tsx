@@ -25,6 +25,7 @@ import { hapticAction } from '../utils/haptics';
 interface StateEmergencyHighlightCardProps {
   language: Language;
   selectedScenario?: CrisisScenarioKey | string;
+  isMinor?: boolean;
   onNavigateToTab?: (tab: string, elementId?: string) => void;
   onBrowseStateServices?: () => void;
 }
@@ -35,6 +36,7 @@ const CONFIRM_PROMPT_DISMISSED_KEY = 'suraksha_loc_confirm_dismissed_v1';
 export const StateEmergencyHighlightCard: React.FC<StateEmergencyHighlightCardProps> = ({
   language,
   selectedScenario,
+  isMinor = false,
   onNavigateToTab,
   onBrowseStateServices
 }) => {
@@ -138,7 +140,8 @@ export const StateEmergencyHighlightCard: React.FC<StateEmergencyHighlightCardPr
       ) || null)
     : null;
 
-  const isMinor = selectedScenario === 'police' || selectedScenario === 'known_person_threats';
+  // Childline 1098 is now strictly controlled by the isMinor prop (POCSO Guide trigger),
+  // ensuring Cyber Crime Police Station (e.g. 0651-2220060 in Jharkhand) is always available for adult FIR filers.
 
   // Filtered state list for manual selection
   const filteredCells = STATE_CYBER_CELLS.filter((cell) => {

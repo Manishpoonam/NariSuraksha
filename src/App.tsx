@@ -29,6 +29,7 @@ const PurgeFootprintModal = React.lazy(() => import('./components/PurgeFootprint
 const ImmediateActionPath = React.lazy(() => import('./components/ImmediateActionPath').then((m) => ({ default: m.ImmediateActionPath })));
 const DeviceSafetyChecklist = React.lazy(() => import('./components/DeviceSafetyChecklist').then((m) => ({ default: m.DeviceSafetyChecklist })));
 const LegalDisclaimerPage = React.lazy(() => import('./components/LegalDisclaimerPage').then((m) => ({ default: m.LegalDisclaimerPage })));
+const NariSurakshaFieldGuideModal = React.lazy(() => import('./components/NariSurakshaFieldGuideModal').then((m) => ({ default: m.NariSurakshaFieldGuideModal })));
 
 const TabSuspenseFallback = () => (
   <div 
@@ -117,6 +118,7 @@ export default function App() {
   const [draftCategory, setDraftCategory] = useState<IncidentCategory>('extortion_blackmail');
   const [rescueSituation, setRescueSituation] = useState<CrisisScenarioKey | string>('countdown');
   const [isPrintCardOpen, setIsPrintCardOpen] = useState<boolean>(false);
+  const [isFieldGuideOpen, setIsFieldGuideOpen] = useState<boolean>(false);
   const [isPurgeModalOpen, setIsPurgeModalOpen] = useState<boolean>(false);
   const [isImmediateActionOpen, setIsImmediateActionOpen] = useState<boolean>(false);
   const [isDeviceSafetyOpen, setIsDeviceSafetyOpen] = useState<boolean>(false);
@@ -590,6 +592,14 @@ export default function App() {
     }
 
     // 1. Close active modals if open
+    if (isFieldGuideOpen) {
+      setIsFieldGuideOpen(false);
+      return;
+    }
+    if (isPrintCardOpen) {
+      setIsPrintCardOpen(false);
+      return;
+    }
     if (isSOSOpen) {
       setIsSOSOpen(false);
       return;
@@ -669,6 +679,14 @@ export default function App() {
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
       // Priority 1: Close active modals without leaving view
+      if (isFieldGuideOpen) {
+        setIsFieldGuideOpen(false);
+        return;
+      }
+      if (isPrintCardOpen) {
+        setIsPrintCardOpen(false);
+        return;
+      }
       if (isSOSOpen) {
         setIsSOSOpen(false);
         return;
@@ -846,6 +864,7 @@ export default function App() {
             onOpenFullDisclaimer={() => {
               handleOpenDisclaimer();
             }}
+            onOpenFieldGuide={() => setIsFieldGuideOpen(true)}
           />
           {isImmediateActionOpen && (
             <React.Suspense fallback={<TabSuspenseFallback />}>
@@ -996,6 +1015,7 @@ export default function App() {
                     language={language}
                     onNavigateToTab={handleNavigateToTab}
                     onOpenPrintCard={() => setIsPrintCardOpen(true)}
+                    onOpenFieldGuide={() => setIsFieldGuideOpen(true)}
                     onOpenPurgeModal={() => setIsPurgeModalOpen(true)}
                     onOpenDeviceSafety={() => handleOpenDeviceSafety('offline-utilities')}
                     onSelectCategoryForDraft={setDraftCategory}
@@ -1159,6 +1179,17 @@ export default function App() {
           <CampusSafetyPrintableCard
             isOpen={isPrintCardOpen}
             onClose={() => setIsPrintCardOpen(false)}
+            language={language}
+          />
+        </React.Suspense>
+      )}
+
+      {/* Community Presentation Notes & Field Guide (Print & PDF Ready) */}
+      {isFieldGuideOpen && (
+        <React.Suspense fallback={null}>
+          <NariSurakshaFieldGuideModal
+            isOpen={isFieldGuideOpen}
+            onClose={() => setIsFieldGuideOpen(false)}
             language={language}
           />
         </React.Suspense>

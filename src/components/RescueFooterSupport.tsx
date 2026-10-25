@@ -18,7 +18,8 @@ import {
   Building2,
   ArrowRight,
   Smartphone,
-  ExternalLink
+  ExternalLink,
+  FileText
 } from 'lucide-react';
 import { Language, IncidentCategory } from '../types';
 import { hapticAction } from '../utils/haptics';
@@ -33,6 +34,7 @@ interface RescueFooterSupportProps {
   onOpenPrintCard: () => void;
   onOpenPurgeModal: () => void;
   onOpenDeviceSafety?: () => void;
+  onOpenFieldGuide?: () => void;
   onSelectCategoryForDraft?: (category: IncidentCategory) => void;
   onOpenSOS?: () => void;
   showPlatformGuides?: boolean;
@@ -56,6 +58,7 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
   onOpenPrintCard,
   onOpenPurgeModal,
   onOpenDeviceSafety,
+  onOpenFieldGuide,
   onSelectCategoryForDraft,
   onOpenSOS,
   showPlatformGuides: externalShowPlatformGuides,
@@ -484,6 +487,33 @@ export const RescueFooterSupport: React.FC<RescueFooterSupportProps> = ({
                 >
                   <Smartphone className="w-3.5 h-3.5 text-amber-800" />
                   <span className="whitespace-nowrap">{isHindi ? 'जांचें' : 'Audit'}</span>
+                </button>
+              </div>
+            )}
+
+            {/* Utility 4: Community Presentation Notes & PDF Guide */}
+            {onOpenFieldGuide && (
+              <div className="p-3 rounded-xl bg-purple-50/60 border border-purple-200/80 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-lg bg-white border border-purple-200 flex items-center justify-center text-purple-800 shrink-0">
+                    <FileText className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-purple-950 truncate">
+                      {isHindi ? 'कम्युनिटी गाइड व प्रेजेंटेशन नोट्स (PDF)' : 'Community Guide & Presentation Notes (PDF)'}
+                    </h4>
+                    <p className="text-[10px] text-purple-800/80 line-clamp-1">
+                      {isHindi ? 'छात्राओं, महिलाओं व NGOs के लिए कार्यप्रणाली, फ्लोचार्ट्स व प्रेजेंटेशन' : 'Plain English guide, flowcharts & presentation handbook for girls, women & NGOs'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={onOpenFieldGuide}
+                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-purple-100 text-purple-900 border border-purple-300 font-semibold text-xs transition-colors cursor-pointer active:scale-97 min-h-[38px]"
+                >
+                  <FileText className="w-3.5 h-3.5 text-purple-800" />
+                  <span className="whitespace-nowrap">{isHindi ? 'नोट्स / PDF' : 'Guide / PDF'}</span>
                 </button>
               </div>
             )}

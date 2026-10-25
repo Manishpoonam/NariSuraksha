@@ -15,7 +15,8 @@ import {
   ArrowRight,
   Heart,
   Sparkles,
-  Smartphone
+  Smartphone,
+  FileText
 } from 'lucide-react';
 import { Language } from '../types';
 import { hapticAction, hapticCamouflage, hapticSOS } from '../utils/haptics';
@@ -30,6 +31,7 @@ interface LandingGroundingScreenProps {
   onOpenBreathing: () => void;
   onOpenDeviceSafety: () => void;
   onOpenFullDisclaimer?: () => void;
+  onOpenFieldGuide?: () => void;
 }
 
 /**
@@ -53,6 +55,7 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
   onOpenBreathing,
   onOpenDeviceSafety,
   onOpenFullDisclaimer,
+  onOpenFieldGuide,
 }) => {
   const isHindi = language === 'hi';
 
@@ -278,6 +281,24 @@ export const LandingGroundingScreen: React.FC<LandingGroundingScreenProps> = ({
                   : 'Could someone else be monitoring this phone or browser?'}
               </span>
             </button>
+
+            {onOpenFieldGuide && (
+              <button
+                type="button"
+                onClick={() => {
+                  hapticAction();
+                  onOpenFieldGuide();
+                }}
+                className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#26215C] hover:text-[#993556] font-semibold transition-colors cursor-pointer py-2 px-4 rounded-full bg-[#FAF8F3] hover:bg-[#F3EFEA] border border-[#E8E2DC] shadow-2xs min-h-[44px] focus-visible:ring-2 focus-visible:ring-[#26215C] focus-visible:outline-none text-center mt-0.5"
+              >
+                <FileText className="w-4 h-4 text-[#993556] shrink-0" />
+                <span>
+                  {isHindi
+                    ? 'कम्युनिटी फील्ड गाइड व प्रेजेंटेशन हैंडबुक (PDF डाउनलोड)'
+                    : 'Field Guide & Presentation Notes for Girls, Women & NGOs (PDF)'}
+                </span>
+              </button>
+            )}
           </div>
         </motion.div>
       </main>
