@@ -864,7 +864,6 @@ export default function App() {
             onOpenFullDisclaimer={() => {
               handleOpenDisclaimer();
             }}
-            onOpenFieldGuide={() => setIsFieldGuideOpen(true)}
           />
           {isImmediateActionOpen && (
             <React.Suspense fallback={<TabSuspenseFallback />}>
